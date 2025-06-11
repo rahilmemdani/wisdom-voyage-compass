@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Plane, Loader2, X, Users } from 'lucide-react';
+import { Plane, Loader2, X, Users, Briefcase } from 'lucide-react';
 import axios from 'axios';
 
 interface MultiCityLeg {
@@ -32,10 +32,27 @@ interface FlightOffer {
   travelerPricings: Array<{
     fareDetailsBySegment: Array<{
       includedCheckedBags: { weight: number; weightUnit: string };
-      includedCabinBags: { weight: number; weightUnit: string };
+      cabin: string;
     }>;
   }>;
 }
+
+// Map carrier codes to airline names
+const airlineMap: { [key: string]: string } = {
+  AI: 'Air India',
+  UK: 'Vistara',
+  "6E": 'IndiGo',
+  SG: 'SpiceJet',
+  G8: 'GoAir',
+  // Add more mappings as needed
+};
+
+const travelClasses = [
+  { label: 'Economy', value: 'ECONOMY' },
+  { label: 'Premium Economy', value: 'PREMIUM_ECONOMY' },
+  { label: 'Business', value: 'BUSINESS' },
+  { label: 'First', value: 'FIRST' },
+];
 
 const Flights = () => {
   const [tripType, setTripType] = useState<'round-trip' | 'one-way' | 'multi-city'>('round-trip');
@@ -44,6 +61,7 @@ const Flights = () => {
   const [departureDate, setDepartureDate] = useState('');
   const [returnDate, setReturnDate] = useState('');
   const [adults, setAdults] = useState<number>(1);
+  const [travelClass, setTravelClass] = useState<string>('ECONOMY');
   const [multiCityLegs, setMultiCityLegs] = useState<MultiCityLeg[]>([
     { from: null, to: null, departureDate: '' },
   ]);
@@ -89,6 +107,11 @@ const Flights = () => {
           setLoading(false);
           return;
         }
+        if (!travelClasses.some(cls => cls.value === travelClass)) {
+          setError('Please select a valid travel class.');
+          setLoading(false);
+          return;
+        }
 
         const multiCityResults: FlightOffer[] = [];
         for (const leg of multiCityLegs) {
@@ -97,7 +120,7 @@ const Flights = () => {
             destinationLocationCode: leg.to!.value,
             departureDate: leg.departureDate,
             adults,
-            travelClass: 'ECONOMY',
+            travelClass,
             nonStop: false,
             currencyCode: 'INR',
             max: 2,
@@ -125,13 +148,18 @@ const Flights = () => {
           setLoading(false);
           return;
         }
+        if (!travelClasses.some(cls => cls.value === travelClass)) {
+          setError('Please select a valid travel class.');
+          setLoading(false);
+          return;
+        }
 
         const params: any = {
           originLocationCode: from.value,
           destinationLocationCode: to.value,
           departureDate: departureDate,
           adults,
-          travelClass: 'ECONOMY',
+          travelClass,
           nonStop: false,
           currencyCode: 'INR',
           max: 5,
@@ -183,6 +211,7 @@ const Flights = () => {
     setDepartureDate('');
     setReturnDate('');
     setAdults(1);
+    setTravelClass('ECONOMY');
     setMultiCityLegs([{ from: null, to: null, departureDate: '' }]);
     setResults([]);
     setError('');
@@ -253,7 +282,7 @@ const Flights = () => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div>
           <Label className="text-sm font-medium text-gray-700">
             {isMultiCity ? `Departure Date (Leg ${index! + 1})` : 'Departure Date'}
@@ -295,6 +324,23 @@ const Flights = () => {
               ))}
             </select>
             <Users className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+          </div>
+        </div>
+        <div>
+          <Label className="text-sm font-medium text-gray-700">Class</Label>
+          <div className="relative">
+            <select
+              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 appearance-none bg-white"
+              value={travelClass}
+              onChange={(e) => setTravelClass(e.target.value)}
+            >
+              {travelClasses.map(cls => (
+                <option key={cls.value} value={cls.value}>
+                  {cls.label}
+                </option>
+              ))}
+            </select>
+            <Briefcase className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
           </div>
         </div>
       </div>
@@ -341,7 +387,7 @@ const Flights = () => {
                 </TabsTrigger>
                 <TabsTrigger
                   value="one-way"
-                  className="rounde d-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
+                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
                 >
                   One Way
                 </TabsTrigger>
@@ -370,7 +416,7 @@ const Flights = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-primary border-primary hover:bg-primary transition-colors duration-200"
+                  className="text-primary border-primary hover:bg-blue-50 transition-colors duration-200"
                   onClick={addMultiCityLeg}
                 >
                   + Add Another Leg
@@ -403,6 +449,9 @@ const Flights = () => {
             {results.map((f, i) => {
               const totalPrice = parseFloat(f.price?.total || '0');
               const perPassengerPrice = adults > 0 ? totalPrice / adults : totalPrice;
+              const firstSegment = f.itineraries?.[0]?.segments?.[0];
+              const cabin = f.travelerPricings?.[0]?.fareDetailsBySegment?.[0]?.cabin || travelClass;
+              const airlineName = firstSegment ? airlineMap[firstSegment.carrierCode] || firstSegment.carrierCode : '';
               return (
                 <Card
                   key={i}
@@ -417,7 +466,7 @@ const Flights = () => {
                         <div key={idx} className="space-y-2">
                           <div className="flex justify-between items-center">
                             <h3 className="font-semibold text-gray-800 text-base sm:text-lg">
-                              { " ("+firstSegment.carrierCode+ ")"} {firstSegment.number}
+                              {airlineName} ({firstSegment.carrierCode}) {firstSegment.number}
                             </h3>
                             <span className="text-sm text-gray-500">
                               {idx === 0 ? 'Outbound' : 'Return'}
@@ -450,6 +499,7 @@ const Flights = () => {
                           {f.travelerPricings?.[0]?.fareDetailsBySegment?.[0]?.includedCheckedBags?.weight || 0} kg
                         </p>
                       </div>
+                      <p className="text-sm text-gray-600">Class: {travelClasses.find(cls => cls.value === cabin)?.label || cabin}</p>
                       {adults > 1 && (
                         <p className="text-sm text-gray-600">
                           ₹{perPassengerPrice.toLocaleString('en-IN')} per passenger ({adults} adults)
