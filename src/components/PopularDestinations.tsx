@@ -3,8 +3,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Star, MapPin } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const PopularDestinations = () => {
+  const navigate = useNavigate();
+
   const destinations = [
     {
       name: 'Swiss Alps',
@@ -68,61 +71,75 @@ const PopularDestinations = () => {
     },
   ];
 
+  const handleViewDetails = (destination: string) => {
+    // For now, navigate to packages page - can be enhanced to show specific destination
+    navigate('/packages', { state: { selectedDestination: destination } });
+  };
+
+  const handleViewAll = () => {
+    navigate('/packages');
+  };
+
   return (
-    <section className="py-20">
+    <section className="py-20 bg-gradient-to-br from-white to-muted/30">
       <div className="container mx-auto section-padding">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-serif font-bold text-primary mb-4">
+          <h2 className="text-5xl font-serif font-bold text-primary mb-6">
             Popular Destinations
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Explore our handpicked destinations that offer unforgettable experiences and breathtaking beauty
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {destinations.map((destination, index) => (
-            <Card key={index} className="group overflow-hidden hover-lift bg-white shadow-lg hover:shadow-xl transition-all duration-300">
+            <Card key={index} className="group overflow-hidden hover-lift bg-white shadow-xl hover:shadow-2xl transition-all duration-500 border-2 border-transparent hover:border-primary/20">
               <div className="relative overflow-hidden">
                 <img 
                   src={destination.image} 
                   alt={destination.name}
-                  className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute top-4 left-4">
-                  <Badge variant="secondary" className="bg-white/90 text-primary">
+                  <Badge variant="secondary" className="bg-white/95 text-primary font-semibold shadow-lg">
                     {destination.category}
                   </Badge>
                 </div>
                 <div className="absolute top-4 right-4">
-                  <Badge variant="secondary" className="bg-primary text-white">
+                  <Badge variant="secondary" className="bg-primary text-white font-semibold shadow-lg">
                     {destination.duration}
                   </Badge>
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               </div>
               
               <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-2">
-                  <h3 className="text-xl font-serif font-semibold text-primary">{destination.name}</h3>
-                  <div className="flex items-center space-x-1">
+                <div className="flex items-start justify-between mb-3">
+                  <h3 className="text-2xl font-serif font-bold text-primary group-hover:text-primary/80 transition-colors">
+                    {destination.name}
+                  </h3>
+                  <div className="flex items-center space-x-1 bg-accent/10 px-2 py-1 rounded-full">
                     <Star className="w-4 h-4 text-accent fill-current" />
-                    <span className="text-sm font-medium">{destination.rating}</span>
+                    <span className="text-sm font-bold text-accent">{destination.rating}</span>
                   </div>
                 </div>
                 
-                <div className="flex items-center text-muted-foreground mb-4">
-                  <MapPin className="w-4 h-4 mr-1" />
-                  <span className="text-sm">{destination.location}</span>
+                <div className="flex items-center text-muted-foreground mb-6">
+                  <MapPin className="w-4 h-4 mr-2" />
+                  <span className="font-medium">{destination.location}</span>
                   <span className="text-sm ml-auto">({destination.reviews} reviews)</span>
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-2xl font-bold text-primary">{destination.price}</p>
-                    <p className="text-sm text-muted-foreground">per person</p>
+                    <p className="text-sm text-muted-foreground font-medium">per person</p>
                   </div>
-                  <Button className="bg-primary hover:bg-primary/90">
+                  <Button 
+                    className="bg-primary hover:bg-primary/90 font-semibold px-6 hover:scale-105 transition-all duration-300 shadow-lg"
+                    onClick={() => handleViewDetails(destination.name)}
+                  >
                     View Details
                   </Button>
                 </div>
@@ -131,8 +148,13 @@ const PopularDestinations = () => {
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white">
+        <div className="text-center mt-16">
+          <Button 
+            size="lg" 
+            variant="outline" 
+            className="border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold text-lg px-10 py-4 rounded-xl hover:scale-105 transition-all duration-300 shadow-lg"
+            onClick={handleViewAll}
+          >
             View All Destinations
           </Button>
         </div>

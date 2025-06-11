@@ -1,10 +1,12 @@
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MessageCircle, Phone, Mail, MapPin, Facebook, Instagram, Twitter, Linkedin } from 'lucide-react';
 
 const Footer = () => {
+  const navigate = useNavigate();
+
   const quickLinks = [
     { name: 'Tour Packages', href: '/packages' },
     { name: 'Flight Bookings', href: '/flights' },
@@ -34,49 +36,76 @@ const Footer = () => {
     window.open('https://wa.me/1234567890?text=Hello, I would like to inquire about your travel services.', '_blank');
   };
 
+  const handlePhoneClick = () => {
+    window.open('tel:+919876543210', '_self');
+  };
+
+  const handleEmailClick = () => {
+    window.open('mailto:info@wisdomtours.com', '_self');
+  };
+
+  const handleSubscribe = () => {
+    // Add newsletter subscription logic here
+    alert('Thank you for subscribing! We will keep you updated with the latest travel deals.');
+  };
+
+  const handleDestinationClick = (destination: string) => {
+    navigate('/packages', { state: { selectedDestination: destination } });
+  };
+
   return (
-    <footer className="bg-primary text-white">
+    <footer className="bg-gradient-to-br from-primary via-red-600 to-red-700 text-white">
       <div className="container mx-auto section-padding py-16">
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
           {/* Company Info */}
           <div className="space-y-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
-                <span className="text-primary font-bold text-xl">W</span>
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg">
+                  <span className="text-primary font-bold text-2xl">W</span>
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full border-2 border-white"></div>
               </div>
               <div>
-                <h3 className="text-xl font-serif font-semibold">Wisdom Tours</h3>
-                <p className="text-sm text-white/80">& Travels</p>
+                <h3 className="text-2xl font-serif font-bold">Wisdom Tours</h3>
+                <p className="text-sm text-white/90 font-medium">Travel & Tours</p>
+                <p className="text-xs text-white/80 italic">A travel Knowledge Co.</p>
               </div>
             </div>
-            <p className="text-white/80 text-sm leading-relaxed">
+            <p className="text-white/90 leading-relaxed">
               Your trusted partner for extraordinary travel experiences. We create memories that last a lifetime with our premium domestic and international tour packages.
             </p>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3 cursor-pointer hover:text-accent transition-colors">
                 <MapPin className="w-5 h-5 text-accent" />
-                <span className="text-sm">123 Travel Street, Mumbai, India</span>
+                <span>123 Travel Street, Mumbai, India</span>
               </div>
-              <div className="flex items-center space-x-3">
+              <div 
+                className="flex items-center space-x-3 cursor-pointer hover:text-accent transition-colors"
+                onClick={handlePhoneClick}
+              >
                 <Phone className="w-5 h-5 text-accent" />
-                <span className="text-sm">+91 98765 43210</span>
+                <span>+91 98765 43210</span>
               </div>
-              <div className="flex items-center space-x-3">
+              <div 
+                className="flex items-center space-x-3 cursor-pointer hover:text-accent transition-colors"
+                onClick={handleEmailClick}
+              >
                 <Mail className="w-5 h-5 text-accent" />
-                <span className="text-sm">info@wisdomtours.com</span>
+                <span>info@wisdomtours.com</span>
               </div>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
+            <h4 className="text-xl font-bold mb-6">Quick Links</h4>
             <ul className="space-y-3">
               {quickLinks.map((link, index) => (
                 <li key={index}>
                   <Link 
                     to={link.href} 
-                    className="text-white/80 hover:text-accent transition-colors text-sm"
+                    className="text-white/90 hover:text-accent transition-colors font-medium hover:translate-x-2 transform duration-300 block"
                   >
                     {link.name}
                   </Link>
@@ -87,10 +116,10 @@ const Footer = () => {
 
           {/* Services */}
           <div>
-            <h4 className="text-lg font-semibold mb-6">Our Services</h4>
+            <h4 className="text-xl font-bold mb-6">Our Services</h4>
             <ul className="space-y-3">
               {services.map((service, index) => (
-                <li key={index} className="text-white/80 text-sm">
+                <li key={index} className="text-white/90 font-medium">
                   {service}
                 </li>
               ))}
@@ -99,17 +128,20 @@ const Footer = () => {
 
           {/* Newsletter */}
           <div>
-            <h4 className="text-lg font-semibold mb-6">Stay Connected</h4>
-            <p className="text-white/80 text-sm mb-4">
+            <h4 className="text-xl font-bold mb-6">Stay Connected</h4>
+            <p className="text-white/90 mb-6 leading-relaxed">
               Subscribe to get the latest travel deals and destination updates.
             </p>
             <div className="space-y-4">
               <div className="flex space-x-2">
                 <Input 
                   placeholder="Enter your email" 
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                  className="bg-white/20 border-white/30 text-white placeholder:text-white/70 backdrop-blur-sm"
                 />
-                <Button className="bg-accent hover:bg-accent/90 text-primary">
+                <Button 
+                  className="bg-white text-primary hover:bg-white/90 font-bold shadow-lg hover:scale-105 transition-all duration-300"
+                  onClick={handleSubscribe}
+                >
                   Subscribe
                 </Button>
               </div>
@@ -117,7 +149,7 @@ const Footer = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-white/20 text-white hover:bg-accent hover:text-primary hover:border-accent"
+                  className="border-white/30 text-white hover:bg-white hover:text-primary hover:border-white backdrop-blur-sm hover:scale-105 transition-all duration-300"
                   onClick={handleWhatsAppClick}
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
@@ -130,12 +162,13 @@ const Footer = () => {
 
         {/* Popular Destinations */}
         <div className="border-t border-white/20 mt-12 pt-8">
-          <h4 className="text-lg font-semibold mb-4">Popular Destinations</h4>
-          <div className="flex flex-wrap gap-2">
+          <h4 className="text-xl font-bold mb-6">Popular Destinations</h4>
+          <div className="flex flex-wrap gap-3">
             {destinations.map((destination, index) => (
               <span 
                 key={index} 
-                className="px-3 py-1 bg-white/10 rounded-full text-sm hover:bg-accent hover:text-primary transition-colors cursor-pointer"
+                className="px-4 py-2 bg-white/20 rounded-full font-medium hover:bg-white hover:text-primary transition-all duration-300 cursor-pointer hover:scale-105 backdrop-blur-sm"
+                onClick={() => handleDestinationClick(destination)}
               >
                 {destination}
               </span>
@@ -145,14 +178,14 @@ const Footer = () => {
 
         {/* Social Media & Copyright */}
         <div className="border-t border-white/20 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-white/80 text-sm mb-4 md:mb-0">
+          <p className="text-white/90 mb-4 md:mb-0 font-medium">
             © 2024 Wisdom Tours and Travels. All rights reserved.
           </p>
-          <div className="flex space-x-4">
-            <Facebook className="w-5 h-5 text-white/60 hover:text-accent cursor-pointer transition-colors" />
-            <Instagram className="w-5 h-5 text-white/60 hover:text-accent cursor-pointer transition-colors" />
-            <Twitter className="w-5 h-5 text-white/60 hover:text-accent cursor-pointer transition-colors" />
-            <Linkedin className="w-5 h-5 text-white/60 hover:text-accent cursor-pointer transition-colors" />
+          <div className="flex space-x-6">
+            <Facebook className="w-6 h-6 text-white/70 hover:text-white cursor-pointer transition-all duration-300 hover:scale-125" />
+            <Instagram className="w-6 h-6 text-white/70 hover:text-white cursor-pointer transition-all duration-300 hover:scale-125" />
+            <Twitter className="w-6 h-6 text-white/70 hover:text-white cursor-pointer transition-all duration-300 hover:scale-125" />
+            <Linkedin className="w-6 h-6 text-white/70 hover:text-white cursor-pointer transition-all duration-300 hover:scale-125" />
           </div>
         </div>
       </div>
