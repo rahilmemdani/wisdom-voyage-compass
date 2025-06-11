@@ -111,7 +111,8 @@
 
 @layer components {
   .glass-effect {
-    @apply bg-white/95 backdrop-blur-xl border border-white/20 shadow-2xl;
+    @apply bg-white backdrop-blur-xl border border-white shadow-2xl;
+    background-color: rgba(255, 255, 255, 0.95);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
   
@@ -141,11 +142,13 @@
   }
 
   .btn-secondary {
-    @apply bg-white/95 backdrop-blur-sm text-primary border-2 border-primary/20 hover:bg-primary hover:text-white hover:border-primary font-semibold px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg;
+    @apply bg-white backdrop-blur-sm text-primary border-2 border-primary hover:bg-primary hover:text-white hover:border-primary font-semibold px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg;
+    background-color: rgba(255, 255, 255, 0.95);
   }
 
   .card-modern {
-    @apply bg-white/98 backdrop-blur-sm border border-gray-100/50 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500;
+    @apply bg-white backdrop-blur-sm border border-gray-100 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500;
+    background-color: rgba(255, 255, 255, 0.98);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
   }
 
@@ -190,7 +193,8 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-primary/50 rounded-full;
+  @apply bg-primary rounded-full;
+  opacity: 0.5;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -199,10 +203,12 @@
 
 /* Selection styling */
 ::selection {
-  @apply bg-primary/20 text-primary;
+  @apply bg-primary text-white;
+  background-color: rgba(239, 68, 68, 0.2);
 }
 
 /* Focus styles */
 :focus-visible {
-  @apply outline-none ring-2 ring-primary/50 ring-offset-2 ring-offset-white;
+  @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-white;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5), 0 0 0 4px white;
 }
