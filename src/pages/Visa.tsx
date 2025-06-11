@@ -104,10 +104,10 @@ const Visa = () => {
             Professional visa assistance and documentation support for hassle-free international travel
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-primary">
+            <Button size="lg" className="bg-accent hover:bg-accent/90 text-white">
               Start Application
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary">
+            <Button size="lg" variant="outline" className="border-white text-primary hover:bg-white hover:text-primary">
               Free Consultation
             </Button>
           </div>
@@ -165,7 +165,7 @@ const Visa = () => {
                     </ul>
                   </div>
                   
-                  <Button className="w-full bg-primary hover:bg-primary/90 group-hover:bg-accent group-hover:text-primary transition-colors">
+                  <Button className="w-full bg-primary hover:bg-primary/90 group-hover:bg-accent group-hover:text-white transition-colors">
                     Apply Now
                   </Button>
                 </CardContent>

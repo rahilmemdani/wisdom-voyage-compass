@@ -41,9 +41,14 @@ const Header = () => {
               <div className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full border-3 border-primary shadow-lg"></div>
             </div>
             <div className="group-hover:translate-x-1 transition-transform duration-300">
-              <h1 className="text-3xl font-serif font-bold gradient-text">Wisdom Tours</h1>
-              <p className="text-sm text-muted-foreground -mt-1 font-semibold tracking-wide">Travel & Tours</p>
-              <p className="text-xs text-accent -mt-1 italic font-medium">A travel Knowledge Co.</p>
+              <div className="md:block hidden">
+                <h1 className="text-3xl font-serif font-bold gradient-text">Wisdom Tours</h1>
+                <p className="text-sm text-muted-foreground -mt-1 font-semibold tracking-wide">Travel & Tours</p>
+                <p className="text-xs text-accent -mt-1 italic font-medium">A travel Knowledge Co.</p>
+              </div>
+              <div className="block md:hidden">
+                <h1 className="text-xl font-bold gradient-text leading-tight">Wisdom Tours</h1>
+              </div>
             </div>
           </Link>
 
@@ -53,16 +58,14 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`text-sm font-semibold transition-all duration-300 relative group ${
-                  isActive(item.href)
+                className={`text-sm font-semibold transition-all duration-300 relative group ${isActive(item.href)
                     ? 'text-primary'
                     : 'text-foreground hover:text-primary'
-                }`}
+                  }`}
               >
                 {item.name}
-                <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-red-500 transform transition-transform duration-300 origin-left ${
-                  isActive(item.href) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                }`} />
+                <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-red-500 transform transition-transform duration-300 origin-left ${isActive(item.href) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  }`} />
               </Link>
             ))}
           </nav>
@@ -78,8 +81,8 @@ const Header = () => {
               <MessageCircle className="w-4 h-4" />
               <span className="font-semibold">WhatsApp</span>
             </Button>
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               className="btn-primary font-bold"
               onClick={handleContactClick}
             >
@@ -107,11 +110,10 @@ const Header = () => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`text-lg font-semibold transition-all duration-300 px-6 py-4 rounded-xl ${
-                    isActive(item.href)
+                  className={`text-lg font-semibold transition-all duration-300 px-6 py-4 rounded-xl ${isActive(item.href)
                       ? 'text-primary bg-primary/10 border-l-4 border-primary shadow-lg'
                       : 'text-foreground hover:text-primary hover:bg-primary/5 hover:translate-x-2'
-                  }`}
+                    }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
@@ -127,8 +129,8 @@ const Header = () => {
                   <MessageCircle className="w-4 h-4" />
                   <span className="font-semibold">WhatsApp Inquiry</span>
                 </Button>
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   className="btn-primary font-bold"
                   onClick={handleContactClick}
                 >

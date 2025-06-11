@@ -108,8 +108,8 @@ const Packages = () => {
   const PackageCard = ({ pkg }: { pkg: any }) => (
     <Card className="group overflow-hidden hover-lift bg-white shadow-lg hover:shadow-xl transition-all duration-300">
       <div className="relative overflow-hidden">
-        <img 
-          src={pkg.image} 
+        <img
+          src={pkg.image}
           alt={pkg.name}
           className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
         />
@@ -126,7 +126,7 @@ const Packages = () => {
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
       </div>
-      
+
       <CardHeader className="pb-4">
         <CardTitle className="text-xl font-serif text-primary">{pkg.name}</CardTitle>
         <div className="flex items-center text-muted-foreground text-sm">
@@ -134,7 +134,7 @@ const Packages = () => {
           {pkg.location}
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center">
@@ -146,7 +146,7 @@ const Packages = () => {
             {pkg.groupSize}
           </div>
         </div>
-        
+
         <div className="space-y-2">
           <h4 className="font-semibold text-sm">Package Highlights:</h4>
           <div className="grid grid-cols-2 gap-1">
@@ -158,7 +158,7 @@ const Packages = () => {
             ))}
           </div>
         </div>
-        
+
         <div className="flex items-center justify-between pt-4 border-t">
           <div>
             <p className="text-2xl font-bold text-primary">{pkg.price}</p>
@@ -168,7 +168,7 @@ const Packages = () => {
             Book Now
           </Button>
         </div>
-        
+
         <p className="text-xs text-muted-foreground text-center">
           {pkg.reviews} reviews • Trusted by travelers
         </p>
@@ -179,7 +179,7 @@ const Packages = () => {
   return (
     <div className="min-h-screen">
       <Header />
-      
+
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto section-padding">
           <div className="text-center mb-12">
@@ -200,7 +200,7 @@ const Packages = () => {
                 International Tours
               </TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="domestic" className="space-y-8">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-serif font-semibold text-primary mb-2">
@@ -216,7 +216,7 @@ const Packages = () => {
                 ))}
               </div>
             </TabsContent>
-            
+
             <TabsContent value="international" className="space-y-8">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-serif font-semibold text-primary mb-2">
@@ -238,13 +238,17 @@ const Packages = () => {
             <p className="text-muted-foreground mb-4">
               Can't find what you're looking for? Let us create a custom package for you.
             </p>
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-primary">
+            <Button
+              size="lg"
+              className="bg-accent text-white border border-white hover:bg-accent/90 "
+            >
+
               Request Custom Package
             </Button>
           </div>
         </div>
       </section>
-      
+
       <Footer />
     </div>
   );
