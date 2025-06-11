@@ -47,45 +47,50 @@ const Services = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-muted/30 to-white">
-      <div className="container mx-auto section-padding">
-        <div className="text-center mb-16">
-          <h2 className="text-5xl font-serif font-bold text-primary mb-6">
+    <section className="section-standard bg-gradient-to-br from-gray-50/50 to-white">
+      <div className="container-custom section-padding">
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center space-x-2 bg-primary/10 backdrop-blur-sm px-6 py-3 rounded-full border border-primary/20 mb-6">
+            <span className="text-sm font-semibold text-primary">Premium Services</span>
+          </div>
+          <h2 className="font-serif font-bold gradient-text mb-8 text-balance">
             Our Premium Services
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed text-balance">
             Comprehensive travel solutions designed to make your journey seamless and memorable
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-8">
           {services.map((service, index) => (
-            <Card key={index} className="group hover-lift bg-white shadow-xl hover:shadow-2xl transition-all duration-500 border-2 border-transparent hover:border-primary/20">
-              <div className="relative overflow-hidden rounded-t-lg">
+            <Card key={index} className="group card-modern hover-lift border-0 overflow-hidden">
+              <div className="relative overflow-hidden">
                 <img 
                   src={service.image} 
                   alt={service.title}
-                  className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/90 to-transparent" />
-                <div className="absolute bottom-4 left-4">
-                  <service.icon className="w-10 h-10 text-white drop-shadow-lg" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute bottom-6 left-6">
+                  <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-3 group-hover:bg-white/30 transition-all duration-300">
+                    <service.icon className="w-8 h-8 text-white drop-shadow-lg" />
+                  </div>
                 </div>
               </div>
               
-              <CardHeader>
-                <CardTitle className="text-2xl font-serif text-primary group-hover:text-primary/80 transition-colors">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-2xl font-serif gradient-text group-hover:scale-105 transition-transform duration-300 origin-left">
                   {service.title}
                 </CardTitle>
               </CardHeader>
               
-              <CardContent className="space-y-6">
-                <p className="text-muted-foreground leading-relaxed">{service.description}</p>
+              <CardContent className="space-y-6 pb-8">
+                <p className="text-muted-foreground leading-relaxed text-balance">{service.description}</p>
                 
                 <ul className="space-y-3">
                   {service.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center text-sm">
-                      <div className="w-2 h-2 bg-primary rounded-full mr-3 shadow-md" />
+                    <li key={featureIndex} className="flex items-center text-sm group-hover:translate-x-1 transition-transform duration-300" style={{ transitionDelay: `${featureIndex * 50}ms` }}>
+                      <div className="w-2 h-2 bg-gradient-to-r from-primary to-red-500 rounded-full mr-3 shadow-lg flex-shrink-0" />
                       <span className="font-medium">{feature}</span>
                     </li>
                   ))}
@@ -93,7 +98,7 @@ const Services = () => {
                 
                 <Button 
                   variant="outline" 
-                  className="w-full mt-6 border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 hover:scale-105 font-semibold"
+                  className="w-full mt-8 btn-secondary text-base py-3 rounded-xl"
                   onClick={() => handleServiceClick(service.route)}
                 >
                   Learn More

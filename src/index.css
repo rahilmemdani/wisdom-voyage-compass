@@ -19,10 +19,10 @@
     --primary: 0 84% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
+    --secondary: 210 40% 98%;
     --secondary-foreground: 215 25% 27%;
 
-    --muted: 210 40% 96.1%;
+    --muted: 210 40% 98%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
     --accent: 0 72% 58%;
@@ -35,7 +35,7 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 0 84% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -84,36 +84,125 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "cv11", "ss01";
+    font-variation-settings: "opsz" 32;
+    text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
+    @apply font-serif font-medium;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+
+  h1 {
+    @apply text-5xl lg:text-7xl;
+  }
+
+  h2 {
+    @apply text-4xl lg:text-5xl;
+  }
+
+  h3 {
+    @apply text-2xl lg:text-3xl;
   }
 }
 
 @layer components {
   .glass-effect {
-    @apply bg-white/90 backdrop-blur-lg border border-white/30 shadow-xl;
+    @apply bg-white/95 backdrop-blur-xl border border-white/20 shadow-2xl;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
   
   .gradient-text {
-    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary via-red-500 to-accent bg-clip-text text-transparent;
   }
   
   .hover-lift {
-    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl;
+    @apply transition-all duration-500 ease-out hover:-translate-y-3 hover:shadow-2xl;
+  }
+
+  .hover-lift-subtle {
+    @apply transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg;
   }
   
   .section-padding {
-    @apply px-4 sm:px-6 lg:px-8;
+    @apply px-6 sm:px-8 lg:px-12;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto;
   }
 
   .btn-primary {
-    @apply bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg;
+    @apply bg-gradient-to-r from-primary to-red-600 hover:from-red-600 hover:to-primary text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg;
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
   }
 
   .btn-secondary {
-    @apply bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg;
+    @apply bg-white/95 backdrop-blur-sm text-primary border-2 border-primary/20 hover:bg-primary hover:text-white hover:border-primary font-semibold px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg;
   }
+
+  .card-modern {
+    @apply bg-white/98 backdrop-blur-sm border border-gray-100/50 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .section-hero {
+    @apply relative min-h-screen flex items-center justify-center overflow-hidden;
+  }
+
+  .section-standard {
+    @apply py-24 lg:py-32;
+  }
+
+  .floating-element {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .glow-effect {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+  }
+
+  .parallax-element {
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/50 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary;
+}
+
+/* Selection styling */
+::selection {
+  @apply bg-primary/20 text-primary;
+}
+
+/* Focus styles */
+:focus-visible {
+  @apply outline-none ring-2 ring-primary/50 ring-offset-2 ring-offset-white;
 }

@@ -2,7 +2,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Star, MapPin } from 'lucide-react';
+import { Star, MapPin, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const PopularDestinations = () => {
@@ -72,7 +72,6 @@ const PopularDestinations = () => {
   ];
 
   const handleViewDetails = (destination: string) => {
-    // For now, navigate to packages page - can be enhanced to show specific destination
     navigate('/packages', { state: { selectedDestination: destination } });
   };
 
@@ -81,63 +80,69 @@ const PopularDestinations = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-white to-muted/30">
-      <div className="container mx-auto section-padding">
-        <div className="text-center mb-16">
-          <h2 className="text-5xl font-serif font-bold text-primary mb-6">
+    <section className="section-standard bg-gradient-to-br from-white to-gray-50/50">
+      <div className="container-custom section-padding">
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center space-x-2 bg-accent/10 backdrop-blur-sm px-6 py-3 rounded-full border border-accent/20 mb-6">
+            <span className="text-sm font-semibold text-accent">Trending Destinations</span>
+          </div>
+          <h2 className="font-serif font-bold gradient-text mb-8 text-balance">
             Popular Destinations
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed text-balance">
             Explore our handpicked destinations that offer unforgettable experiences and breathtaking beauty
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
           {destinations.map((destination, index) => (
-            <Card key={index} className="group overflow-hidden hover-lift bg-white shadow-xl hover:shadow-2xl transition-all duration-500 border-2 border-transparent hover:border-primary/20">
+            <Card key={index} className="group card-modern hover-lift border-0 overflow-hidden">
               <div className="relative overflow-hidden">
                 <img 
                   src={destination.image} 
                   alt={destination.name}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute top-4 left-4">
-                  <Badge variant="secondary" className="bg-white/95 text-primary font-semibold shadow-lg">
+                <div className="absolute top-6 left-6">
+                  <Badge variant="secondary" className="bg-white/95 backdrop-blur-sm text-primary font-semibold shadow-lg rounded-full px-3 py-1">
                     {destination.category}
                   </Badge>
                 </div>
-                <div className="absolute top-4 right-4">
-                  <Badge variant="secondary" className="bg-primary text-white font-semibold shadow-lg">
-                    {destination.duration}
+                <div className="absolute top-6 right-6">
+                  <Badge variant="secondary" className="bg-primary text-white font-semibold shadow-lg rounded-full px-3 py-1 flex items-center space-x-1">
+                    <Calendar className="w-3 h-3" />
+                    <span>{destination.duration}</span>
                   </Badge>
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute bottom-6 right-6">
+                  <div className="flex items-center space-x-1 bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
+                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                    <span className="text-sm font-bold text-white">{destination.rating}</span>
+                  </div>
+                </div>
               </div>
               
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-2xl font-serif font-bold text-primary group-hover:text-primary/80 transition-colors">
+              <CardContent className="p-8">
+                <div className="flex items-start justify-between mb-4">
+                  <h3 className="text-2xl font-serif font-bold gradient-text group-hover:scale-105 transition-transform duration-300 origin-left">
                     {destination.name}
                   </h3>
-                  <div className="flex items-center space-x-1 bg-accent/10 px-2 py-1 rounded-full">
-                    <Star className="w-4 h-4 text-accent fill-current" />
-                    <span className="text-sm font-bold text-accent">{destination.rating}</span>
-                  </div>
                 </div>
                 
                 <div className="flex items-center text-muted-foreground mb-6">
-                  <MapPin className="w-4 h-4 mr-2" />
+                  <MapPin className="w-4 h-4 mr-2 text-primary" />
                   <span className="font-medium">{destination.location}</span>
                   <span className="text-sm ml-auto">({destination.reviews} reviews)</span>
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-2xl font-bold text-primary">{destination.price}</p>
+                    <p className="text-2xl font-bold gradient-text font-serif">{destination.price}</p>
                     <p className="text-sm text-muted-foreground font-medium">per person</p>
                   </div>
                   <Button 
-                    className="bg-primary hover:bg-primary/90 font-semibold px-6 hover:scale-105 transition-all duration-300 shadow-lg"
+                    className="btn-primary text-sm px-6 py-3 rounded-xl"
                     onClick={() => handleViewDetails(destination.name)}
                   >
                     View Details
@@ -148,11 +153,11 @@ const PopularDestinations = () => {
           ))}
         </div>
 
-        <div className="text-center mt-16">
+        <div className="text-center mt-20">
           <Button 
             size="lg" 
             variant="outline" 
-            className="border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold text-lg px-10 py-4 rounded-xl hover:scale-105 transition-all duration-300 shadow-lg"
+            className="btn-secondary text-lg px-12 py-5 rounded-2xl"
             onClick={handleViewAll}
           >
             View All Destinations
