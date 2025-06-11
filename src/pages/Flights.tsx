@@ -1,252 +1,474 @@
-
 import { useState } from 'react';
+import Select from 'react-select';
+import airports from '../data/airports.json';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Plane, Calendar, Users, ArrowRight, Clock, Star } from 'lucide-react';
+import { Plane, Loader2, X, Users } from 'lucide-react';
+import axios from 'axios';
+
+interface MultiCityLeg {
+  from: { label: string; value: string } | null;
+  to: { label: string; value: string } | null;
+  departureDate: string;
+}
+
+interface FlightOffer {
+  id: string;
+  itineraries: Array<{
+    duration: string;
+    segments: Array<{
+      carrierCode: string;
+      number: string;
+      departure: { iataCode: string; at: string };
+      arrival: { iataCode: string; terminal?: string; at: string };
+      duration: string;
+    }>;
+  }>;
+  price: { total: string; currency: string };
+  travelerPricings: Array<{
+    fareDetailsBySegment: Array<{
+      includedCheckedBags: { weight: number; weightUnit: string };
+      includedCabinBags: { weight: number; weightUnit: string };
+    }>;
+  }>;
+}
 
 const Flights = () => {
-  const [tripType, setTripType] = useState('round-trip');
+  const [tripType, setTripType] = useState<'round-trip' | 'one-way' | 'multi-city'>('round-trip');
+  const [from, setFrom] = useState<{ label: string; value: string } | null>(null);
+  const [to, setTo] = useState<{ label: string; value: string } | null>(null);
+  const [departureDate, setDepartureDate] = useState('');
+  const [returnDate, setReturnDate] = useState('');
+  const [adults, setAdults] = useState<number>(1);
+  const [multiCityLegs, setMultiCityLegs] = useState<MultiCityLeg[]>([
+    { from: null, to: null, departureDate: '' },
+  ]);
+  const [results, setResults] = useState<FlightOffer[]>([]);
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const popularRoutes = [
-    { from: 'Mumbai', to: 'Dubai', price: '₹25,000', duration: '3h 30m' },
-    { from: 'Delhi', to: 'London', price: '₹45,000', duration: '8h 45m' },
-    { from: 'Bangalore', to: 'Singapore', price: '₹28,000', duration: '4h 15m' },
-    { from: 'Chennai', to: 'Bangkok', price: '₹22,000', duration: '3h 45m' },
-    { from: 'Kolkata', to: 'Kathmandu', price: '₹15,000', duration: '1h 30m' },
-    { from: 'Pune', to: 'Goa', price: '₹8,000', duration: '1h 15m' },
-  ];
+  const getAmadeusToken = async () => {
+    try {
+      const response = await axios.post(
+        'https://test.api.amadeus.com/v1/security/oauth2/token',
+        new URLSearchParams({
+          grant_type: 'client_credentials',
+          client_id: import.meta.env.VITE_AMADEUS_API_KEY,
+          client_secret: import.meta.env.VITE_AMADEUS_API_SECRET,
+        }),
+        {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        }
+      );
+      return response.data.access_token;
+    } catch (err) {
+      throw new Error('Failed to authenticate with Amadeus API');
+    }
+  };
 
-  const airlines = [
-    { name: 'Air India', logo: '🇮🇳', rating: 4.2 },
-    { name: 'Emirates', logo: '🇦🇪', rating: 4.7 },
-    { name: 'Qatar Airways', logo: '🇶🇦', rating: 4.8 },
-    { name: 'Singapore Airlines', logo: '🇸🇬', rating: 4.9 },
-    { name: 'Thai Airways', logo: '🇹🇭', rating: 4.5 },
-    { name: 'IndiGo', logo: '💙', rating: 4.3 },
-  ];
+  const handleSearch = async () => {
+    setError('');
+    setLoading(true);
+
+    try {
+      const token = await getAmadeusToken();
+      const headers = { Authorization: `Bearer ${token}` };
+
+      if (tripType === 'multi-city') {
+        if (multiCityLegs.some(leg => !leg.from || !leg.to || !leg.departureDate)) {
+          setError('Please fill in all fields for multi-city legs.');
+          setLoading(false);
+          return;
+        }
+        if (adults < 1 || adults > 4) {
+          setError('Please select 1 to 4 adult passengers.');
+          setLoading(false);
+          return;
+        }
+
+        const multiCityResults: FlightOffer[] = [];
+        for (const leg of multiCityLegs) {
+          const params = {
+            originLocationCode: leg.from!.value,
+            destinationLocationCode: leg.to!.value,
+            departureDate: leg.departureDate,
+            adults,
+            travelClass: 'ECONOMY',
+            nonStop: false,
+            currencyCode: 'INR',
+            max: 2,
+          };
+          const res = await axios.get('https://test.api.amadeus.com/v2/shopping/flight-offers', {
+            headers,
+            params,
+          });
+          multiCityResults.push(...(res.data.data || []));
+        }
+        setResults(multiCityResults);
+      } else {
+        if (!from || !to || !departureDate) {
+          setError('Please fill in all required fields.');
+          setLoading(false);
+          return;
+        }
+        if (tripType === 'round-trip' && !returnDate) {
+          setError('Please select a return date for round-trip.');
+          setLoading(false);
+          return;
+        }
+        if (adults < 1 || adults > 4) {
+          setError('Please select 1 to 4 adult passengers.');
+          setLoading(false);
+          return;
+        }
+
+        const params: any = {
+          originLocationCode: from.value,
+          destinationLocationCode: to.value,
+          departureDate: departureDate,
+          adults,
+          travelClass: 'ECONOMY',
+          nonStop: false,
+          currencyCode: 'INR',
+          max: 5,
+        };
+        if (tripType === 'round-trip') params.returnDate = returnDate;
+
+        const res = await axios.get('https://test.api.amadeus.com/v2/shopping/flight-offers', {
+          headers,
+          params,
+        });
+        setResults(res.data.data || []);
+      }
+    } catch (err) {
+      setError('Failed to fetch flight data. Please try again.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addMultiCityLeg = () => {
+    setMultiCityLegs([...multiCityLegs, { from: null, to: null, departureDate: '' }]);
+  };
+
+  const removeMultiCityLeg = (index: number) => {
+    if (multiCityLegs.length > 1) {
+      setMultiCityLegs(multiCityLegs.filter((_, i) => i !== index));
+    }
+  };
+
+  const updateMultiCityLeg = (index: number, field: keyof MultiCityLeg, value: any) => {
+    setMultiCityLegs(prev =>
+      prev.map((leg, i) => (i === index ? { ...leg, [field]: value } : leg))
+    );
+  };
+
+  const formatDuration = (duration: string) => {
+    if (!duration) return '';
+    const match = duration.match(/PT(\d+)H(?:(\d+)M)?/);
+    if (!match) return duration;
+    const hours = match[1];
+    const minutes = match[2] || '0';
+    return `${hours}h ${minutes.padStart(2, '0')}m`;
+  };
+
+  const resetForm = () => {
+    setFrom(null);
+    setTo(null);
+    setDepartureDate('');
+    setReturnDate('');
+    setAdults(1);
+    setMultiCityLegs([{ from: null, to: null, departureDate: '' }]);
+    setResults([]);
+    setError('');
+  };
+
+  const handleTabChange = (value: string) => {
+    resetForm();
+    setTripType(value as 'round-trip' | 'one-way' | 'multi-city');
+  };
+
+  const renderFlightInputs = (isMultiCity: boolean = false, index: number | null = null) => (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label className="text-sm font-medium text-gray-700">
+            {isMultiCity ? `From (Leg ${index! + 1})` : 'From'}
+          </Label>
+          <Select
+            options={airports}
+            value={isMultiCity ? multiCityLegs[index!].from : from}
+            onChange={isMultiCity ? (val) => updateMultiCityLeg(index!, 'from', val) : setFrom}
+            placeholder="Select departure airport"
+            getOptionLabel={(e) => `${e.label} (${e.value})`}
+            className="border border-gray-200 rounded-md shadow-sm"
+            classNamePrefix="select"
+            styles={{
+              control: (base) => ({
+                ...base,
+                height: '3rem',
+                borderColor: '#e5e7eb',
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+                '&:hover': { borderColor: '#2563eb' },
+              }),
+              menu: (base) => ({
+                ...base,
+                borderRadius: '0.375rem',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+              }),
+            }}
+          />
+        </div>
+        <div>
+          <Label className="text-sm font-medium text-gray-700">
+            {isMultiCity ? `To (Leg ${index! + 1})` : 'To'}
+          </Label>
+          <Select
+            options={airports}
+            value={isMultiCity ? multiCityLegs[index!].to : to}
+            onChange={isMultiCity ? (val) => updateMultiCityLeg(index!, 'to', val) : setTo}
+            placeholder="Select destination airport"
+            getOptionLabel={(e) => `${e.label} (${e.value})`}
+            className="border border-gray-200 rounded-md shadow-sm"
+            classNamePrefix="select"
+            styles={{
+              control: (base) => ({
+                ...base,
+                height: '3rem',
+                borderColor: '#e5e7eb',
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+                '&:hover': { borderColor: '#2563eb' },
+              }),
+              menu: (base) => ({
+                ...base,
+                borderRadius: '0.375rem',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+              }),
+            }}
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <Label className="text-sm font-medium text-gray-700">
+            {isMultiCity ? `Departure Date (Leg ${index! + 1})` : 'Departure Date'}
+          </Label>
+          <input
+            type="date"
+            className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700"
+            value={isMultiCity ? multiCityLegs[index!].departureDate : departureDate}
+            onChange={(e) =>
+              isMultiCity
+                ? updateMultiCityLeg(index!, 'departureDate', e.target.value)
+                : setDepartureDate(e.target.value)
+            }
+          />
+        </div>
+        {!isMultiCity && tripType === 'round-trip' && (
+          <div>
+            <Label className="text-sm font-medium text-gray-700">Return Date</Label>
+            <input
+              type="date"
+              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700"
+              value={returnDate}
+              onChange={(e) => setReturnDate(e.target.value)}
+            />
+          </div>
+        )}
+        <div>
+          <Label className="text-sm font-medium text-gray-700">Passengers</Label>
+          <div className="relative">
+            <select
+              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 appearance-none bg-white"
+              value={adults}
+              onChange={(e) => setAdults(Number(e.target.value))}
+            >
+              {[1, 2, 3, 4].map(num => (
+                <option key={num} value={num}>
+                  {num} Adult{num > 1 ? 's' : ''}
+                </option>
+              ))}
+            </select>
+            <Users className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+          </div>
+        </div>
+      </div>
+      {isMultiCity && multiCityLegs.length > 1 && (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-red-500 hover:text-red-700 flex items-center"
+          onClick={() => removeMultiCityLeg(index!)}
+        >
+          <X className="w-4 h-4 mr-1" /> Remove Leg
+        </Button>
+      )}
+    </div>
+  );
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
-      
-      {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-r from-primary to-primary/80">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80')] bg-cover bg-center opacity-20" />
-        <div className="relative z-10 container mx-auto section-padding text-center text-white">
-          <h1 className="text-4xl lg:text-5xl font-serif font-bold mb-4">
-            Flight Bookings Made Easy
-          </h1>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Find the best deals on domestic and international flights with our comprehensive booking platform
-          </p>
-        </div>
-      </section>
+      <section className="py-8 sm:py-12 container mx-auto px-4 sm:px-6">
+        <Card className="shadow-md border-none rounded-xl max-w-4xl mx-auto bg-white transition-all duration-300 hover:shadow-lg">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-center text-2xl sm:text-3xl font-serif text-primary">
+              Search Flights
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6 px-4 sm:px-6">
+            {error && (
+              <div className="text-red-500 text-center text-sm font-medium animate-fade-in">
+                {error}
+              </div>
+            )}
+            <Tabs
+              value={tripType}
+              onValueChange={handleTabChange}
+              className="w-full"
+            >
+              <TabsList className="grid grid-cols-3 rounded-lg bg-gray-100 p-1 mb-6">
+                <TabsTrigger
+                  value="round-trip"
+                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
+                >
+                  Round Trip
+                </TabsTrigger>
+                <TabsTrigger
+                  value="one-way"
+                  className="rounde d-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
+                >
+                  One Way
+                </TabsTrigger>
+                <TabsTrigger
+                  value="multi-city"
+                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
+                >
+                  Multi City
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="round-trip" className="animate-fade-in">
+                {renderFlightInputs()}
+              </TabsContent>
+              <TabsContent value="one-way" className="animate-fade-in">
+                {renderFlightInputs()}
+              </TabsContent>
+              <TabsContent value="multi-city" className="animate-fade-in">
+                {multiCityLegs.map((_, index) => (
+                  <div key={index} className="space-y-4 mb-6 border-b border-gray-200 pb-4 last:border-b-0">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-lg font-medium text-gray-700">Leg {index + 1}</h3>
+                    </div>
+                    {renderFlightInputs(true, index)}
+                  </div>
+                ))}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-primary border-primary hover:bg-primary transition-colors duration-200"
+                  onClick={addMultiCityLeg}
+                >
+                  + Add Another Leg
+                </Button>
+              </TabsContent>
+            </Tabs>
+            <Button
+              size="lg"
+              className="w-full flex items-center justify-center bg-primary hover:bg-primary text-white rounded-md h-12 font-medium disabled:bg-primary disabled:cursor-not-allowed transition-all duration-200"
+              onClick={handleSearch}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Searching...
+                </>
+              ) : (
+                <>
+                  <Plane className="w-5 h-5 mr-2" />
+                  Search Flights
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
 
-      {/* Flight Search Form */}
-      <section className="py-12 bg-muted/30">
-        <div className="container mx-auto section-padding">
-          <Card className="max-w-4xl mx-auto shadow-xl">
-            <CardHeader>
-              <CardTitle className="text-2xl font-serif text-primary text-center">
-                Search Flights
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <Tabs defaultValue="round-trip" className="w-full">
-                <TabsList className="grid w-full max-w-md mx-auto grid-cols-3">
-                  <TabsTrigger value="round-trip">Round Trip</TabsTrigger>
-                  <TabsTrigger value="one-way">One Way</TabsTrigger>
-                  <TabsTrigger value="multi-city">Multi City</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="round-trip" className="space-y-6 mt-6">
-                  <div className="grid md:grid-cols-2 gap-4">
+        {results.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-8 animate-fade-in">
+            {results.map((f, i) => {
+              const totalPrice = parseFloat(f.price?.total || '0');
+              const perPassengerPrice = adults > 0 ? totalPrice / adults : totalPrice;
+              return (
+                <Card
+                  key={i}
+                  className="shadow-sm border-gray-200 rounded-lg bg-white hover:shadow-md transition-all duration-200"
+                >
+                  <CardContent className="p-4 sm:p-6 space-y-4">
+                    {f.itineraries?.map((itinerary, idx) => {
+                      const firstSegment = itinerary.segments?.[0];
+                      const lastSegment = itinerary.segments?.slice(-1)?.[0];
+                      if (!firstSegment || !lastSegment) return null;
+                      return (
+                        <div key={idx} className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <h3 className="font-semibold text-gray-800 text-base sm:text-lg">
+                              { " ("+firstSegment.carrierCode+ ")"} {firstSegment.number}
+                            </h3>
+                            <span className="text-sm text-gray-500">
+                              {idx === 0 ? 'Outbound' : 'Return'}
+                            </span>
+                          </div>
+                          <p className="text-gray-600 text-sm">
+                            {firstSegment.departure?.iataCode} → {lastSegment.arrival?.iataCode}
+                            {lastSegment.arrival?.terminal && ` (Terminal ${lastSegment.arrival.terminal})`}
+                          </p>
+                          <p className="text-gray-600 text-sm">
+                            {new Date(firstSegment.departure?.at).toLocaleTimeString([], {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })} –{' '}
+                            {new Date(lastSegment.arrival?.at).toLocaleTimeString([], {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })} | {formatDuration(itinerary.duration)}
+                          </p>
+                        </div>
+                      );
+                    })}
                     <div className="space-y-2">
-                      <Label htmlFor="from">From</Label>
-                      <Input id="from" placeholder="Departure city" className="h-12" />
+                      <div className="flex justify-between items-center">
+                        <p className="text-lg font-bold text-primary">
+                          ₹{totalPrice.toLocaleString('en-IN')} <span className="text-sm font-normal">Total</span>
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Baggage:{' '}
+                          {f.travelerPricings?.[0]?.fareDetailsBySegment?.[0]?.includedCheckedBags?.weight || 0} kg
+                        </p>
+                      </div>
+                      {adults > 1 && (
+                        <p className="text-sm text-gray-600">
+                          ₹{perPassengerPrice.toLocaleString('en-IN')} per passenger ({adults} adults)
+                        </p>
+                      )}
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="to">To</Label>
-                      <Input id="to" placeholder="Destination city" className="h-12" />
-                    </div>
-                  </div>
-                  
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="departure">Departure Date</Label>
-                      <Input id="departure" type="date" className="h-12" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="return">Return Date</Label>
-                      <Input id="return" type="date" className="h-12" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="passengers">Passengers</Label>
-                      <Select>
-                        <SelectTrigger className="h-12">
-                          <SelectValue placeholder="Select passengers" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="1">1 Passenger</SelectItem>
-                          <SelectItem value="2">2 Passengers</SelectItem>
-                          <SelectItem value="3">3 Passengers</SelectItem>
-                          <SelectItem value="4">4+ Passengers</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="class">Class</Label>
-                      <Select>
-                        <SelectTrigger className="h-12">
-                          <SelectValue placeholder="Select class" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="economy">Economy</SelectItem>
-                          <SelectItem value="premium">Premium Economy</SelectItem>
-                          <SelectItem value="business">Business</SelectItem>
-                          <SelectItem value="first">First Class</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="airline">Preferred Airline</Label>
-                      <Select>
-                        <SelectTrigger className="h-12">
-                          <SelectValue placeholder="Any airline" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {airlines.map((airline, index) => (
-                            <SelectItem key={index} value={airline.name.toLowerCase()}>
-                              {airline.logo} {airline.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  
-                  <Button size="lg" className="w-full bg-primary hover:bg-primary/90 h-12 text-lg">
-                    <Plane className="w-5 h-5 mr-2" />
-                    Search Flights
-                  </Button>
-                </TabsContent>
-
-                <TabsContent value="one-way" className="space-y-6 mt-6">
-                  <div className="text-center p-8 text-muted-foreground">
-                    <Plane className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                    <p>One-way flight search form will be available here.</p>
-                    <p className="text-sm mt-2">Please contact us for one-way bookings.</p>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="multi-city" className="space-y-6 mt-6">
-                  <div className="text-center p-8 text-muted-foreground">
-                    <Plane className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                    <p>Multi-city flight search form will be available here.</p>
-                    <p className="text-sm mt-2">Please contact us for multi-city bookings.</p>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Popular Routes */}
-      <section className="py-16">
-        <div className="container mx-auto section-padding">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-serif font-bold text-primary mb-4">
-              Popular Flight Routes
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Book the most popular destinations at great prices
-            </p>
+                    <Button
+                      size="sm"
+                      className="w-full bg-primary hover:bg-primary text-white rounded-md h-10 text-sm font-medium transition-colors duration-200"
+                    >
+                      Book Now
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {popularRoutes.map((route, index) => (
-              <Card key={index} className="group hover-lift cursor-pointer transition-all duration-300 hover:shadow-lg">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="text-lg font-semibold">{route.from}</div>
-                    <ArrowRight className="w-5 h-5 text-accent" />
-                    <div className="text-lg font-semibold">{route.to}</div>
-                  </div>
-                  <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
-                    <div className="flex items-center">
-                      <Clock className="w-4 h-4 mr-1" />
-                      {route.duration}
-                    </div>
-                    <div className="text-2xl font-bold text-primary">{route.price}</div>
-                  </div>
-                  <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-white transition-colors">
-                    Book Now
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
+        )}
       </section>
-
-      {/* Partner Airlines */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto section-padding">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-serif font-bold text-primary mb-4">
-              Our Partner Airlines
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Choose from top-rated airlines for your journey
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {airlines.map((airline, index) => (
-              <Card key={index} className="text-center p-6 hover-lift cursor-pointer">
-                <div className="text-4xl mb-3">{airline.logo}</div>
-                <h3 className="font-semibold text-sm mb-2">{airline.name}</h3>
-                <div className="flex items-center justify-center">
-                  <Star className="w-4 h-4 text-accent fill-current mr-1" />
-                  <span className="text-sm font-medium">{airline.rating}</span>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Backend Integration Notice */}
-      <section className="py-16">
-        <div className="container mx-auto section-padding">
-          <Card className="max-w-3xl mx-auto bg-gradient-to-r from-accent/10 to-primary/10 border-accent/20">
-            <CardContent className="p-8 text-center">
-              <Plane className="w-16 h-16 mx-auto mb-4 text-primary" />
-              <h3 className="text-2xl font-serif font-bold text-primary mb-4">
-                Real-time Flight Booking System
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                Our flight booking system will be integrated with live airline APIs to provide real-time 
-                availability, pricing, and instant booking confirmation. Contact us to enable this feature.
-              </p>
-              <Button size="lg" className="bg-primary hover:bg-primary/90">
-                Contact for Integration
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-      
       <Footer />
     </div>
   );

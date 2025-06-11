@@ -92,7 +92,7 @@ const Visa = () => {
   return (
     <div className="min-h-screen">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-r from-primary to-primary/80">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80')] bg-cover bg-center opacity-20" />
@@ -140,7 +140,7 @@ const Visa = () => {
                     ))}
                   </div>
                 </CardHeader>
-                
+
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
@@ -152,7 +152,7 @@ const Visa = () => {
                       <div className="text-muted-foreground">{service.price}</div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <h4 className="font-semibold text-sm text-primary">Key Requirements:</h4>
                     <ul className="space-y-1">
@@ -164,7 +164,7 @@ const Visa = () => {
                       ))}
                     </ul>
                   </div>
-                  
+
                   <Button className="w-full bg-primary hover:bg-primary/90 group-hover:bg-accent group-hover:text-white transition-colors">
                     Apply Now
                   </Button>
@@ -236,8 +236,8 @@ const Visa = () => {
                       <MessageCircle className="w-12 h-12 text-primary mx-auto mb-4" />
                       <h4 className="font-semibold text-primary mb-2">WhatsApp</h4>
                       <p className="text-muted-foreground mb-4">Quick assistance via WhatsApp</p>
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         className="w-full"
                         onClick={handleWhatsAppClick}
                       >
@@ -257,7 +257,7 @@ const Visa = () => {
           </div>
         </div>
       </section>
-      
+
       <Footer />
     </div>
   );

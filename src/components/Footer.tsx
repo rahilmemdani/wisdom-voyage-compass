@@ -162,7 +162,7 @@ const Footer = () => {
               <Button
                 size="sm"
                 variant="outline"
-                className="w-full border-white/20 text-white hover:bg-white hover:text-primary hover:border-white backdrop-blur-sm hover:scale-105 transition-all duration-300 rounded-xl"
+                className="w-full border-white/20 text-primary hover:bg-white hover:text-primary hover:border-white backdrop-blur-sm hover:scale-105 transition-all duration-300 rounded-xl"
                 onClick={handleWhatsAppClick}
               >
                 <MessageCircle className="w-4 h-4 mr-2" />

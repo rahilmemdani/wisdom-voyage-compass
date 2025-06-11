@@ -1,0 +1,13 @@
+[
+    { "label": "Chhatrapati Shivaji Maharaj International Airport - Mumbai", "value": "BOM" },
+    { "label": "Indira Gandhi International Airport - Delhi", "value": "DEL" },
+    { "label": "Kempegowda International Airport - Bangalore", "value": "BLR" },
+    { "label": "Rajiv Gandhi International Airport - Hyderabad", "value": "HYD" },
+    { "label": "Netaji Subhas Chandra Bose International Airport - Kolkata", "value": "CCU" },
+    { "label": "Sardar Vallabhbhai Patel International Airport - Ahmedabad", "value": "AMD" },
+    { "label": "Chennai International Airport", "value": "MAA" },
+    { "label": "Cochin International Airport", "value": "COK" },
+    { "label": "Pune Airport", "value": "PNQ" },
+    { "label": "Goa International Airport", "value": "GOI" }
+  ]
+  

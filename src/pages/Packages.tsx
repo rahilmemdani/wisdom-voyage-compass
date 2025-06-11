@@ -114,7 +114,7 @@ const Packages = () => {
           className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute top-4 left-4">
-          <Badge className="bg-accent text-primary">
+          <Badge className="bg-accent text-white">
             {pkg.duration}
           </Badge>
         </div>
