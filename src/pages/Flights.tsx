@@ -339,7 +339,7 @@ const Flights = () => {
           </Label>
           <input
             type="date"
-            className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700"
+            className="w-full h-11 px-3 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-base sm:h-12 sm:px-4"
             value={isMultiCity ? multiCityLegs[index!].departureDate : departureDate}
             onChange={(e) =>
               isMultiCity
@@ -347,6 +347,7 @@ const Flights = () => {
                 : setDepartureDate(e.target.value)
             }
           />
+
         </div>
         {!isMultiCity && tripType === 'round-trip' && (
           <div>
