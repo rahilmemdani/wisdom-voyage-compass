@@ -57,7 +57,7 @@ const travelClasses = [
 
 const Flights = () => {
   const navigate = useNavigate();
-  const [tripType, setTripType] = useState<'round-trip' | 'one-way' | 'multi-city'>('round-trip');
+  const [tripType, setTripType] = useState<'round-trip' | 'one-way' | 'multi-city'>('one-way');
   const [from, setFrom] = useState<{ label: string; value: string } | null>(null);
   const [to, setTo] = useState<{ label: string; value: string } | null>(null);
   const [departureDate, setDepartureDate] = useState('');
@@ -434,16 +434,16 @@ const Flights = () => {
               <Tabs value={tripType} onValueChange={handleTabChange} className="w-full">
                 <TabsList className="grid grid-cols-3 rounded-lg bg-gray-100 p-1 mb-6">
                   <TabsTrigger
-                    value="round-trip"
-                    className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
-                  >
-                    Round Trip
-                  </TabsTrigger>
-                  <TabsTrigger
                     value="one-way"
                     className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
                   >
                     One Way
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="round-trip"
+                    className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
+                  >
+                    Round Trip
                   </TabsTrigger>
                   <TabsTrigger
                     value="multi-city"

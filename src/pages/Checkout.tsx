@@ -83,7 +83,7 @@ const Checkout = () => {
   const [loading, setLoading] = useState<boolean>(false); // Hook 6
 
   // Check if location.state exists, otherwise redirect to Flights page
-  useEffect(() => { // Hook 7
+  useEffect(() => { 
     if (!location.state) {
       setToast({
         title: 'Error',
@@ -378,7 +378,7 @@ const Checkout = () => {
           <Button
             variant="outline"
             className="mb-6 flex items-center gap-2 text-primary"
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/flights')}
           >
             <ArrowLeft className="w-4 h-4" /> Back to Flights
           </Button>

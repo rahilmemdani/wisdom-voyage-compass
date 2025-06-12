@@ -39,8 +39,8 @@ const App = () => (
           <Route path="/flights" element={<Flights />} />
           <Route path="/visa" element={<Visa />} />
           <Route path="/about" element={<About />} />
-          <Route path="/my-bookings" element={<Checkout />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

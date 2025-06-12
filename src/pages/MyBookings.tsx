@@ -24,7 +24,7 @@ interface FlightOrder {
         arrival: { iataCode: string; terminal?: string; at: string };
         duration: string;
       }>;
-      duration: string; // Added duration property
+      duration: string;
     }>;
     price: { total: string; currency: string };
   }>;
@@ -58,6 +58,7 @@ const MyBookings = () => {
   useEffect(() => {
     // Load bookings from local storage
     const storedBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+    console.log("storedBookings", storedBookings)
     setBookings(storedBookings);
   }, []);
 
@@ -88,17 +89,29 @@ const MyBookings = () => {
       });
       return response.data.data;
     } catch (err: any) {
-      throw new Error(err.message || 'Failed to fetch booking details.');
+      throw new Error(err.response?.data?.errors?.[0]?.detail || 'Failed to fetch booking details.');
     }
   };
 
   const handleViewBooking = async (bookingId: string) => {
+    // Validate bookingId
+    if (!bookingId || typeof bookingId !== 'string') {
+      setError('Invalid booking ID.');
+      setToast({
+        title: 'Error',
+        description: 'Invalid booking ID. Please try again.',
+        open: true,
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setError('');
     setLoading(true);
     setSelectedBooking(null);
 
     try {
-      const flightOrderData = await fetchFlightOrder(bookingId);
+      const flightOrderData = await fetchFlightOrder(bookingId); // Use the bookingId parameter
       setSelectedBooking(flightOrderData);
       setToast({
         title: 'Booking Details Loaded',
@@ -107,10 +120,11 @@ const MyBookings = () => {
         variant: 'default',
       });
     } catch (err: any) {
-      setError(err.message || 'Failed to fetch booking details. Please try again.');
+      const errorMessage = err.message || 'Failed to fetch booking details. Please try again.';
+      setError(errorMessage);
       setToast({
         title: 'Error',
-        description: err.message || 'Failed to fetch booking details.',
+        description: errorMessage,
         open: true,
         variant: 'destructive',
       });
@@ -141,7 +155,7 @@ const MyBookings = () => {
           <Button
             variant="outline"
             className="mb-6 flex items-center gap-2 text-primary"
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/flights')}
           >
             <ArrowLeft className="w-4 h-4" /> Back to Flights
           </Button>
