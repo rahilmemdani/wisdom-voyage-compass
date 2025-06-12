@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import airports from '../data/airports.json';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -69,6 +69,8 @@ const Flights = () => {
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedClasses, setSelectedClasses] = useState<{ [key: string]: string }>({});
+  // Store seats left for each flight card and travel class
+  const [seatsLeftMap, setSeatsLeftMap] = useState<{ [key: string]: { [key: string]: number } }>({});
 
   const getAmadeusToken = async () => {
     try {
@@ -93,6 +95,7 @@ const Flights = () => {
     setError('');
     setLoading(true);
     setSelectedClasses({});
+    setSeatsLeftMap({}); // Reset seats left on new search
 
     try {
       const token = await getAmadeusToken();
@@ -193,6 +196,23 @@ const Flights = () => {
     }
   };
 
+  // Generate seats left for each flight card when results change
+  useEffect(() => {
+    if (results.length === 0) return;
+
+    const newSeatsLeftMap: { [key: string]: { [key: string]: number } } = {};
+    results.forEach((_, i) => {
+      const cardKey = `${i}`;
+      newSeatsLeftMap[cardKey] = {
+        ECONOMY: Math.floor(Math.random() * 9) + 1, // 1–9 seats
+        PREMIUM_ECONOMY: Math.floor(Math.random() * 6) + 1, // 1–6 seats
+        BUSINESS: Math.floor(Math.random() * 4) + 1, // 1–4 seats
+        FIRST: Math.floor(Math.random() * 3) + 1, // 1–3 seats
+      };
+    });
+    setSeatsLeftMap(newSeatsLeftMap);
+  }, [results]);
+
   const addMultiCityLeg = () => {
     setMultiCityLegs([...multiCityLegs, { from: null, to: null, departureDate: '' }]);
   };
@@ -233,16 +253,6 @@ const Flights = () => {
     return basePrice * (multipliers[travelClass] || 1);
   };
 
-  const getSeatsLeft = (travelClass: string) => {
-    const baseSeats: { [key: string]: number } = {
-      ECONOMY: Math.floor(Math.random() * 9) + 1,
-      PREMIUM_ECONOMY: Math.floor(Math.random() * 6) + 1,
-      BUSINESS: Math.floor(Math.random() * 4) + 1,
-      FIRST: Math.floor(Math.random() * 3) + 1,
-    };
-    return baseSeats[travelClass] || 1;
-  };
-
   const resetForm = () => {
     setFrom(null);
     setTo(null);
@@ -254,6 +264,7 @@ const Flights = () => {
     setResults([]);
     setError('');
     setSelectedClasses({});
+    setSeatsLeftMap({});
   };
 
   const handleTabChange = (value: string) => {
@@ -328,7 +339,7 @@ const Flights = () => {
           </Label>
           <input
             type="date"
-            className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
+            className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700"
             value={isMultiCity ? multiCityLegs[index!].departureDate : departureDate}
             onChange={(e) =>
               isMultiCity
@@ -342,7 +353,7 @@ const Flights = () => {
             <Label className="text-sm font-medium text-gray-700">Return Date</Label>
             <input
               type="date"
-              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
+              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700"
               value={returnDate}
               onChange={(e) => setReturnDate(e.target.value)}
             />
@@ -352,7 +363,7 @@ const Flights = () => {
           <Label className="text-sm font-medium text-gray-700">Passengers</Label>
           <div className="relative">
             <select
-              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 appearance-none bg-white"
+              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 appearance-none bg-white"
               value={adults}
               onChange={(e) => setAdults(Number(e.target.value))}
             >
@@ -363,23 +374,6 @@ const Flights = () => {
               ))}
             </select>
             <Users className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
-          </div>
-        </div>
-        <div>
-          <Label className="text-sm font-medium text-gray-700">Class</Label>
-          <div className="relative">
-            <select
-              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 appearance-none bg-white"
-              value={travelClass}
-              onChange={(e) => setTravelClass(e.target.value)}
-            >
-              {travelClasses.map(cls => (
-                <option key={cls.value} value={cls.value}>
-                  {cls.label}
-                </option>
-              ))}
-            </select>
-            <Briefcase className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
           </div>
         </div>
       </div>
@@ -402,7 +396,7 @@ const Flights = () => {
       <section className="py-8 sm:py-12 container mx-auto px-4 sm:px-6">
         <Card className="shadow-md border-none rounded-xl max-w-4xl mx-auto bg-white transition-all duration-300 hover:shadow-lg">
           <CardHeader className="pb-4">
-            <CardTitle className="text-center text-2xl sm:text-3xl font-serif text-blue-600">
+            <CardTitle className="text-center text-2xl sm:text-3xl font-serif text-primary">
               Search Flights
             </CardTitle>
           </CardHeader>
@@ -416,19 +410,19 @@ const Flights = () => {
               <TabsList className="grid grid-cols-3 rounded-lg bg-gray-100 p-1 mb-6">
                 <TabsTrigger
                   value="round-trip"
-                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm transition-all duration-200"
+                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
                 >
                   Round Trip
                 </TabsTrigger>
                 <TabsTrigger
                   value="one-way"
-                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm transition-all duration-200"
+                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
                 >
                   One Way
                 </TabsTrigger>
                 <TabsTrigger
                   value="multi-city"
-                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm transition-all duration-200"
+                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
                 >
                   Multi City
                 </TabsTrigger>
@@ -451,7 +445,7 @@ const Flights = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-blue-600 border-blue-600 hover:bg-blue-50 transition-colors duration-200"
+                  className="text-primary border-primary hover:bg-primary transition-colors duration-200"
                   onClick={addMultiCityLeg}
                 >
                   + Add Another Leg
@@ -460,7 +454,7 @@ const Flights = () => {
             </Tabs>
             <Button
               size="lg"
-              className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white rounded-md h-12 font-medium disabled:bg-blue-400 disabled:cursor-not-allowed transition-all duration-200"
+              className="w-full flex items-center justify-center bg-primary hover:bg-primary text-white rounded-md h-12 font-medium disabled:bg-primary disabled:cursor-not-allowed transition-all duration-200"
               onClick={handleSearch}
               disabled={loading}
             >
@@ -488,13 +482,11 @@ const Flights = () => {
               const selectedClass = selectedClasses[cardKey] || defaultCabin;
               const adjustedPrice = getAdjustedPrice(basePrice, selectedClass);
               const perPassengerPrice = adults > 0 ? adjustedPrice / adults : adjustedPrice;
-              const seatsLeft = getSeatsLeft(selectedClass);
+              const seatsLeft = seatsLeftMap[cardKey]?.[selectedClass] || 1;
 
-              // For multi-city, each FlightOffer represents a single leg
               const isMultiCity = tripType === 'multi-city';
               const legLabel = isMultiCity ? `Leg ${i + 1}` : '';
 
-              // Get outbound and return itineraries (if applicable)
               const outboundItinerary = f.itineraries[0];
               const returnItinerary = f.itineraries[1] || null;
 
@@ -614,7 +606,7 @@ const Flights = () => {
 
                       {/* Price and Details */}
                       <div className="min-w-[150px] flex flex-col gap-1">
-                        <p className="text-lg font-bold text-blue-600">
+                        <p className="text-lg font-bold text-primary">
                           ₹{adjustedPrice.toLocaleString('en-IN')}
                         </p>
                         {adults > 1 && (
@@ -631,7 +623,7 @@ const Flights = () => {
                     {/* Book Now Button */}
                     <Button
                       size="sm"
-                      className="bg-blue-600 hover:bg-blue-700 text-white rounded-md h-10 text-sm font-medium transition-colors duration-200 md:w-32 w-full"
+                      className="bg-primary hover:bg-primary text-white rounded-md h-10 text-sm font-medium transition-colors duration-200 md:w-32 w-full"
                     >
                       Book Now
                     </Button>
