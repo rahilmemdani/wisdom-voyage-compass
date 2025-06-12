@@ -9,6 +9,8 @@ import Packages from "./pages/Packages";
 import Flights from "./pages/Flights";
 import Visa from "./pages/Visa";
 import About from "./pages/About";
+import Checkout from "./pages/Checkout";
+import MyBookings from "./pages/MyBookings";
 import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
 
@@ -37,6 +39,8 @@ const App = () => (
           <Route path="/flights" element={<Flights />} />
           <Route path="/visa" element={<Visa />} />
           <Route path="/about" element={<About />} />
+          <Route path="/my-bookings" element={<Checkout />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
