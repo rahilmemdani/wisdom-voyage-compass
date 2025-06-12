@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Plane, Loader2, X, Users, Briefcase } from 'lucide-react';
@@ -41,10 +42,9 @@ interface FlightOffer {
 const airlineMap: { [key: string]: string } = {
   AI: 'Air India',
   UK: 'Vistara',
-  "6E": 'IndiGo',
+  '6E': 'IndiGo',
   SG: 'SpiceJet',
   G8: 'GoAir',
-  // Add more mappings as needed
 };
 
 const travelClasses = [
@@ -68,6 +68,7 @@ const Flights = () => {
   const [results, setResults] = useState<FlightOffer[]>([]);
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [selectedClasses, setSelectedClasses] = useState<{ [key: string]: string }>({});
 
   const getAmadeusToken = async () => {
     try {
@@ -91,6 +92,7 @@ const Flights = () => {
   const handleSearch = async () => {
     setError('');
     setLoading(true);
+    setSelectedClasses({});
 
     try {
       const token = await getAmadeusToken();
@@ -131,6 +133,9 @@ const Flights = () => {
           });
           multiCityResults.push(...(res.data.data || []));
         }
+        if (multiCityResults.length === 0) {
+          setError('No flights found for the specified multi-city itinerary.');
+        }
         setResults(multiCityResults);
       } else {
         if (!from || !to || !departureDate) {
@@ -170,10 +175,18 @@ const Flights = () => {
           headers,
           params,
         });
+        if (!res.data.data || res.data.data.length === 0) {
+          setError('No flights found for the specified itinerary.');
+        }
         setResults(res.data.data || []);
       }
-    } catch (err) {
-      setError('Failed to fetch flight data. Please try again.');
+    } catch (err: any) {
+      if (err.response?.data?.errors) {
+        const apiError = err.response.data.errors[0];
+        setError(apiError.detail || 'Failed to fetch flight data. Please try again.');
+      } else {
+        setError('Failed to fetch flight data. Please try again.');
+      }
       console.error(err);
     } finally {
       setLoading(false);
@@ -205,6 +218,31 @@ const Flights = () => {
     return `${hours}h ${minutes.padStart(2, '0')}m`;
   };
 
+  const getStopsInfo = (segments: FlightOffer['itineraries'][0]['segments']) => {
+    const stops = segments.length - 1;
+    return stops === 0 ? 'Non-stop' : `${stops} stop${stops > 1 ? 's' : ''}`;
+  };
+
+  const getAdjustedPrice = (basePrice: number, travelClass: string) => {
+    const multipliers: { [key: string]: number } = {
+      ECONOMY: 1,
+      PREMIUM_ECONOMY: 1.5,
+      BUSINESS: 2,
+      FIRST: 3,
+    };
+    return basePrice * (multipliers[travelClass] || 1);
+  };
+
+  const getSeatsLeft = (travelClass: string) => {
+    const baseSeats: { [key: string]: number } = {
+      ECONOMY: Math.floor(Math.random() * 9) + 1,
+      PREMIUM_ECONOMY: Math.floor(Math.random() * 6) + 1,
+      BUSINESS: Math.floor(Math.random() * 4) + 1,
+      FIRST: Math.floor(Math.random() * 3) + 1,
+    };
+    return baseSeats[travelClass] || 1;
+  };
+
   const resetForm = () => {
     setFrom(null);
     setTo(null);
@@ -215,6 +253,7 @@ const Flights = () => {
     setMultiCityLegs([{ from: null, to: null, departureDate: '' }]);
     setResults([]);
     setError('');
+    setSelectedClasses({});
   };
 
   const handleTabChange = (value: string) => {
@@ -289,7 +328,7 @@ const Flights = () => {
           </Label>
           <input
             type="date"
-            className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700"
+            className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
             value={isMultiCity ? multiCityLegs[index!].departureDate : departureDate}
             onChange={(e) =>
               isMultiCity
@@ -303,7 +342,7 @@ const Flights = () => {
             <Label className="text-sm font-medium text-gray-700">Return Date</Label>
             <input
               type="date"
-              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700"
+              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
               value={returnDate}
               onChange={(e) => setReturnDate(e.target.value)}
             />
@@ -313,7 +352,7 @@ const Flights = () => {
           <Label className="text-sm font-medium text-gray-700">Passengers</Label>
           <div className="relative">
             <select
-              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 appearance-none bg-white"
+              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 appearance-none bg-white"
               value={adults}
               onChange={(e) => setAdults(Number(e.target.value))}
             >
@@ -330,7 +369,7 @@ const Flights = () => {
           <Label className="text-sm font-medium text-gray-700">Class</Label>
           <div className="relative">
             <select
-              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 appearance-none bg-white"
+              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 appearance-none bg-white"
               value={travelClass}
               onChange={(e) => setTravelClass(e.target.value)}
             >
@@ -363,7 +402,7 @@ const Flights = () => {
       <section className="py-8 sm:py-12 container mx-auto px-4 sm:px-6">
         <Card className="shadow-md border-none rounded-xl max-w-4xl mx-auto bg-white transition-all duration-300 hover:shadow-lg">
           <CardHeader className="pb-4">
-            <CardTitle className="text-center text-2xl sm:text-3xl font-serif text-primary">
+            <CardTitle className="text-center text-2xl sm:text-3xl font-serif text-blue-600">
               Search Flights
             </CardTitle>
           </CardHeader>
@@ -373,27 +412,23 @@ const Flights = () => {
                 {error}
               </div>
             )}
-            <Tabs
-              value={tripType}
-              onValueChange={handleTabChange}
-              className="w-full"
-            >
+            <Tabs value={tripType} onValueChange={handleTabChange} className="w-full">
               <TabsList className="grid grid-cols-3 rounded-lg bg-gray-100 p-1 mb-6">
                 <TabsTrigger
                   value="round-trip"
-                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
+                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm transition-all duration-200"
                 >
                   Round Trip
                 </TabsTrigger>
                 <TabsTrigger
                   value="one-way"
-                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
+                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm transition-all duration-200"
                 >
                   One Way
                 </TabsTrigger>
                 <TabsTrigger
                   value="multi-city"
-                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200"
+                  className="rounded-md text-gray-700 font-medium data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm transition-all duration-200"
                 >
                   Multi City
                 </TabsTrigger>
@@ -416,7 +451,7 @@ const Flights = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-primary border-primary hover:bg-blue-50 transition-colors duration-200"
+                  className="text-blue-600 border-blue-600 hover:bg-blue-50 transition-colors duration-200"
                   onClick={addMultiCityLeg}
                 >
                   + Add Another Leg
@@ -425,7 +460,7 @@ const Flights = () => {
             </Tabs>
             <Button
               size="lg"
-              className="w-full flex items-center justify-center bg-primary hover:bg-primary text-white rounded-md h-12 font-medium disabled:bg-primary disabled:cursor-not-allowed transition-all duration-200"
+              className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white rounded-md h-12 font-medium disabled:bg-blue-400 disabled:cursor-not-allowed transition-all duration-200"
               onClick={handleSearch}
               disabled={loading}
             >
@@ -445,70 +480,158 @@ const Flights = () => {
         </Card>
 
         {results.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-8 animate-fade-in">
+          <div className="flex flex-col gap-4 mt-8 animate-fade-in">
             {results.map((f, i) => {
-              const totalPrice = parseFloat(f.price?.total || '0');
-              const perPassengerPrice = adults > 0 ? totalPrice / adults : totalPrice;
-              const firstSegment = f.itineraries?.[0]?.segments?.[0];
-              const cabin = f.travelerPricings?.[0]?.fareDetailsBySegment?.[0]?.cabin || travelClass;
-              const airlineName = firstSegment ? airlineMap[firstSegment.carrierCode] || firstSegment.carrierCode : '';
+              const basePrice = parseFloat(f.price?.total || '0');
+              const defaultCabin = f.travelerPricings?.[0]?.fareDetailsBySegment?.[0]?.cabin || travelClass;
+              const cardKey = `${i}`;
+              const selectedClass = selectedClasses[cardKey] || defaultCabin;
+              const adjustedPrice = getAdjustedPrice(basePrice, selectedClass);
+              const perPassengerPrice = adults > 0 ? adjustedPrice / adults : adjustedPrice;
+              const seatsLeft = getSeatsLeft(selectedClass);
+
+              // For multi-city, each FlightOffer represents a single leg
+              const isMultiCity = tripType === 'multi-city';
+              const legLabel = isMultiCity ? `Leg ${i + 1}` : '';
+
+              // Get outbound and return itineraries (if applicable)
+              const outboundItinerary = f.itineraries[0];
+              const returnItinerary = f.itineraries[1] || null;
+
+              const outboundFirstSegment = outboundItinerary?.segments[0];
+              const outboundLastSegment = outboundItinerary?.segments.slice(-1)[0];
+              const returnFirstSegment = returnItinerary?.segments[0];
+              const returnLastSegment = returnItinerary?.segments.slice(-1)[0];
+
+              if (!outboundFirstSegment || !outboundLastSegment) return null;
+
+              const airlineName = airlineMap[outboundFirstSegment.carrierCode] || outboundFirstSegment.carrierCode;
+              const outboundStops = getStopsInfo(outboundItinerary.segments);
+              const returnStops = returnItinerary ? getStopsInfo(returnItinerary.segments) : null;
+
               return (
                 <Card
                   key={i}
-                  className="shadow-sm border-gray-200 rounded-lg bg-white hover:shadow-md transition-all duration-200"
+                  className="border-gray-200 rounded-lg bg-white hover:shadow-md transition-all duration-200"
                 >
-                  <CardContent className="p-4 sm:p-6 space-y-4">
-                    {f.itineraries?.map((itinerary, idx) => {
-                      const firstSegment = itinerary.segments?.[0];
-                      const lastSegment = itinerary.segments?.slice(-1)?.[0];
-                      if (!firstSegment || !lastSegment) return null;
-                      return (
-                        <div key={idx} className="space-y-2">
-                          <div className="flex justify-between items-center">
-                            <h3 className="font-semibold text-gray-800 text-base sm:text-lg">
-                              {airlineName} ({firstSegment.carrierCode}) {firstSegment.number}
-                            </h3>
-                            <span className="text-sm text-gray-500">
-                              {idx === 0 ? 'Outbound' : 'Return'}
-                            </span>
-                          </div>
-                          <p className="text-gray-600 text-sm">
-                            {firstSegment.departure?.iataCode} → {lastSegment.arrival?.iataCode}
-                            {lastSegment.arrival?.terminal && ` (Terminal ${lastSegment.arrival.terminal})`}
+                  <CardContent className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 w-full">
+                      {/* Airline and Flight Number */}
+                      <div className="min-w-[150px]">
+                        <p className="font-semibold text-gray-800 text-sm">
+                          {airlineName} ({outboundFirstSegment.carrierCode}) {outboundFirstSegment.number}
+                        </p>
+                        {isMultiCity ? (
+                          <p className="text-xs text-gray-500">{legLabel}</p>
+                        ) : (
+                          <p className="text-xs text-gray-500">{tripType === 'round-trip' ? 'Round Trip' : 'One Way'}</p>
+                        )}
+                      </div>
+
+                      {/* Departure and Arrival */}
+                      <div className="min-w-[200px] flex flex-col gap-1">
+                        {/* Outbound */}
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-gray-800 text-sm">
+                            {new Date(outboundFirstSegment.departure?.at).toLocaleTimeString([], {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
                           </p>
-                          <p className="text-gray-600 text-sm">
-                            {new Date(firstSegment.departure?.at).toLocaleTimeString([], {
+                          <span className="text-gray-500 text-sm">→</span>
+                          <p className="font-medium text-gray-800 text-sm">
+                            {new Date(outboundLastSegment.arrival?.at).toLocaleTimeString([], {
                               hour: '2-digit',
                               minute: '2-digit',
-                            })} –{' '}
-                            {new Date(lastSegment.arrival?.at).toLocaleTimeString([], {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })} | {formatDuration(itinerary.duration)}
+                            })}
                           </p>
                         </div>
-                      );
-                    })}
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <p className="text-lg font-bold text-primary">
-                          ₹{totalPrice.toLocaleString('en-IN')} <span className="text-sm font-normal">Total</span>
+                        <p className="text-xs text-gray-600">
+                          {outboundFirstSegment.departure?.iataCode} → {outboundLastSegment.arrival?.iataCode}
+                          {outboundLastSegment.arrival?.terminal && ` (Terminal ${outboundLastSegment.arrival.terminal})`}
                         </p>
-                        <p className="text-sm text-gray-600">
-                          Baggage:{' '}
-                          {f.travelerPricings?.[0]?.fareDetailsBySegment?.[0]?.includedCheckedBags?.weight || 0} kg
+                        {/* Return (if applicable) */}
+                        {returnItinerary && returnFirstSegment && returnLastSegment && (
+                          <>
+                            <div className="flex items-center gap-2 mt-1">
+                              <p className="font-medium text-gray-800 text-sm">
+                                {new Date(returnFirstSegment.departure?.at).toLocaleTimeString([], {
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                })}
+                              </p>
+                              <span className="text-gray-500 text-sm">→</span>
+                              <p className="font-medium text-gray-800 text-sm">
+                                {new Date(returnLastSegment.arrival?.at).toLocaleTimeString([], {
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                })}
+                              </p>
+                            </div>
+                            <p className="text-xs text-gray-600">
+                              {returnFirstSegment.departure?.iataCode} → {returnLastSegment.arrival?.iataCode}
+                              {returnLastSegment.arrival?.terminal && ` (Terminal ${returnLastSegment.arrival.terminal})`}
+                            </p>
+                          </>
+                        )}
+                      </div>
+
+                      {/* Duration, Stops, and Travel Class Selection */}
+                      <div className="min-w-[220px] flex flex-col gap-2">
+                        <div>
+                          <p className="text-sm text-gray-800">{formatDuration(outboundItinerary.duration)}</p>
+                          <p className="text-xs text-gray-600">{outboundStops}</p>
+                          {returnItinerary && (
+                            <>
+                              <p className="text-sm text-gray-800 mt-1">{formatDuration(returnItinerary.duration)}</p>
+                              <p className="text-xs text-gray-600">{returnStops}</p>
+                            </>
+                          )}
+                        </div>
+                        <RadioGroup
+                          defaultValue={defaultCabin}
+                          onValueChange={(value) =>
+                            setSelectedClasses(prev => ({ ...prev, [cardKey]: value }))
+                          }
+                          className="flex gap-2 flex-wrap"
+                        >
+                          {travelClasses.map(cls => (
+                            <div key={cls.value} className="flex items-center space-x-1">
+                              <RadioGroupItem value={cls.value} id={`${cardKey}-${cls.value}`} />
+                              <Label
+                                htmlFor={`${cardKey}-${cls.value}`}
+                                className="text-xs text-gray-700 cursor-pointer"
+                              >
+                                {cls.label}
+                              </Label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                        <p className="text-xs text-gray-600">
+                          {seatsLeft} seat{seatsLeft !== 1 ? 's' : ''} left
                         </p>
                       </div>
-                      <p className="text-sm text-gray-600">Class: {travelClasses.find(cls => cls.value === cabin)?.label || cabin}</p>
-                      {adults > 1 && (
-                        <p className="text-sm text-gray-600">
-                          ₹{perPassengerPrice.toLocaleString('en-IN')} per passenger ({adults} adults)
+
+                      {/* Price and Details */}
+                      <div className="min-w-[150px] flex flex-col gap-1">
+                        <p className="text-lg font-bold text-blue-600">
+                          ₹{adjustedPrice.toLocaleString('en-IN')}
                         </p>
-                      )}
+                        {adults > 1 && (
+                          <p className="text-xs text-gray-600">
+                            ₹{perPassengerPrice.toLocaleString('en-IN')} per passenger
+                          </p>
+                        )}
+                        <p className="text-xs text-gray-600">
+                          Baggage: {f.travelerPricings?.[0]?.fareDetailsBySegment?.[0]?.includedCheckedBags?.weight || 0} kg
+                        </p>
+                      </div>
                     </div>
+
+                    {/* Book Now Button */}
                     <Button
                       size="sm"
-                      className="w-full bg-primary hover:bg-primary text-white rounded-md h-10 text-sm font-medium transition-colors duration-200"
+                      className="bg-blue-600 hover:bg-blue-700 text-white rounded-md h-10 text-sm font-medium transition-colors duration-200 md:w-32 w-full"
                     >
                       Book Now
                     </Button>
