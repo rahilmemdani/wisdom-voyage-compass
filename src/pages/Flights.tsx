@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Plane, Loader2, X, Users, Briefcase } from 'lucide-react';
+import { Plane, Loader2, X, Users, Briefcase, Calendar } from 'lucide-react';
 import axios from 'axios';
 
 interface MultiCityLeg {
@@ -69,7 +69,6 @@ const Flights = () => {
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedClasses, setSelectedClasses] = useState<{ [key: string]: string }>({});
-  // Store seats left for each flight card and travel class
   const [seatsLeftMap, setSeatsLeftMap] = useState<{ [key: string]: { [key: string]: number } }>({});
 
   const getAmadeusToken = async () => {
@@ -95,7 +94,7 @@ const Flights = () => {
     setError('');
     setLoading(true);
     setSelectedClasses({});
-    setSeatsLeftMap({}); // Reset seats left on new search
+    setSeatsLeftMap({});
 
     try {
       const token = await getAmadeusToken();
@@ -196,7 +195,6 @@ const Flights = () => {
     }
   };
 
-  // Generate seats left for each flight card when results change
   useEffect(() => {
     if (results.length === 0) return;
 
@@ -204,10 +202,10 @@ const Flights = () => {
     results.forEach((_, i) => {
       const cardKey = `${i}`;
       newSeatsLeftMap[cardKey] = {
-        ECONOMY: Math.floor(Math.random() * 9) + 1, // 1–9 seats
-        PREMIUM_ECONOMY: Math.floor(Math.random() * 6) + 1, // 1–6 seats
-        BUSINESS: Math.floor(Math.random() * 4) + 1, // 1–4 seats
-        FIRST: Math.floor(Math.random() * 3) + 1, // 1–3 seats
+        ECONOMY: Math.floor(Math.random() * 9) + 1,
+        PREMIUM_ECONOMY: Math.floor(Math.random() * 6) + 1,
+        BUSINESS: Math.floor(Math.random() * 4) + 1,
+        FIRST: Math.floor(Math.random() * 3) + 1,
       };
     });
     setSeatsLeftMap(newSeatsLeftMap);
@@ -332,39 +330,46 @@ const Flights = () => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="relative">
           <Label className="text-sm font-medium text-gray-700">
             {isMultiCity ? `Departure Date (Leg ${index! + 1})` : 'Departure Date'}
           </Label>
-          <input
-            type="date"
-            className="w-full h-11 px-3 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-base sm:h-12 sm:px-4"
-            value={isMultiCity ? multiCityLegs[index!].departureDate : departureDate}
-            onChange={(e) =>
-              isMultiCity
-                ? updateMultiCityLeg(index!, 'departureDate', e.target.value)
-                : setDepartureDate(e.target.value)
-            }
-          />
-
-        </div>
-        {!isMultiCity && tripType === 'round-trip' && (
-          <div>
-            <Label className="text-sm font-medium text-gray-700">Return Date</Label>
+          <div className="relative">
             <input
               type="date"
-              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700"
-              value={returnDate}
-              onChange={(e) => setReturnDate(e.target.value)}
+              className="w-full h-12 pl-10 pr-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 bg-white appearance-none"
+              value={isMultiCity ? multiCityLegs[index!].departureDate : departureDate}
+              onChange={(e) =>
+                isMultiCity
+                  ? updateMultiCityLeg(index!, 'departureDate', e.target.value)
+                  : setDepartureDate(e.target.value)
+              }
+              min={new Date().toISOString().split('T')[0]} // Prevent past dates
             />
+            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+          </div>
+        </div>
+        {!isMultiCity && tripType === 'round-trip' && (
+          <div className="relative">
+            <Label className="text-sm font-medium text-gray-700">Return Date</Label>
+            <div className="relative">
+              <input
+                type="date"
+                className="w-full h-12 pl-10 pr-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 bg-white appearance-none"
+                value={returnDate}
+                onChange={(e) => setReturnDate(e.target.value)}
+                min={departureDate || new Date().toISOString().split('T')[0]} // Prevent return before departure
+              />
+              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+            </div>
           </div>
         )}
-        <div>
+        <div className="relative">
           <Label className="text-sm font-medium text-gray-700">Passengers</Label>
           <div className="relative">
             <select
-              className="w-full h-12 px-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 appearance-none bg-white"
+              className="w-full h-12 pl-10 pr-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 appearance-none bg-white"
               value={adults}
               onChange={(e) => setAdults(Number(e.target.value))}
             >
@@ -374,7 +379,7 @@ const Flights = () => {
                 </option>
               ))}
             </select>
-            <Users className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
           </div>
         </div>
       </div>
@@ -446,7 +451,7 @@ const Flights = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-primary border-primary hover:bg-primary transition-colors duration-200"
+                  className="text-primary border-primary hover:bg-primary/10 transition-colors duration-200"
                   onClick={addMultiCityLeg}
                 >
                   + Add Another Leg
@@ -455,7 +460,7 @@ const Flights = () => {
             </Tabs>
             <Button
               size="lg"
-              className="w-full flex items-center justify-center bg-primary hover:bg-primary text-white rounded-md h-12 font-medium disabled:bg-primary disabled:cursor-not-allowed transition-all duration-200"
+              className="w-full flex items-center justify-center bg-primary hover:bg-primary/90 text-white rounded-md h-12 font-medium disabled:bg-primary/70 disabled:cursor-not-allowed transition-all duration-200"
               onClick={handleSearch}
               disabled={loading}
             >
@@ -624,7 +629,7 @@ const Flights = () => {
                     {/* Book Now Button */}
                     <Button
                       size="sm"
-                      className="bg-primary hover:bg-primary text-white rounded-md h-10 text-sm font-medium transition-colors duration-200 md:w-32 w-full"
+                      className="bg-primary hover:bg-primary/90 text-white rounded-md h-10 text-sm font-medium transition-colors duration-200 md:w-32 w-full"
                     >
                       Book Now
                     </Button>
