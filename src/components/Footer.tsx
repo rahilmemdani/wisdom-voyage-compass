@@ -32,7 +32,7 @@ const Footer = () => {
   ];
 
   const handleWhatsAppClick = () => {
-    window.open('https://wa.me/1234567890?text=Hello, I would like to inquire about your travel services.', '_blank');
+    window.open('https://wa.me/9856664440?text=Hello, I would like to inquire about your travel services.', '_blank');
   };
 
   const handlePhoneClick = () => {
