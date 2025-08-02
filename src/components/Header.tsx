@@ -36,7 +36,7 @@ const Header = () => {
           <Link to="/" className="flex items-center gap-4 group">
            <div className="relative w-32 h-32 flex items-center justify-center">
 
-             <img src="../../public/WISDOM LOGO.jpg"  alt="Logo" />
+             <img src="/WISDOM LOGO.jpg"  alt="Logo" />
             </div>
             {/* <div className="md:block">
               <h1 className="text-xl font-bold gradient-text font-serif">Wisdom Tours</h1>
