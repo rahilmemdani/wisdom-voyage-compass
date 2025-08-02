@@ -20,7 +20,7 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const handleWhatsAppClick = () => {
-    window.open('https://wa.me/1234567890?text=Hello, I would like to inquire about your travel services.', '_blank');
+    window.open('https://wa.me/9856664440?text=Hello, I would like to inquire about your travel services.', '_blank');
   };
 
   const handleContactClick = () => {
@@ -34,15 +34,15 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-4 group">
-            <div className="relative w-14 h-14 bg-gradient-to-br from-primary via-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-200">
-              <span className="text-white font-bold text-2xl">W</span>
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-white rounded-full border-2 border-primary shadow" />
+           <div className="relative w-32 h-32 flex items-center justify-center">
+
+             <img src="../../public/WISDOM LOGO.jpg"  alt="Logo" />
             </div>
-            <div className="md:block">
+            {/* <div className="md:block">
               <h1 className="text-xl font-bold gradient-text font-serif">Wisdom Tours</h1>
               <p className="text-xs font-semibold text-muted-foreground -mt-1">Travel & Tours</p>
               <p className="text-[11px] text-accent italic -mt-1">A travel Knowledge Co.</p>
-            </div>
+            </div> */}
           </Link>
 
           {/* Desktop Navigation */}
