@@ -35,7 +35,8 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-4 group">
            <div className="relative w-32 h-32 flex items-center justify-center">
-             <img src="/WisdomLogo.jpg"  alt="Logo" />
+             <img src="/WisdomLogo.jpg"  alt="Logo" 
+              className="w-full h-full object-contain select-none pointer-events-none"/>
             </div>
             {/* <div className="md:block">
               <h1 className="text-xl font-bold gradient-text font-serif">Wisdom Tours</h1>
