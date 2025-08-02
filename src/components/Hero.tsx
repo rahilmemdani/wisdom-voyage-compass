@@ -48,10 +48,10 @@ const Hero = () => {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Hero Content */}
           <div className="text-white animate-fade-in space-y-8">
-            <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+            {/* <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
               <Sparkles className="w-4 h-4 text-white" />
               <span className="text-sm font-semibold">Premium Travel Experiences</span>
-            </div>
+            </div> */}
             
             <h1 className="font-serif font-bold leading-tight text-balance">
               Discover the World with 
