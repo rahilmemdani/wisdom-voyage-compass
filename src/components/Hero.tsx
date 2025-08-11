@@ -49,9 +49,9 @@ const Hero = () => {
           {/* Hero Content */}
           <div className="text-white animate-fade-in space-y-8">
             <h1 className="font-serif font-bold leading-tight text-balance">
-              Discover the World with 
-              <span className="block gradient-text bg-gradient-to-r from-white via-red-200 to-white bg-clip-text text-transparent"> Wisdom</span>
-            </h1>
+  Discover the World with 
+  <span className="block text-white">Wisdom</span>
+</h1>
             
             <p className="text-xl lg:text-2xl leading-relaxed text-white/95 font-medium text-balance max-w-2xl">
               Embark on extraordinary journeys with our premium travel experiences. 
