@@ -85,7 +85,7 @@ const Footer = () => {
             <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors">
               <MapPin className="w-5 h-5 text-accent" />
             </div>
-            <span className="text-sm">123 Travel Street, Mumbai, India</span>
+            <span className="text-sm">Ground floor, Dheeraj Heritage, G-14, Swami Vivekananda Rd, near Milan Subway, Junction, Santacruz (West), Mumbai, Maharashtra 400054</span>
           </div>
           <div
             className="flex items-center space-x-3 cursor-pointer hover:text-white/80 transition-colors group"
