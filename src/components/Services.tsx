@@ -50,9 +50,6 @@ const Services = () => {
     <section className="section-standard bg-gradient-to-br from-gray-50/50 to-white">
       <div className="container-custom section-padding">
         <div className="text-center mb-20">
-          <div className="inline-flex items-center space-x-2 bg-primary/10 backdrop-blur-sm px-6 py-3 rounded-full border border-primary/20 mb-6">
-            <span className="text-sm font-semibold text-primary">Premium Services</span>
-          </div>
           <h2 className="font-serif font-bold gradient-text mb-8 text-balance">
             Our Premium Services
           </h2>

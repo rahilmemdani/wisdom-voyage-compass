@@ -83,9 +83,6 @@ const PopularDestinations = () => {
     <section className="section-standard bg-gradient-to-br from-white to-gray-50/50">
       <div className="container-custom section-padding">
         <div className="text-center mb-20">
-          <div className="inline-flex items-center space-x-2 bg-accent/10 backdrop-blur-sm px-6 py-3 rounded-full border border-accent/20 mb-6">
-            <span className="text-sm font-semibold text-accent">Trending Destinations</span>
-          </div>
           <h2 className="font-serif font-bold gradient-text mb-8 text-balance">
             Popular Destinations
           </h2>
