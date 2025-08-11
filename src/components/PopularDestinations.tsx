@@ -80,7 +80,7 @@ const PopularDestinations = () => {
   };
 
   return (
-    <section className="section-standard bg-gradient-to-br from-white to-gray-50/50">
+    <section className="py-16 lg:py-20 bg-gradient-to-br from-white to-gray-50/50">
       <div className="container-custom section-padding">
         <div className="text-center mb-20">
           <h2 className="font-serif font-bold gradient-text mb-8 text-balance">
