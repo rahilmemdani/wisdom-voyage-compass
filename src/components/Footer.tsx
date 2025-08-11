@@ -172,22 +172,6 @@ const Footer = () => {
       </div>
     </div>
 
-    {/* Popular Destinations */}
-    <div className="border-t border-white/20 mt-16 pt-12">
-      <h4 className="text-xl font-bold mb-8 font-serif">Popular Destinations</h4>
-      <div className="flex flex-wrap gap-4">
-        {destinations.map((destination, index) => (
-          <span
-            key={index}
-            className="px-6 py-3 bg-white/10 backdrop-blur-sm rounded-2xl font-medium hover:bg-white hover:text-primary transition-all duration-300 cursor-pointer hover:scale-105 border border-white/10 hover:border-white"
-            onClick={() => handleDestinationClick(destination)}
-          >
-            {destination}
-          </span>
-        ))}
-      </div>
-    </div>
-
     {/* Footer Bottom */}
     <div className="border-t border-white/20 mt-12 pt-12 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
       <p className="text-white/90 font-medium">

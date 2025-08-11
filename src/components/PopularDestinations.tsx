@@ -91,6 +91,21 @@ const PopularDestinations = () => {
           </p>
         </div>
 
+        {/* Quick Destination Links */}
+        <div className="mb-16">
+          <div className="flex flex-wrap gap-4 justify-center">
+            {['Switzerland', 'Iceland', 'Nepal', 'Goa', 'Kerala', 'Rajasthan'].map((destination, index) => (
+              <span
+                key={index}
+                className="px-6 py-3 bg-primary/10 backdrop-blur-sm rounded-2xl font-medium hover:bg-primary hover:text-white transition-all duration-300 cursor-pointer hover:scale-105 border border-primary/20 hover:border-primary"
+                onClick={() => handleViewDetails(destination)}
+              >
+                {destination}
+              </span>
+            ))}
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
           {destinations.map((destination, index) => (
             <Card key={index} className="group card-modern hover-lift border-0 overflow-hidden">
