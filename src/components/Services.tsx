@@ -51,7 +51,7 @@ const Services = () => {
       <div className="container-custom section-padding">
         <div className="text-center mb-20">
           <h2 className="font-serif font-bold gradient-text mb-8 text-balance">
-            Our Premium Services
+            Our Services
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed text-balance">
             Comprehensive travel solutions designed to make your journey seamless and memorable
