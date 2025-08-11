@@ -80,26 +80,18 @@ const Footer = () => {
         <p className="text-white/90 leading-relaxed text-balance">
           Your trusted partner for extraordinary travel experiences. We create memories that last a lifetime with our premium domestic and international tour packages.
         </p>
-        {/* <div className="space-y-4">
-          <div className="flex items-center space-x-3 cursor-pointer hover:text-white/80 transition-colors group">
-            <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors">
+        <div className="space-y-4">
+          <div className="flex items-start space-x-3 cursor-pointer hover:text-white/80 transition-colors group">
+            <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors flex-shrink-0">
               <MapPin className="w-5 h-5 text-accent" />
             </div>
-            <span className="text-sm">123 Travel Street, Mumbai, India</span>
-          </div> */}
-          <div className="space-y-4">
-  <div className="flex items-start space-x-3 cursor-pointer hover:text-white/80 transition-colors group">
-    <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors flex-shrink-0">
-      <MapPin className="w-5 h-5 text-accent" />
-    </div>
-    <p className="text-sm leading-relaxed max-w-xs">
-      Ground floor, Dheeraj Heritage, G-14,<br />
-      Swami Vivekananda Rd, near Milan Subway,<br />
-      Junction, Santacruz (West), Mumbai,<br />
-      Maharashtra 400054
-    </p>
-  </div>
-</div>
+            <p className="text-sm leading-relaxed max-w-xs">
+              Ground floor, Dheeraj Heritage, G-14,<br />
+              Swami Vivekananda Rd, near Milan Subway,<br />
+              Junction, Santacruz (West), Mumbai,<br />
+              Maharashtra 400054
+            </p>
+          </div>
           <div
             className="flex items-center space-x-3 cursor-pointer hover:text-white/80 transition-colors group"
             onClick={handlePhoneClick}
@@ -185,22 +177,6 @@ const Footer = () => {
       </div>
     </div>
 
-    {/* Popular Destinations */}
-    <div className="border-t border-white/20 mt-16 pt-12">
-      <h4 className="text-xl font-bold mb-8 font-serif">Popular Destinations</h4>
-      <div className="flex flex-wrap gap-4">
-        {destinations.map((destination, index) => (
-          <span
-            key={index}
-            className="px-6 py-3 bg-white/10 backdrop-blur-sm rounded-2xl font-medium hover:bg-white hover:text-primary transition-all duration-300 cursor-pointer hover:scale-105 border border-white/10 hover:border-white"
-            onClick={() => handleDestinationClick(destination)}
-          >
-            {destination}
-          </span>
-        ))}
-      </div>
-    </div>
-
     {/* Footer Bottom */}
     <div className="border-t border-white/20 mt-12 pt-12 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
       <p className="text-white/90 font-medium">
@@ -215,7 +191,6 @@ const Footer = () => {
     </div>
   </div>
 </footer>
-
   );
 };
 
