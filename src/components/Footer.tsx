@@ -80,15 +80,15 @@ const Footer = () => {
         <p className="text-white/90 leading-relaxed text-balance">
           Your trusted partner for extraordinary travel experiences. We create memories that last a lifetime with our premium domestic and international tour packages.
         </p>
-        <div className="space-y-4">
-          <div className="flex items-start space-x-3 cursor-pointer hover:text-white/80 transition-colors group">
+        <div className="space-y-6">
+          <div className="flex items-start space-x-4 cursor-pointer hover:text-white/80 transition-colors group">
             <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors flex-shrink-0">
               <MapPin className="w-5 h-5 text-accent" />
             </div>
-            <div className="text-sm leading-relaxed max-w-xs">
-              <p>Ground floor, Dheeraj Heritage, G-14,</p>
-              <p>Swami Vivekananda Rd, near Milan Subway,</p>
-              <p>Junction, Santacruz (West),</p>
+            <div className="text-sm leading-relaxed">
+              <p className="mb-1">Ground floor, Dheeraj Heritage, G-14,</p>
+              <p className="mb-1">Swami Vivekananda Rd, near Milan Subway,</p>
+              <p className="mb-1">Junction, Santacruz (West),</p>
               <p>Mumbai, Maharashtra 400054</p>
             </div>
           </div>
