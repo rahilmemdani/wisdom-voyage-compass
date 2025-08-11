@@ -92,11 +92,11 @@ const Footer = () => {
     <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors flex-shrink-0">
       <MapPin className="w-5 h-5 text-accent" />
     </div>
-    <p className="text-sm leading-relaxed max-w-xs">
-      Ground floor, Dheeraj Heritage, G-14,<br />
-      Swami Vivekananda Rd, near Milan Subway,<br />
-      Junction, Santacruz (West), Mumbai,<br />
-      Maharashtra 400054
+      <div className="text-sm leading-snug">
+      <div>Ground floor, G-14, Dheeraj Heritage</div>
+      <div>Swami Vivekananda Rd, near Milan Subway</div>
+      <div>Junction, Santacruz (West)</div>
+      <div>Mumbai, Maharashtra 400054</div>
     </p>
   </div>
 </div>
@@ -214,7 +214,7 @@ const Footer = () => {
       </div>
     </div>
   </div>
-</Footer>
+</footer>
 
   );
 };
