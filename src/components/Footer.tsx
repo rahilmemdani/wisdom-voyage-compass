@@ -36,11 +36,11 @@ const Footer = () => {
   };
 
   const handlePhoneClick = () => {
-    window.open('tel:+919876543210', '_self');
+    window.open('tel:+919856664440', '_self');
   };
 
   const handleEmailClick = () => {
-    window.open('mailto:info@wisdomtours.com', '_self');
+    window.open('mailto:sales@wisdomtravel.co.in', '_self');
   };
 
   const handleSubscribe = () => {
@@ -85,12 +85,12 @@ const Footer = () => {
             <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors flex-shrink-0">
               <MapPin className="w-5 h-5 text-accent" />
             </div>
-            <p className="text-sm leading-relaxed max-w-xs">
-              Ground floor, Dheeraj Heritage, G-14,<br />
-              Swami Vivekananda Rd, near Milan Subway,<br />
-              Junction, Santacruz (West), Mumbai,<br />
-              Maharashtra 400054
-            </p>
+            <div className="text-sm leading-relaxed max-w-xs">
+              <p>Ground floor, Dheeraj Heritage, G-14,</p>
+              <p>Swami Vivekananda Rd, near Milan Subway,</p>
+              <p>Junction, Santacruz (West),</p>
+              <p>Mumbai, Maharashtra 400054</p>
+            </div>
           </div>
           <div
             className="flex items-center space-x-3 cursor-pointer hover:text-white/80 transition-colors group"
@@ -99,7 +99,7 @@ const Footer = () => {
             <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors">
               <Phone className="w-5 h-5 text-accent" />
             </div>
-            <span className="text-sm">+91 98765 43210</span>
+            <span className="text-sm">+91 98566 64440</span>
           </div>
           <div
             className="flex items-center space-x-3 cursor-pointer hover:text-white/80 transition-colors group"
@@ -108,7 +108,7 @@ const Footer = () => {
             <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors">
               <Mail className="w-5 h-5 text-accent" />
             </div>
-            <span className="text-sm">info@wisdomtours.com</span>
+            <span className="text-sm">sales@wisdomtravel.co.in</span>
           </div>
         </div>
       </div>
