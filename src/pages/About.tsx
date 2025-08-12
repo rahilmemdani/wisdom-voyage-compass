@@ -66,7 +66,7 @@ const About = () => {
     { year: '2015', event: 'Launched online booking platform' },
     { year: '2018', event: 'Reached 5,000+ satisfied customers' },
     { year: '2021', event: 'Introduced digital visa services' },
-    { year: '2024', event: 'Celebrating 15 years of excellence' },
+    { year: '2024', event: 'Celebrating 6 years of excellence' },
   ];
 
   return (
@@ -81,7 +81,7 @@ const About = () => {
             About Wisdom Tours & Travels
           </h1>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
-            For over 15 years, we've been crafting extraordinary travel experiences that connect people with the world's most beautiful destinations
+            For over 6 years, we've been crafting extraordinary travel experiences that connect people with the world's most beautiful destinations
           </p>
         </div>
       </section>
