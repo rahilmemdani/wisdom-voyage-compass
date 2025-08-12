@@ -16,7 +16,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 27%;
 
-    --primary: 0 45% 75%;
+    --primary: 0 84% 50%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 98%;
@@ -25,15 +25,15 @@
     --muted: 210 40% 98%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 0 40% 80%;
+    --accent: 0 72% 58%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 50% 70%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 0 45% 75%;
+    --ring: 0 84% 50%;
 
     --radius: 0.75rem;
 
@@ -54,15 +54,15 @@
     --card-foreground: 210 40% 98%;
     --popover: 215 25% 27%;
     --popover-foreground: 210 40% 98%;
-    --primary: 0 45% 75%;
+    --primary: 0 84% 50%;
     --primary-foreground: 0 0% 100%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 0 40% 80%;
+    --accent: 0 72% 58%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 40% 65%;
+    --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
@@ -117,7 +117,7 @@
   }
   
   .gradient-text {
-    @apply bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary via-red-500 to-accent bg-clip-text text-transparent;
   }
   
   .hover-lift {
@@ -137,8 +137,8 @@
   }
 
   .btn-primary {
-    @apply bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg;
-    box-shadow: 0 10px 25px hsl(var(--primary) / 0.3);
+    @apply bg-gradient-to-r from-primary to-red-600 hover:from-red-600 hover:to-primary text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg;
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
   }
 
   .btn-secondary {
@@ -174,7 +174,7 @@
   }
 
   .glow-effect {
-    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
   }
 
   .parallax-element {
@@ -204,11 +204,11 @@
 /* Selection styling */
 ::selection {
   @apply bg-primary text-white;
-  background-color: hsl(var(--primary) / 0.2);
+  background-color: rgba(239, 68, 68, 0.2);
 }
 
 /* Focus styles */
 :focus-visible {
   @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-white;
-  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.5), 0 0 0 4px white;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5), 0 0 0 4px white;
 }
