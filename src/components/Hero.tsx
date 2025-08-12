@@ -22,8 +22,7 @@ const Hero = () => {
   };
 
   const handleConsultation = () => {
-    const phone = '+919856664440';
-    window.open(`tel:${phone}`, '_self');
+    navigate('/contact');
   };
 
   return (
