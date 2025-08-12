@@ -9,7 +9,7 @@ const About = () => {
   const stats = [
     { icon: Users, label: 'Happy Customers', value: '10,000+' },
     { icon: Globe, label: 'Destinations', value: '150+' },
-    { icon: Award, label: 'Years Experience', value: '6+' },
+    { icon: Award, label: 'Years Experience', value: '20+' },
     { icon: Star, label: 'Average Rating', value: '4.9/5' },
   ];
 
