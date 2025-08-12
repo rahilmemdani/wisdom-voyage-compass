@@ -38,25 +38,25 @@ const About = () => {
 
   const team = [
     {
-      name: 'Rajesh Kumar',
-      role: 'Founder & CEO',
-      experience: '15+ years',
+      name: 'Riyaz Vasani',
+      role: 'Managing Partner',
+      experience: '30+ years',
       image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
       description: 'Passionate travel enthusiast with extensive experience in hospitality and tourism industry.',
     },
     {
-      name: 'Priya Sharma',
-      role: 'Head of Operations',
-      experience: '12+ years',
+      name: 'Sohail Rupani',
+      role: 'Managing Partner',
+      experience: '25+ years',
       image: 'https://images.unsplash.com/photo-1494790108755-2616b612b376?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-      description: 'Expert in travel operations and customer service, ensuring seamless travel experiences.',
+      description: 'Expert in travel operations and ticketing, ensuring seamless travel experiences.',
     },
     {
-      name: 'Amit Patel',
-      role: 'International Tours Manager',
-      experience: '10+ years',
+      name: 'Rizan Vasani',
+      role: 'Senior Associate',
+      experience: '2+ years',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-      description: 'Specialist in international destinations with deep knowledge of global travel requirements.',
+      description: 'Specialist in corporate ticketings with deep knowledge of group travel management.',
     },
   ];
 
