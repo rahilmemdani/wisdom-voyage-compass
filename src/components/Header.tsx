@@ -24,7 +24,7 @@ const Header = () => {
   };
 
   const handleContactClick = () => {
-    navigate('/about');
+    navigate('/contact');
     setIsMenuOpen(false);
   };
 

@@ -9,6 +9,7 @@ import Packages from "./pages/Packages";
 import Flights from "./pages/Flights";
 import Visa from "./pages/Visa";
 import About from "./pages/About";
+import Contact from "./pages/Contact";
 import Checkout from "./pages/Checkout";
 import MyBookings from "./pages/MyBookings";
 import NotFound from "./pages/NotFound";
@@ -39,6 +40,7 @@ const App = () => (
           <Route path="/flights" element={<Flights />} />
           <Route path="/visa" element={<Visa />} />
           <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="*" element={<NotFound />} />
