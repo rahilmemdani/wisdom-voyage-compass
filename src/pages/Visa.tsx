@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import VisaChecker from '@/components/VisaChecker';
 import { CheckCircle, Clock, FileText, Users, Phone, MessageCircle } from 'lucide-react';
 
 const Visa = () => {
@@ -111,6 +112,13 @@ const Visa = () => {
               Free Consultation
             </Button>
           </div>
+        </div>
+      </section>
+
+      {/* Visa Requirement Checker */}
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto section-padding">
+          <VisaChecker />
         </div>
       </section>
 
