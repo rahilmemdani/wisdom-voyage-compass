@@ -61,33 +61,27 @@ const Footer = () => {
       </div>
 
       <div className="relative z-10 container mx-auto px-6">
+        {/* Logo Section */}
+        <div className="flex items-center justify-center mb-12">
+          <div className="relative w-24 h-24 flex items-center justify-center">
+            <img
+              src="/WisdomLogo.png"
+              alt="Wisdom Tours Logo"
+              className="w-full h-full object-contain"
+            />
+          </div>
+        </div>
+
         {/* Main Cards Grid */}
         <div className="grid lg:grid-cols-2 xl:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
           
           {/* About Us Card */}
           <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:shadow-red-200/50 group border border-red-100">
             <div className="space-y-6">
-              <div className="flex items-center justify-center mb-6">
-                <div className="relative w-20 h-20 flex items-center justify-center">
-                  <img
-                    src="/WisdomLogo.png"
-                    alt="Wisdom Tours Logo"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-              </div>
               <h4 className="text-xl font-bold text-red-600 text-center mb-4">About Us</h4>
               <p className="text-gray-700 text-sm leading-relaxed text-center">
-                Your trusted partner for extraordinary travel experiences. We create memories that last a lifetime.
+                Your trusted partner for extraordinary travel experiences. We create memories that last a lifetime with our premium domestic and international tour packages.
               </p>
-              <div className="space-y-3 pt-4">
-                <div className="flex items-start space-x-3 text-sm text-gray-600">
-                  <MapPin className="w-4 h-4 text-red-500 mt-1 flex-shrink-0" />
-                  <span className="leading-tight">
-                    Dheeraj Heritage, G-14, Swami Vivekananda Rd, Santacruz (West), Mumbai - 400054
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -166,6 +160,16 @@ const Footer = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Address Section */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center space-x-3 text-gray-700">
+            <MapPin className="w-5 h-5 text-red-500" />
+            <span className="text-lg font-medium leading-relaxed">
+              Dheeraj Heritage, G-14, Swami Vivekananda Rd, Santacruz (West), Mumbai - 400054
+            </span>
           </div>
         </div>
 
