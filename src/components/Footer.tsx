@@ -61,23 +61,24 @@ const Footer = () => {
       </div>
 
       <div className="relative z-10 container mx-auto px-6 max-w-7xl">
+        {/* Logo positioned above About Us box, aligned left */}
+        <div className="mb-4">
+          <div className="w-24 h-24">
+            <img
+              src="/WisdomLogo.png"
+              alt="Wisdom Tours Logo"
+              className="w-full h-full object-contain drop-shadow-sm"
+            />
+          </div>
+        </div>
+
         {/* Main Cards Grid */}
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
           
-          {/* About Us Card with Logo Above */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:shadow-red-200/50 group border border-red-100">
-            <div className="space-y-6">
-              {/* Logo Above About Us */}
-              <div className="flex items-center justify-center mb-6">
-                <div className="relative w-28 h-28 flex items-center justify-center">
-                  <img
-                    src="/WisdomLogo.png"
-                    alt="Wisdom Tours Logo"
-                    className="w-full h-full object-contain drop-shadow-sm"
-                  />
-                </div>
-              </div>
-              <h4 className="text-xl font-bold text-red-600 text-center mb-4">About Us</h4>
+          {/* About Us Card - Smaller height */}
+          <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:shadow-red-200/50 group border border-red-100">
+            <div className="space-y-4">
+              <h4 className="text-xl font-bold text-red-600 text-center mb-3">About Us</h4>
               <p className="text-gray-700 text-sm leading-relaxed text-center">
                 Your trusted partner for extraordinary travel experiences. We create memories that last a lifetime with our premium domestic and international tour packages.
               </p>
