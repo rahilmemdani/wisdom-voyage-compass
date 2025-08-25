@@ -52,153 +52,137 @@ const Footer = () => {
   };
 
   return (
-<footer className="bg-gradient-to-br from-gray-900 via-primary to-red-800 text-white relative overflow-hidden">
-  {/* Background Pattern */}
-  <div className="absolute inset-0 opacity-5">
-    <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
-    <div className="absolute bottom-20 right-16 w-48 h-48 bg-white rounded-full blur-3xl"></div>
-    <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-white rounded-full blur-2xl"></div>
-  </div>
-
-  <div className="relative z-10 container-custom section-padding py-20">
-    <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-12">
-      {/* Enhanced Company Info */}
-      <div className="space-y-8">
-        <div className="flex items-center space-x-4 group">
-          <Link to="/" className="flex items-center gap-4 group">
-            <div className="relative w-32 h-32 flex items-center justify-center">
-              {/* Soft background glow behind logo */}
-              <div className="absolute inset-0 bg-white/10 rounded-2xl blur-xl z-0 backdrop-blur-sm" />
-              <img
-                src="/WisdomLogo.png"
-                alt="Logo"
-                className="w-full h-full object-contain select-none pointer-events-none relative z-10"
-              />
-            </div>
-          </Link>
-        </div>
-        <p className="text-white/90 leading-relaxed text-balance">
-          Your trusted partner for extraordinary travel experiences. We create memories that last a lifetime with our premium domestic and international tour packages.
-        </p>
-        <div className="space-y-6">
-          {/* <div className="flex items-start space-x-4 cursor-pointer hover:text-white/80 transition-colors group">
-            <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors flex-shrink-0">
-              <MapPin className="w-5 h-5 text-accent" />
-            </div>
-            <span className="text-sm">123 Travel Street, Mumbai, India</span>
-          </div> * */}
-          <div className="space-y-4">
-  <div className="flex items-start space-x-3 cursor-pointer hover:text-white/80 transition-colors group">
-    <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors flex-shrink-0">
-      <MapPin className="w-5 h-5 text-accent" />
-    </div>
-    <p className="text-sm leading-relaxed max-w-xs">
-      Ground floor, Dheeraj Heritage, G-14,<br />
-      Swami Vivekananda Rd, near Milan Subway,<br />
-      Junction, Santacruz (West), Mumbai,<br />
-      Maharashtra 400054
-    </p>
-  </div>
-</div>
-          <div
-            className="flex items-center space-x-3 cursor-pointer hover:text-white/80 transition-colors group"
-            onClick={handlePhoneClick}
-          >
-            <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors">
-              <Phone className="w-5 h-5 text-accent" />
-            </div>
-            <span className="text-sm">+91 98566 64440</span>
-          </div>
-          <div
-            className="flex items-center space-x-3 cursor-pointer hover:text-white/80 transition-colors group"
-            onClick={handleEmailClick}
-          >
-            <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors">
-              <Mail className="w-5 h-5 text-accent" />
-            </div>
-            <span className="text-sm">sales@wisdomtravel.co.in</span>
-          </div>
-        </div>
+    <footer className="bg-gradient-to-br from-red-50 to-red-100 py-20 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-10 left-10 w-32 h-32 bg-red-300 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-16 w-48 h-48 bg-red-200 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-red-400 rounded-full blur-2xl"></div>
       </div>
 
-      {/* Quick Links */}
-      <div>
-        <h4 className="text-xl font-bold mb-8 font-serif">Quick Links</h4>
-        <ul className="space-y-4">
-          {quickLinks.map((link, index) => (
-            <li key={index}>
-              <Link
-                to={link.href}
-                className="text-white/90 hover:text-white transition-all duration-300 font-medium hover:translate-x-2 transform block group"
+      <div className="relative z-10 container mx-auto px-6">
+        {/* Main Cards Grid */}
+        <div className="grid lg:grid-cols-2 xl:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
+          
+          {/* About Us Card */}
+          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:shadow-red-200/50 group border border-red-100">
+            <div className="space-y-6">
+              <div className="flex items-center justify-center mb-6">
+                <div className="relative w-20 h-20 flex items-center justify-center">
+                  <img
+                    src="/WisdomLogo.png"
+                    alt="Wisdom Tours Logo"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              </div>
+              <h4 className="text-xl font-bold text-red-600 text-center mb-4">About Us</h4>
+              <p className="text-gray-700 text-sm leading-relaxed text-center">
+                Your trusted partner for extraordinary travel experiences. We create memories that last a lifetime.
+              </p>
+              <div className="space-y-3 pt-4">
+                <div className="flex items-start space-x-3 text-sm text-gray-600">
+                  <MapPin className="w-4 h-4 text-red-500 mt-1 flex-shrink-0" />
+                  <span className="leading-tight">
+                    Dheeraj Heritage, G-14, Swami Vivekananda Rd, Santacruz (West), Mumbai - 400054
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Links Card */}
+          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:shadow-red-200/50 group border border-red-100">
+            <h4 className="text-xl font-bold text-red-600 text-center mb-6">Quick Links</h4>
+            <ul className="space-y-4">
+              {quickLinks.map((link, index) => (
+                <li key={index} className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                  <Link
+                    to={link.href}
+                    className="text-gray-700 hover:text-red-600 transition-colors duration-300 font-medium text-sm group-hover:translate-x-1 transform block"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Our Services Card */}
+          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:shadow-red-200/50 group border border-red-100">
+            <h4 className="text-xl font-bold text-red-600 text-center mb-6">Our Services</h4>
+            <ul className="space-y-4">
+              {services.map((service, index) => (
+                <li key={index} className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                  <span className="text-gray-700 font-medium text-sm">{service}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Stay Connected Card */}
+          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:shadow-red-200/50 group border border-red-100">
+            <h4 className="text-xl font-bold text-red-600 text-center mb-6">Stay Connected</h4>
+            <p className="text-gray-700 text-sm mb-6 text-center">
+              Subscribe for latest travel deals and updates.
+            </p>
+            <div className="space-y-4">
+              <div className="flex space-x-2">
+                <Input
+                  placeholder="Enter email"
+                  className="flex-1 border-red-200 focus:border-red-400 rounded-lg text-sm"
+                />
+                <Button
+                  className="bg-red-600 hover:bg-red-700 text-white font-medium px-4 rounded-lg transition-colors duration-300"
+                  onClick={handleSubscribe}
+                >
+                  Subscribe
+                </Button>
+              </div>
+              <Button
+                variant="outline"
+                className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:border-red-400 rounded-lg transition-all duration-300"
+                onClick={handleWhatsAppClick}
               >
-                <span className="border-b border-transparent group-hover:border-white/50 transition-all duration-300">
-                  {link.name}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Services */}
-      <div>
-        <h4 className="text-xl font-bold mb-8 font-serif">Our Services</h4>
-        <ul className="space-y-4">
-          {services.map((service, index) => (
-            <li key={index} className="text-white/90 font-medium flex items-center space-x-2">
-              <div className="w-1.5 h-1.5 bg-accent rounded-full"></div>
-              <span>{service}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Newsletter */}
-      <div>
-        <h4 className="text-xl font-bold mb-8 font-serif">Stay Connected</h4>
-        <p className="text-white/90 mb-8 leading-relaxed text-balance">
-          Subscribe to get the latest travel deals and destination updates.
-        </p>
-        <div className="space-y-6">
-          <div className="flex space-x-3">
-            <Input
-              placeholder="Enter your email"
-              className="bg-white/10 border-white/20 text-white placeholder:text-white/60 backdrop-blur-sm rounded-xl flex-1"
-            />
-            <Button
-              className="bg-white text-primary hover:bg-white/90 font-bold shadow-xl hover:scale-105 transition-all duration-300 rounded-xl px-6"
-              onClick={handleSubscribe}
-            >
-              Subscribe
-            </Button>
+                <MessageCircle className="w-4 h-4 mr-2" />
+                WhatsApp Inquiry
+              </Button>
+              <div className="space-y-2 pt-2">
+                <div
+                  className="flex items-center space-x-2 text-xs text-gray-600 cursor-pointer hover:text-red-600 transition-colors"
+                  onClick={handlePhoneClick}
+                >
+                  <Phone className="w-3 h-3" />
+                  <span>+91 98566 64440</span>
+                </div>
+                <div
+                  className="flex items-center space-x-2 text-xs text-gray-600 cursor-pointer hover:text-red-600 transition-colors"
+                  onClick={handleEmailClick}
+                >
+                  <Mail className="w-3 h-3" />
+                  <span>sales@wisdomtravel.co.in</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <Button
-            size="sm"
-            variant="outline"
-            className="w-full border-white/20 text-primary hover:bg-white hover:text-primary hover:border-white backdrop-blur-sm hover:scale-105 transition-all duration-300 rounded-xl"
-            onClick={handleWhatsAppClick}
-          >
-            <MessageCircle className="w-4 h-4 mr-2" />
-            WhatsApp Inquiry
-          </Button>
+        </div>
+
+        {/* Footer Bottom */}
+        <div className="border-t border-red-200 pt-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+          <p className="text-gray-600 text-sm font-medium">
+            © 2018 Wisdom Tours and Travels. All rights reserved.
+          </p>
+          <div className="flex space-x-4">
+            <Facebook className="w-5 h-5 text-gray-400 hover:text-red-600 cursor-pointer transition-all duration-300 hover:scale-110" />
+            <Instagram className="w-5 h-5 text-gray-400 hover:text-red-600 cursor-pointer transition-all duration-300 hover:scale-110" />
+            <Twitter className="w-5 h-5 text-gray-400 hover:text-red-600 cursor-pointer transition-all duration-300 hover:scale-110" />
+            <Linkedin className="w-5 h-5 text-gray-400 hover:text-red-600 cursor-pointer transition-all duration-300 hover:scale-110" />
+          </div>
         </div>
       </div>
-    </div>
-
-    {/* Footer Bottom */}
-    <div className="border-t border-white/20 mt-12 pt-12 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-      <p className="text-white/90 font-medium">
-        © 2018 Wisdom Tours and Travels. All rights reserved.
-      </p>
-      <div className="flex space-x-6">
-        <Facebook className="w-6 h-6 text-white/70 hover:text-white cursor-pointer transition-all duration-300 hover:scale-125 hover:-translate-y-1" />
-        <Instagram className="w-6 h-6 text-white/70 hover:text-white cursor-pointer transition-all duration-300 hover:scale-125 hover:-translate-y-1" />
-        <Twitter className="w-6 h-6 text-white/70 hover:text-white cursor-pointer transition-all duration-300 hover:scale-125 hover:-translate-y-1" />
-        <Linkedin className="w-6 h-6 text-white/70 hover:text-white cursor-pointer transition-all duration-300 hover:scale-125 hover:-translate-y-1" />
-      </div>
-    </div>
-  </div>
-</footer>
+    </footer>
   );
 };
 
