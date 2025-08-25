@@ -60,47 +60,28 @@ const Footer = () => {
         <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-red-400 rounded-full blur-2xl"></div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-6">
-        {/* Logo Section */}
-        <div className="flex items-center justify-center mb-12">
-          <div className="relative w-24 h-24 flex items-center justify-center">
-            <img
-              src="/WisdomLogo.png"
-              alt="Wisdom Tours Logo"
-              className="w-full h-full object-contain"
-            />
-          </div>
-        </div>
-
+      <div className="relative z-10 container mx-auto px-6 max-w-7xl">
         {/* Main Cards Grid */}
-        <div className="grid lg:grid-cols-2 xl:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
           
-          {/* About Us Card */}
+          {/* About Us Card with Logo Above */}
           <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:shadow-red-200/50 group border border-red-100">
             <div className="space-y-6">
+              {/* Logo Above About Us */}
+              <div className="flex items-center justify-center mb-6">
+                <div className="relative w-28 h-28 flex items-center justify-center">
+                  <img
+                    src="/WisdomLogo.png"
+                    alt="Wisdom Tours Logo"
+                    className="w-full h-full object-contain drop-shadow-sm"
+                  />
+                </div>
+              </div>
               <h4 className="text-xl font-bold text-red-600 text-center mb-4">About Us</h4>
               <p className="text-gray-700 text-sm leading-relaxed text-center">
                 Your trusted partner for extraordinary travel experiences. We create memories that last a lifetime with our premium domestic and international tour packages.
               </p>
             </div>
-          </div>
-
-          {/* Quick Links Card */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:shadow-red-200/50 group border border-red-100">
-            <h4 className="text-xl font-bold text-red-600 text-center mb-6">Quick Links</h4>
-            <ul className="space-y-4">
-              {quickLinks.map((link, index) => (
-                <li key={index} className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                  <Link
-                    to={link.href}
-                    className="text-gray-700 hover:text-red-600 transition-colors duration-300 font-medium text-sm group-hover:translate-x-1 transform block"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
           </div>
 
           {/* Our Services Card */}
@@ -109,8 +90,26 @@ const Footer = () => {
             <ul className="space-y-4">
               {services.map((service, index) => (
                 <li key={index} className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></div>
                   <span className="text-gray-700 font-medium text-sm">{service}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Quick Links Card */}
+          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:shadow-red-200/50 group border border-red-100">
+            <h4 className="text-xl font-bold text-red-600 text-center mb-6">Quick Links</h4>
+            <ul className="space-y-4">
+              {quickLinks.map((link, index) => (
+                <li key={index} className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></div>
+                  <Link
+                    to={link.href}
+                    className="text-gray-700 hover:text-red-600 transition-colors duration-300 font-medium text-sm group-hover:translate-x-1 transform block"
+                  >
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -145,14 +144,14 @@ const Footer = () => {
               </Button>
               <div className="space-y-2 pt-2">
                 <div
-                  className="flex items-center space-x-2 text-xs text-gray-600 cursor-pointer hover:text-red-600 transition-colors"
+                  className="flex items-center space-x-2 text-xs text-gray-600 cursor-pointer hover:text-red-600 transition-colors justify-center"
                   onClick={handlePhoneClick}
                 >
                   <Phone className="w-3 h-3" />
                   <span>+91 98566 64440</span>
                 </div>
                 <div
-                  className="flex items-center space-x-2 text-xs text-gray-600 cursor-pointer hover:text-red-600 transition-colors"
+                  className="flex items-center space-x-2 text-xs text-gray-600 cursor-pointer hover:text-red-600 transition-colors justify-center"
                   onClick={handleEmailClick}
                 >
                   <Mail className="w-3 h-3" />
