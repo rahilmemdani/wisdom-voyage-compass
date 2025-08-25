@@ -157,16 +157,7 @@ const Footer = () => {
                   <Mail className="w-3 h-3" />
                   <span>sales@wisdomtravel.co.in</span>
                 </div>
-                <div
-  className="flex items-center space-x-2 text-xs text-gray-600 cursor-pointer hover:text-red-600 transition-colors justify-center mt-2"
->
-  <MapPin className="w-3 h-3" />
-  <span>
-    Dheeraj Heritage, G-14, Swami Vivekananda Rd, <br />
-    Santacruz (West), Mumbai - 400054
-  </span>
-</div>
-              </div>
+                        </div>
             </div>
           </div>
         </div>
