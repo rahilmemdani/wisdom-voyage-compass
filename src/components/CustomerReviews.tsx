@@ -143,8 +143,8 @@ const CustomerReviews = () => {
             </CarouselContent>
             
             {/* Navigation Arrows */}
-            <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 bg-red border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-600" />
-            <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 bg-red border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-600" />
+            <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 bg-red border-gray-300 hover:bg-red-50 hover:border-gray-400 text-gray-600" />
+            <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 bg-red border-gray-300 hover:bg-red-50 hover:border-gray-400 text-gray-600" />
           </Carousel>
         </div>
       </div>
