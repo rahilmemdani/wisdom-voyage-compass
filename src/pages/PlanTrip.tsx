@@ -304,7 +304,7 @@ Additional Notes: ${data.notes || 'None'}
 
                       <FormField
                         control={form.control}
-                        name="childrenBelow12"
+                        name="children"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Children</FormLabel>
@@ -312,7 +312,7 @@ Additional Notes: ${data.notes || 'None'}
                               <Input 
                                 type="number" 
                                 min="0" 
-                                placeholder="Number of children"
+                                placeholder="Number of children (below 12 years)"
                                 value={field.value || ""} 
                                 onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                               />
