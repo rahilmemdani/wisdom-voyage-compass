@@ -12,6 +12,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Checkout from "./pages/Checkout";
 import MyBookings from "./pages/MyBookings";
+import PlanTrip from "./pages/PlanTrip";
 import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
 
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/visa" element={<Visa />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/plan-trip" element={<PlanTrip />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="*" element={<NotFound />} />
