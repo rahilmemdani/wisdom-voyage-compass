@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import emailjs from '@emailjs/browser';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -93,34 +94,46 @@ const PlanTrip = () => {
     return encodeURIComponent(message);
   };
 
-  const sendEmail = async (data: PlanTripForm) => {
+  const sendEmailJS = async (data: PlanTripForm) => {
     try {
-      const emailData = {
-        to: "rizan@wisdomtravel.co.in",
-        subject: `New Trip Planning Request from ${data.name}`,
-        name: data.name,
-        email: data.email,
+      // EmailJS configuration - You'll need to replace these with your actual EmailJS credentials
+      const serviceID = 'YOUR_SERVICE_ID'; // Replace with your EmailJS service ID
+      const templateID = 'YOUR_TEMPLATE_ID'; // Replace with your EmailJS template ID
+      const publicKey = 'YOUR_PUBLIC_KEY'; // Replace with your EmailJS public key
+
+      const templateParams = {
+        to_email: 'rizan@wisdomtravel.co.in',
+        from_name: data.name,
+        from_email: data.email,
         phone: data.phone,
-        destination: data.destination || "Not specified",
-        travelDates: data.travelDates || "Not specified",
+        destination: data.destination || 'Not specified',
+        travel_dates: data.travelDates || 'Not specified',
         adults: data.adults || 0,
         children: data.children || 0,
-        budget: data.budget?.[0] || 0,
-        tripType: data.tripType || "Not specified",
-        requirements: data.requirements?.join(", ") || "None",
-        notes: data.notes || "None",
+        budget: data.budget?.[0]?.toLocaleString() || 'Not specified',
+        trip_type: data.tripType || 'Not specified',
+        requirements: data.requirements?.join(', ') || 'None',
+        notes: data.notes || 'None',
+        subject: `New Trip Planning Request from ${data.name}`,
+        message: `
+Name: ${data.name}
+Email: ${data.email}
+Phone: ${data.phone}
+Destination: ${data.destination || 'Not specified'}
+Travel Dates: ${data.travelDates || 'Not specified'}
+Travelers: ${data.adults || 0} Adults${data.children ? `, ${data.children} Children` : ''}
+Budget: ₹${data.budget?.[0]?.toLocaleString() || 'Not specified'}
+Trip Type: ${data.tripType || 'Not specified'}
+Requirements: ${data.requirements?.join(', ') || 'None'}
+Additional Notes: ${data.notes || 'None'}
+        `.trim()
       };
 
-      // Here you would call your edge function for sending emails
-      // For now, we'll just log it
-      console.log("Email data:", emailData);
-      
-      // Simulate email sending
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      const result = await emailjs.send(serviceID, templateID, templateParams, publicKey);
+      console.log('Email sent successfully:', result);
       return true;
     } catch (error) {
-      console.error("Email sending failed:", error);
+      console.error('Email sending failed:', error);
       return false;
     }
   };
@@ -129,8 +142,8 @@ const PlanTrip = () => {
     setIsSubmitting(true);
     
     try {
-      // Send email
-      const emailSent = await sendEmail(data);
+      // Send email using EmailJS
+      const emailSent = await sendEmailJS(data);
       
       if (emailSent) {
         // Open WhatsApp
@@ -138,10 +151,10 @@ const PlanTrip = () => {
         const whatsappUrl = `https://wa.me/919856664440?text=${whatsappMessage}`;
         window.open(whatsappUrl, '_blank');
         
-        toast.success("Trip request submitted successfully! Check WhatsApp to complete the process.");
+        toast.success("Trip request submitted successfully! We'll get back to you soon.");
         form.reset();
       } else {
-        toast.error("Failed to send email. Please try again.");
+        toast.error("Failed to send email. Please check your EmailJS configuration and try again.");
       }
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
