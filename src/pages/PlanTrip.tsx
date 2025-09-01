@@ -312,7 +312,7 @@ Additional Notes: ${data.notes || 'None'}
                               <Input 
                                 type="number" 
                                 min="0" 
-                                placeholder="Number of children (below 12 years)"
+                                placeholder="Number of children(below 12 years)"
                                 value={field.value || ""} 
                                 onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                               />
