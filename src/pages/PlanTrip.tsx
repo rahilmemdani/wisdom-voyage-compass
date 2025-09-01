@@ -304,7 +304,7 @@ Additional Notes: ${data.notes || 'None'}
 
                       <FormField
                         control={form.control}
-                        name="children"
+                        name="children (below 12 year)"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Children</FormLabel>
