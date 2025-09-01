@@ -18,7 +18,7 @@ const Hero = () => {
   };
 
   const handlePlanTrip = () => {
-    navigate('/packages');
+    navigate('/plan-trip');
   };
 
   const handleConsultation = () => {
