@@ -351,7 +351,7 @@ Additional Notes: ${data.notes || 'None'}
                       name="budget"
                       render={({ field }) => (
                         <FormItem className="mb-4">
-                          <FormLabel>Budget Range: ₹{watchedBudget[0]?.toLocaleString()}</FormLabel>
+                          <FormLabel>Budget Range Per Person: ₹{watchedBudget[0]?.toLocaleString()}</FormLabel>
                           <FormControl>
                             <Slider
                               min={10000}
