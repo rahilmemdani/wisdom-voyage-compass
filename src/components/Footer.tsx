@@ -176,7 +176,7 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="border-t border-red-200 pt-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <p className="text-gray-600 text-sm font-medium">
-            © 2018 Wisdom Tours and Travels. All rights reserved.
+            © 2025 Wisdom Tours and Travels. All rights reserved.
           </p>
           <div className="flex space-x-4">
             <Facebook className="w-5 h-5 text-gray-400 hover:text-red-600 cursor-pointer transition-all duration-300 hover:scale-110" />
