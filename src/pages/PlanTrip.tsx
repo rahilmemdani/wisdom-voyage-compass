@@ -40,7 +40,7 @@ const tripTypes = [
   "Business",
   "Solo Travel",
   "Group Tour",
-  "Pilgrimage",
+  "Cruise Vacation",
 ];
 
 const requirementOptions = [
