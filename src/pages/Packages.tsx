@@ -6,10 +6,15 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Star, MapPin, Calendar, Users } from 'lucide-react';
+import { Star, MapPin, Calendar, Users, MessageCircle } from 'lucide-react';
 
 const Packages = () => {
   const [activeTab, setActiveTab] = useState('domestic');
+
+  const handleWhatsAppClick = () => {
+    window.open('https://wa.me/9856664440?text=Hello, I would like to inquire about your travel services.', '_blank');
+  };
+
 
   const domesticPackages = [
     {
@@ -178,6 +183,26 @@ const Packages = () => {
 
   return (
     <div className="min-h-screen">
+            {/* Floating WhatsApp Button */}
+            <div className="fixed bottom-6 right-6 z-50 animate-bounce">
+        <Button
+          onClick={handleWhatsAppClick}
+          className="w-16 h-16 rounded-full bg-green-500 hover:bg-green-600 shadow-2xl hover:shadow-green-500/25 transition-all duration-300 group relative overflow-hidden"
+          size="lg"
+        >
+          {/* Pulse effect */}
+          <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-20"></div>
+          <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-20 animation-delay-300"></div>
+          
+          <MessageCircle className="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300 relative z-10" />
+          
+          {/* Tooltip */}
+          <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            Chat with us on WhatsApp!
+            <div className="absolute left-full top-1/2 -translate-y-1/2 border-4 border-transparent border-l-gray-900"></div>
+          </div>
+        </Button>
+      </div>
       <Header />
 
       <section className="py-20 bg-muted/30">
