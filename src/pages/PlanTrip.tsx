@@ -97,9 +97,9 @@ const PlanTrip = () => {
   const sendEmailJS = async (data: PlanTripForm) => {
     try {
       // EmailJS configuration - You'll need to replace these with your actual EmailJS credentials
-      const serviceID = 'YOUR_SERVICE_ID'; // Replace with your EmailJS service ID
-      const templateID = 'YOUR_TEMPLATE_ID'; // Replace with your EmailJS template ID
-      const publicKey = 'YOUR_PUBLIC_KEY'; // Replace with your EmailJS public key
+      const serviceID = 'service_7jd4cv7'; // Replace with your EmailJS service ID
+      const templateID = 'template_66u4wg8'; // Replace with your EmailJS template ID
+      const publicKey = 'IyzAcrjwMY4P_StOx'; // Replace with your EmailJS public key
 
       const templateParams = {
         to_email: 'rizan@wisdomtravel.co.in',
