@@ -71,28 +71,6 @@ const PlanTrip = () => {
     },
   });
 
-  const formatWhatsAppMessage = (data: PlanTripForm) => {
-    let message = `*New Trip Planning Request*\n\n`;
-    message += `*Name:* ${data.name}\n`;
-    message += `*Email:* ${data.email}\n`;
-    message += `*Phone:* ${data.phone}\n`;
-    
-    if (data.destination) message += `*Destination:* ${data.destination}\n`;
-    if (data.travelDates) message += `*Travel Dates:* ${data.travelDates}\n`;
-    if (data.adults || data.children) {
-      message += `*Travelers:* ${data.adults || 0} Adults`;
-      if (data.children) message += `, ${data.children} Children`;
-      message += `\n`;
-    }
-    if (data.budget) message += `*Budget:* ₹${data.budget[0]?.toLocaleString()}\n`;
-    if (data.tripType) message += `*Trip Type:* ${data.tripType}\n`;
-    if (data.requirements && data.requirements.length > 0) {
-      message += `*Requirements:* ${data.requirements.join(", ")}\n`;
-    }
-    if (data.notes) message += `*Additional Notes:* ${data.notes}\n`;
-    
-    return encodeURIComponent(message);
-  };
 
   const sendEmailJS = async (data: PlanTripForm) => {
     try {
@@ -146,11 +124,6 @@ Additional Notes: ${data.notes || 'None'}
       const emailSent = await sendEmailJS(data);
       
       if (emailSent) {
-        // Open WhatsApp
-        const whatsappMessage = formatWhatsAppMessage(data);
-        const whatsappUrl = `https://wa.me/919856664440?text=${whatsappMessage}`;
-        window.open(whatsappUrl, '_blank');
-        
         toast.success("Trip request submitted successfully! We'll get back to you soon.");
         form.reset();
       } else {
