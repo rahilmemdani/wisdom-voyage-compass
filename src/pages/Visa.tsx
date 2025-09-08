@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, Clock, FileText, Users, Phone, MessageCircle } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { Link } from 'react-router-dom';
 
 
 // --- TYPE DEFINITION ---
@@ -358,7 +359,9 @@ const Visa = () => {
                  </Card>
                </div>
                <div className="text-center mt-8">
+                <Link to="/plan-trip">
                  <Button size="lg" className="bg-primary hover:bg-primary/90">Schedule Free Consultation</Button>
+                 </Link>
                </div>
              </CardContent>
            </Card>
