@@ -203,6 +203,9 @@ const Packages = () => {
       </div> */}
       <Header />
 
+      {/* <iframe src="https://itinerary.digital/qi/wisdom-travel-and-tours/haresh-jethwa/15582" width="800" height="600"></iframe> */}
+
+
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto section-padding">
           <div className="text-center mb-12">
