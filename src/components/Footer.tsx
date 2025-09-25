@@ -60,16 +60,16 @@ const Footer = () => {
         <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-red-400 rounded-full blur-2xl"></div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-6 max-w-7xl">
+      {/* <div className="relative z-10 container mx-auto px-6 max-w-7xl">
         {/* Logo positioned above About Us box, aligned left */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <div className="w-24 h-24">
             <img
               src="/WisdomLogo.png"
               alt="Wisdom Tours Logo"
               className="w-full h-full object-contain drop-shadow-sm"
             />
-          </div>
+          </div> *} */}
         </div>
 
         {/* Main Cards Grid */}
