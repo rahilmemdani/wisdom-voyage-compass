@@ -72,7 +72,7 @@ const PopularDestinations = () => {
   ];
 
   const handleViewDetails = (destination: string) => {
-    navigate('/packages', { state: { selectedDestination: destination } });
+    navigate('/plan-trip', { state: { selectedDestination: destination } });
   };
 
   const handleViewAll = () => {
