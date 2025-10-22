@@ -157,7 +157,7 @@ const PopularDestinations = () => {
                     className="btn-primary text-sm px-6 py-3 rounded-xl"
                     onClick={() => handleViewDetails(destination.name)}
                   >
-                    View Details
+                    Enquire Now
                   </Button>
                 </div>
               </CardContent>
