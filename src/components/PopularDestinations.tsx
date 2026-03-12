@@ -61,28 +61,8 @@ const PopularDestinations = () => {
         {/* Layout Wrapper: Grid for Desktop, Block for Mobile */}
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-center">
           
-          {/* Header Entity - Matched to Services Layout */}
-          <div className="lg:col-span-4 text-left space-y-3 lg:space-y-6 animate-fade-in lg:pr-8 mb-10 lg:mb-0">
-            <div className="space-y-2 lg:space-y-3">
-              <div className="inline-flex items-center px-2 py-0.5 bg-primary/10 rounded-full text-primary font-bold text-[8px] lg:text-[10px] tracking-widest uppercase">
-                Expertise
-              </div>
-              <h2 className="text-2xl sm:text-3xl lg:text-5xl font-serif font-bold text-slate-900 leading-tight">
-                Popular <br className="hidden lg:block"/> <span className="gradient-text">Destinations</span>
-              </h2>
-            </div>
-            <p className="max-w-[280px] lg:max-w-md text-[13px] lg:text-lg text-slate-600 leading-relaxed">
-              Handpicked escapes designed for travelers who seek the extraordinary.
-            </p>
-
-            <div className="flex items-center gap-3 pt-2">
-              <div className="w-10 h-1 bg-primary/30 rounded-full" />
-              <span className="text-slate-400 text-sm font-medium italic">Swipe to explore</span>
-            </div>
-          </div>
-
-          {/* Carousel Entity - Standardized with Services */}
-          <div className="lg:col-span-8 relative px-0">
+          {/* Carousel Entity - Standardized with Services (Now on Left for Desktop) */}
+          <div className="lg:col-span-8 lg:order-first order-last relative px-0">
             <Carousel
               opts={{
                 align: "start",
@@ -164,12 +144,33 @@ const PopularDestinations = () => {
               </CarouselContent>
               
               {/* Custom Navigation for Desktop */}
-              <div className="hidden lg:flex absolute -bottom-14 left-0 gap-3">
+              <div className="hidden lg:flex absolute -bottom-14 right-0 gap-3">
                 <CarouselPrevious className="static translate-y-0 h-11 w-11 rounded-xl border-2 border-slate-200 hover:border-primary hover:text-primary transition-all shadow-none" />
                 <CarouselNext className="static translate-y-0 h-11 w-11 rounded-xl border-2 border-slate-200 hover:border-primary hover:text-primary transition-all shadow-none" />
               </div>
             </Carousel>
           </div>
+
+          {/* Header Entity - Matched to Services Layout (Now on Right for Desktop) */}
+          <div className="lg:col-span-4 lg:order-last order-first text-left space-y-3 lg:space-y-6 animate-fade-in lg:pl-16 mb-10 lg:mb-0">
+            <div className="space-y-2 lg:space-y-3">
+              <div className="inline-flex items-center px-2 py-0.5 bg-primary/10 rounded-full text-primary font-bold text-[8px] lg:text-[10px] tracking-widest uppercase">
+                Expertise
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-5xl font-serif font-bold text-slate-900 leading-tight">
+                Popular <br className="hidden lg:block"/> <span className="gradient-text">Destinations</span>
+              </h2>
+            </div>
+            <p className="max-w-[280px] lg:max-w-md text-[13px] lg:text-lg text-slate-600 leading-relaxed">
+              Handpicked escapes designed for travelers who seek the extraordinary.
+            </p>
+
+            <div className="flex items-center gap-3 pt-2">
+              <div className="w-10 h-1 bg-primary/30 rounded-full" />
+              <span className="text-slate-400 text-sm font-medium italic">Swipe to explore</span>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
