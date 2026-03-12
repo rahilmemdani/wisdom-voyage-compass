@@ -128,10 +128,10 @@ const Hero = () => {
           ))}
         </div>
 
-        <div className="relative z-10 container-custom section-padding">
-          <div className="grid lg:grid-cols-1 gap-10 items-center justify-items-center text-center">
+        <div className="relative z-10 container-custom section-padding pt-20 lg:pt-0">
+          <div className="grid lg:grid-cols-1 gap-6 sm:gap-10 items-center justify-items-center text-center">
             {/* Enhanced Hero Content */}
-            <div className="text-white animate-fade-in space-y-10 max-w-4xl">
+            <div className="text-white animate-fade-in space-y-6 sm:space-y-10 max-w-4xl">
               {/* Animated Badge */}
               {/* <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20 animate-slide-up">
                 <Sparkles className="w-5 h-5 text-yellow-400 animate-spin-slow" />
