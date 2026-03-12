@@ -23,15 +23,15 @@ const Services = () => {
       route: '/packages',
       color: 'from-blue-500 to-cyan-400'
     },
-    {
-      icon: Plane,
-      title: 'Flight Bookings',
-      description: 'Seamless flight booking experience with competitive prices and flexible options.',
-      features: ['Best Price Deals', 'Multiple Airlines', 'Easy Cancellation', '24/7 Support'],
-      image: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      route: '/flights',
-      color: 'from-purple-500 to-pink-400'
-    },
+    // {
+    //   icon: Plane,
+    //   title: 'Flight Bookings',
+    //   description: 'Seamless flight booking experience with competitive prices and flexible options.',
+    //   features: ['Best Price Deals', 'Multiple Airlines', 'Easy Cancellation', '24/7 Support'],
+    //   image: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+    //   route: '/flights',
+    //   color: 'from-purple-500 to-pink-400'
+    // },
     {
       icon: FileText,
       title: 'Visa Services',
