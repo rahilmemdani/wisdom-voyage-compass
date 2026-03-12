@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { 
-  ArrowRight, 
-  Star, 
-  Users, 
-  Globe, 
-  Phone, 
+import {
+  ArrowRight,
+  Star,
+  Users,
+  Globe,
+  Phone,
   Sparkles,
   MessageCircle,
   MapPin,
@@ -15,6 +15,11 @@ import {
   HeadphonesIcon
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -26,23 +31,23 @@ const Hero = () => {
   ];
 
   const features = [
-    { 
-      icon: Award, 
+    {
+      icon: Award,
       title: 'Expert Travel Consultants',
       desc: 'Certified travel experts with 10+ years experience'
     },
-    { 
-      icon: Clock, 
+    {
+      icon: Clock,
       title: '24/7 Customer Support',
       desc: 'Round-the-clock assistance for peace of mind'
     },
-    { 
-      icon: Shield, 
+    {
+      icon: Shield,
       title: 'Best Price Guarantee',
       desc: 'Find better price? We\'ll match it instantly'
     },
-    { 
-      icon: HeadphonesIcon, 
+    {
+      icon: HeadphonesIcon,
       title: 'Hassle-free Bookings',
       desc: 'Simple booking process with instant confirmation'
     }
@@ -61,7 +66,7 @@ const Hero = () => {
   };
 
   const handleWhatsAppClick = () => {
-    const phoneNumber = '7042434631'; 
+    const phoneNumber = '7042434631';
     const message = encodeURIComponent('Hi! I\'m interested in planning a trip with Wisdom Travel. Can you help me?');
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
@@ -87,9 +92,9 @@ const Hero = () => {
         </Button>
       </div> */}
 
-      <section className="section-hero relative overflow-hidden">
+      <section className="section-hero relative overflow-hidden h-[100dvh] !items-start pt-24 md:pt-36">
         {/* Enhanced Background with Multiple Layers */}
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-110 transition-transform duration-[10s] hover:scale-105"
           style={{
             backgroundImage: `url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80')`,
@@ -124,35 +129,35 @@ const Hero = () => {
         </div>
 
         <div className="relative z-10 container-custom section-padding">
-          <div className="grid lg:grid-cols-2 gap-16 xl:gap-20 items-center">
+          <div className="grid lg:grid-cols-1 gap-10 items-center justify-items-center text-center">
             {/* Enhanced Hero Content */}
-            <div className="text-white animate-fade-in space-y-10">
+            <div className="text-white animate-fade-in space-y-10 max-w-4xl">
               {/* Animated Badge */}
               {/* <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20 animate-slide-up">
                 <Sparkles className="w-5 h-5 text-yellow-400 animate-spin-slow" />
                 <span className="text-sm font-semibold text-white/95">India's Premium Travel Experience</span>
               </div> */}
 
-              <div className="space-y-6">
-                <h1 className="font-serif font-bold leading-tight text-balance animate-slide-up" style={{ animationDelay: '0.2s' }}>
-                  Discover the World with 
+              <div className="space-y-4 md:space-y-6">
+                <h1 className="font-serif font-bold text-4xl sm:text-5xl lg:text-7xl leading-tight text-balance animate-slide-up" style={{ animationDelay: '0.2s' }}>
+                  Discover the World with
                   <span className="block bg-gradient-to-r from-white via-primary-light to-accent bg-clip-text text-transparent animate-gradient">
                     Wisdom Travel
                   </span>
                 </h1>
-                
-                <p className="text-xl lg:text-2xl leading-relaxed text-white/95 font-medium text-balance max-w-2xl animate-slide-up" style={{ animationDelay: '0.4s' }}>
-                  Embark on extraordinary journeys with our premium travel experiences. 
-                  From exotic international destinations to hidden domestic gems, we craft 
+
+                <p className="text-lg sm:text-xl lg:text-2xl leading-relaxed text-white/95 font-medium text-balance max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.4s' }}>
+                  Embark on extraordinary journeys with our premium travel experiences.
+                  From exotic international destinations to hidden domestic gems, we craft
                   <span className="text-primary-light font-semibold"> memories that last a lifetime</span>.
                 </p>
               </div>
-              
+
               {/* Enhanced CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-6 animate-slide-up" style={{ animationDelay: '0.6s' }}>
-                <Button 
-                  size="lg" 
-                  className="group btn-primary text-lg px-10 py-6 rounded-2xl shadow-2xl hover:shadow-primary/25 transition-all duration-300 relative overflow-hidden"
+              <div className="flex flex-col sm:flex-row gap-6 animate-slide-up justify-center" style={{ animationDelay: '0.6s' }}>
+                <Button
+                  size="lg"
+                  className="group btn-primary text-lg px-8 py-6 rounded-2xl shadow-2xl hover:shadow-primary/25 transition-all duration-300 relative overflow-hidden"
                   onClick={handleExplorePackages}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-primary to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -161,16 +166,74 @@ const Hero = () => {
                     <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" />
                   </span>
                 </Button>
-                
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="group btn-secondary text-lg px-10 py-6 rounded-2xl backdrop-blur-sm border-2 border-white/30 hover:border-white/50 hover:bg-white/10 transition-all duration-300"
-                  onClick={handlePlanTrip}
-                >
-                  <MapPin className="mr-3 w-5 h-5 group-hover:bounce transition-all duration-300" />
-                  Plan Your Trip
-                </Button>
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="group btn-secondary text-lg px-8 py-6 rounded-2xl backdrop-blur-sm border-2 border-white/30 hover:border-white/50 hover:bg-white/10 transition-all duration-300"
+                    >
+                      <Phone className="mr-3 w-5 h-5 group-hover:bounce transition-all duration-300" />
+                      Start Your Journey Today
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="w-[90%] sm:max-w-sm p-0 border-0 bg-transparent shadow-none overflow-visible rounded-3xl mx-auto">
+                    <Card className="glass-effect p-4 sm:p-6 lg:p-8 border-2 border-white/20 rounded-3xl relative overflow-hidden">
+                      {/* Card Background Effect */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-white/5 to-primary/10"></div>
+
+                      <div className="relative z-10">
+                        <h3 className="text-lg sm:text-xl lg:text-2xl font-serif font-bold mb-4 sm:mb-6 bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent text-center sm:text-left">
+                          Start Your Journey
+                        </h3>
+
+                        <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+                          {features.map((feature, index) => (
+                            <div key={index} className="group/item p-2 sm:p-3 rounded-xl bg-gradient-to-r from-primary/10 to-red-500/10 hover:from-primary/20 hover:to-red-500/20 transition-all duration-300 hover:translate-x-2 cursor-pointer border border-transparent hover:border-primary/20">
+                              <div className="flex items-start space-x-2 sm:space-x-3">
+                                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-primary to-red-500 rounded-lg flex items-center justify-center shadow-md flex-shrink-0 mt-0.5 sm:mt-0">
+                                  <feature.icon className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                                </div>
+                                <div className="flex-1 text-left">
+                                  <span className="font-semibold text-xs sm:text-sm text-foreground block">{feature.title}</span>
+                                  <span className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 leading-tight">{feature.desc}</span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Enhanced Action Buttons */}
+                        <div className="space-y-2 sm:space-y-3 flex flex-col items-stretch">
+                          <Button
+                            className="w-full btn-primary text-sm sm:text-base py-4 sm:py-5 rounded-xl font-bold shadow-lg hover:shadow-primary/25 relative overflow-hidden"
+                            onClick={handleConsultation}
+                          >
+                            <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 relative z-10" />
+                            <span className="relative z-10">Free Consultation</span>
+                          </Button>
+
+                          <Button
+                            onClick={handleWhatsAppClick}
+                            className="w-full bg-green-500 hover:bg-green-600 text-white py-4 sm:py-5 rounded-xl font-bold shadow-md hover:shadow-green-500/25 transition-all duration-300 relative overflow-hidden"
+                          >
+                            <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 relative z-10" />
+                            <span className="relative z-10">WhatsApp</span>
+                          </Button>
+                        </div>
+
+                        {/* Trust Badge */}
+                        <div className="mt-3 sm:mt-4 text-center p-2 sm:p-2.5 bg-green-500/10 rounded-lg border border-green-500/20">
+                          <div className="flex items-center justify-center gap-1.5 sm:gap-2 text-green-400 text-[10px] sm:text-xs font-semibold">
+                            <Shield className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                            100% Secure & Trusted
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               {/* WhatsApp Quick Contact */}
@@ -202,64 +265,7 @@ const Hero = () => {
               </div>
             </div>
 
-            {/* Enhanced Hero Card */}
-            <div className="lg:justify-self-end animate-fade-in" style={{ animationDelay: '0.3s' }}>
-              <Card className="glass-effect p-8 lg:p-10 max-w-md border-2 border-white/20 rounded-3xl relative overflow-hidden group hover:border-white/30 transition-all duration-500 hover:scale-[1.02]">
-                {/* Card Background Effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-primary/5 group-hover:from-white/10 group-hover:to-primary/10 transition-all duration-500"></div>
-                
-                <div className="relative z-10">
-                  <h3 className="text-2xl lg:text-3xl font-serif font-bold mb-8 bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
-                    Start Your Journey Today
-                  </h3>
-                  
-                  <div className="space-y-4 mb-8">
-                    {features.map((feature, index) => (
-                      <div key={index} className="group/item p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-red-500/10 hover:from-primary/20 hover:to-red-500/20 transition-all duration-300 hover:translate-x-2 cursor-pointer border border-transparent hover:border-primary/20">
-                        <div className="flex items-start space-x-4">
-                          <div className="w-10 h-10 bg-gradient-to-r from-primary to-red-500 rounded-xl flex items-center justify-center group-hover/item:scale-110 transition-transform duration-300 shadow-lg">
-                            <feature.icon className="w-5 h-5 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <span className="font-semibold text-foreground block">{feature.title}</span>
-                            <span className="text-sm text-muted-foreground mt-1">{feature.desc}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* Enhanced Action Buttons */}
-                  <div className="space-y-4">
-                    <Button 
-                      className="w-full btn-primary text-lg py-6 rounded-2xl font-bold shadow-2xl hover:shadow-primary/25 group/btn relative overflow-hidden"
-                      onClick={handleConsultation}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-primary via-red-500 to-primary opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                      <Phone className="w-5 h-5 mr-3 relative z-10 group-hover/btn:animate-pulse" />
-                      <span className="relative z-10">Get Free Consultation</span>
-                    </Button>
-                    
-                    <Button
-                      onClick={handleWhatsAppClick}
-                      className="w-full bg-green-500 hover:bg-green-600 text-white py-6 rounded-2xl font-bold shadow-xl hover:shadow-green-500/25 transition-all duration-300 group/whatsapp relative overflow-hidden"
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-green-600 opacity-0 group-hover/whatsapp:opacity-100 transition-opacity duration-300"></div>
-                      <MessageCircle className="w-5 h-5 mr-3 relative z-10 group-hover/whatsapp:animate-bounce" />
-                      <span className="relative z-10">Chat on WhatsApp</span>
-                    </Button>
-                  </div>
-                  
-                  {/* Trust Badge */}
-                  <div className="mt-6 text-center p-3 bg-green-500/10 rounded-xl border border-green-500/20">
-                    <div className="flex items-center justify-center gap-2 text-green-400 text-sm font-semibold">
-                      <Shield className="w-4 h-4" />
-                      100% Secure & Trusted
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </div>
+
           </div>
         </div>
       </section>
