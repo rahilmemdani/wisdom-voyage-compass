@@ -2,178 +2,174 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Star, MapPin, Calendar } from 'lucide-react';
+import { Star, MapPin, Calendar, ArrowRight, Compass } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const PopularDestinations = () => {
   const navigate = useNavigate();
 
   const destinations = [
     {
-      name: 'Swiss Alps',
-      location: 'Switzerland',
-      price: 'From ₹1,50,000',
+      id: 'swiss-alps',
+      name: 'The Swiss Alps',
+      location: 'Bernese Oberland, Switzerland',
+      price: '₹1.5L',
       rating: 4.9,
-      reviews: 234,
-      image: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      category: 'International',
+      reviews: 842,
+      image: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      tag: 'Luxury Escape',
       duration: '7 Days',
+      description: 'Experience the majesty of snow-capped peaks and crystal alpine lakes in the heart of Europe.'
     },
     {
-      name: 'Goa Beaches',
-      location: 'India',
-      price: 'From ₹25,000',
-      rating: 4.7,
-      reviews: 456,
-      image: 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      category: 'Domestic',
-      duration: '5 Days',
-    },
-    {
-      name: 'Iceland Falls',
-      location: 'Iceland',
-      price: 'From ₹2,00,000',
+      id: 'bali-paradise',
+      name: 'Bali Retreat',
+      location: 'Ubud, Indonesia',
+      price: '₹85K',
       rating: 4.8,
-      reviews: 189,
-      image: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      category: 'International',
+      reviews: 1250,
+      image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      tag: 'Tropical Zen',
       duration: '6 Days',
+      description: 'Discover the perfect blend of spiritual heritage, lush jungles, and pristine emerald beaches.'
     },
     {
-      name: 'Kerala Backwaters',
-      location: 'India',
-      price: 'From ₹35,000',
-      rating: 4.6,
-      reviews: 324,
-      image: 'https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      category: 'Domestic',
-      duration: '4 Days',
-    },
-    {
-      name: 'Himalayas Trek',
-      location: 'Nepal',
-      price: 'From ₹75,000',
+      id: 'iceland-aurora',
+      name: 'Nordic Aurora',
+      location: 'Reykjavík, Iceland',
+      price: '₹2.1L',
       rating: 4.9,
-      reviews: 167,
-      image: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      category: 'International',
-      duration: '10 Days',
-    },
-    {
-      name: 'Rajasthan Heritage',
-      location: 'India',
-      price: 'From ₹45,000',
-      rating: 4.5,
-      reviews: 278,
-      image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      category: 'Domestic',
+      reviews: 615,
+      image: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      tag: 'Arctic Adventure',
       duration: '8 Days',
-    },
+      description: 'Embark on a surreal journey through volcanic landscapes, glaciers, and the dancing Northern Lights.'
+    }
   ];
 
-  const handleViewDetails = (destination: string) => {
-    navigate('/plan-trip', { state: { selectedDestination: destination } });
-  };
-
-  const handleViewAll = () => {
-    navigate('/packages');
-  };
-
   return (
-    <section className="py-16 lg:py-20 bg-gradient-to-br from-white to-gray-50/50">
-      <div className="container-custom section-padding">
-        <div className="text-center mb-20">
-          <h2 className="font-serif font-bold gradient-text mb-8 text-balance">
-            Popular Destinations
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed text-balance">
-            Explore our handpicked destinations that offer unforgettable experiences and breathtaking beauty
-          </p>
-        </div>
-
-        {/* Quick Destination Links */}
-        <div className="mb-16">
-          <div className="flex flex-wrap gap-4 justify-center">
-            {['Switzerland', 'Iceland', 'Nepal', 'Goa', 'Kerala', 'Rajasthan'].map((destination, index) => (
-              <span
-                key={index}
-                className="px-6 py-3 bg-primary/10 backdrop-blur-sm rounded-2xl font-medium hover:bg-primary hover:text-white transition-all duration-300 cursor-pointer hover:scale-105 border border-primary/20 hover:border-primary"
-                onClick={() => handleViewDetails(destination)}
-              >
-                {destination}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {destinations.map((destination, index) => (
-            <Card key={index} className="group card-modern hover-lift border-0 overflow-hidden">
-              <div className="relative overflow-hidden">
-                <img 
-                  src={destination.image} 
-                  alt={destination.name}
-                  className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute top-6 left-6">
-                  <Badge variant="secondary" className="bg-white/95 backdrop-blur-sm text-primary font-semibold shadow-lg rounded-full px-3 py-1">
-                    {destination.category}
-                  </Badge>
-                </div>
-                <div className="absolute top-6 right-6">
-                  <Badge variant="secondary" className="bg-primary text-white font-semibold shadow-lg rounded-full px-3 py-1 flex items-center space-x-1">
-                    <Calendar className="w-3 h-3" />
-                    <span>{destination.duration}</span>
-                  </Badge>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-6 right-6">
-                  <div className="flex items-center space-x-1 bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span className="text-sm font-bold text-white">{destination.rating}</span>
-                  </div>
-                </div>
+    <section className="min-h-[100dvh] lg:h-[100dvh] snap-start relative flex flex-col justify-center bg-white py-16 lg:py-0 overflow-x-hidden lg:overflow-hidden no-scrollbar">
+      <div className="container-custom w-full px-6 sm:px-8 lg:px-0">
+        
+        {/* Layout Wrapper: Grid for Desktop, Block for Mobile */}
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+          
+          {/* Header Entity - Matched to Services Layout */}
+          <div className="lg:col-span-4 text-left space-y-3 lg:space-y-6 animate-fade-in lg:pr-8 mb-10 lg:mb-0">
+            <div className="space-y-2 lg:space-y-3">
+              <div className="inline-flex items-center px-2 py-0.5 bg-primary/10 rounded-full text-primary font-bold text-[8px] lg:text-[10px] tracking-widest uppercase">
+                Expertise
               </div>
-              
-              <CardContent className="p-8">
-                <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-2xl font-serif font-bold gradient-text group-hover:scale-105 transition-transform duration-300 origin-left">
-                    {destination.name}
-                  </h3>
-                </div>
-                
-                <div className="flex items-center text-muted-foreground mb-6">
-                  <MapPin className="w-4 h-4 mr-2 text-primary" />
-                  <span className="font-medium">{destination.location}</span>
-                  <span className="text-sm ml-auto">({destination.reviews} reviews)</span>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-2xl font-bold gradient-text font-serif">{destination.price}</p>
-                    <p className="text-sm text-muted-foreground font-medium">per person</p>
-                  </div>
-                  <Button 
-                    className="btn-primary text-sm px-6 py-3 rounded-xl"
-                    onClick={() => handleViewDetails(destination.name)}
-                  >
-                    Enquire Now
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-5xl font-serif font-bold text-slate-900 leading-tight">
+                Popular <br className="hidden lg:block"/> <span className="gradient-text">Destinations</span>
+              </h2>
+            </div>
+            <p className="max-w-[280px] lg:max-w-md text-[13px] lg:text-lg text-slate-600 leading-relaxed">
+              Handpicked escapes designed for travelers who seek the extraordinary.
+            </p>
 
-        <div className="text-center mt-20">
-          <Button 
-            size="lg" 
-            variant="outline" 
-            className="btn-secondary text-lg px-12 py-5 rounded-2xl"
-            onClick={handleViewAll}
-          >
-            View All Destinations
-          </Button>
+            <div className="flex items-center gap-3 pt-2">
+              <div className="w-10 h-1 bg-primary/30 rounded-full" />
+              <span className="text-slate-400 text-sm font-medium italic">Swipe to explore</span>
+            </div>
+          </div>
+
+          {/* Carousel Entity - Standardized with Services */}
+          <div className="lg:col-span-8 relative px-0">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: false,
+                dragFree: true,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-4 flex no-scrollbar touch-pan-y">
+                {destinations.map((dest, index) => (
+                  <CarouselItem key={dest.id} className="basis-[260px] sm:basis-[320px] lg:basis-[380px] pl-4 lg:pl-6 leading-none">
+                    <div 
+                      className="group relative animate-slide-up"
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                      <div className="relative h-[380px] sm:h-[480px] lg:h-[550px] w-full rounded-[2rem] overflow-hidden shadow-xl shadow-slate-200/50">
+                        {/* Image Component */}
+                        <img 
+                          src={dest.image}
+                          alt={dest.name}
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
+                        />
+                        
+                        {/* Overlays */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500" />
+                        
+                        {/* Top Badges */}
+                        <div className="absolute top-4 inset-x-4 flex justify-between items-start">
+                          <Badge className="bg-white/20 backdrop-blur-md border border-white/20 text-white rounded-lg px-2 py-1 text-[8px] sm:text-[10px] font-semibold tracking-wide">
+                            {dest.tag}
+                          </Badge>
+                          <div className="bg-white/95 backdrop-blur-sm px-2 py-1 rounded-xl shadow-lg flex items-center gap-1">
+                            <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                            <span className="text-[10px] font-bold text-slate-800">{dest.rating}</span>
+                          </div>
+                        </div>
+
+                        {/* Bottom Content Area */}
+                        <div className="absolute bottom-0 inset-x-0 p-5 sm:p-6 transform transition-transform duration-500 group-hover:-translate-y-1">
+                          <div className="space-y-2 sm:space-y-3">
+                            <div className="flex items-center gap-1.5 text-white/80 text-[10px] sm:text-xs">
+                              <MapPin className="w-3 h-3 text-primary-light" />
+                              <span className="line-clamp-1">{dest.location}</span>
+                            </div>
+                            
+                            <h3 className="text-xl sm:text-2xl lg:text-3xl font-serif font-bold text-white leading-tight">
+                              {dest.name}
+                            </h3>
+
+                            <div className="flex items-center justify-between pt-1">
+                              <div className="flex flex-col">
+                                <span className="text-white/60 text-[8px] uppercase tracking-widest">Starts from</span>
+                                <div className="flex items-baseline gap-1">
+                                  <span className="text-lg sm:text-xl font-bold text-white font-serif">{dest.price}</span>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-1.5 text-white/90 font-medium text-[10px] bg-white/10 backdrop-blur-md border border-white/10 rounded-full px-3 py-1.5">
+                                <Calendar className="w-3 h-3 text-primary-light" />
+                                <span>{dest.duration}</span>
+                              </div>
+                            </div>
+
+                            <p className="text-white/50 text-[10px] sm:text-[11px] line-clamp-2 mt-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0 hidden sm:block">
+                              {dest.description}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Clickable Area Overlay */}
+                        <div 
+                          className="absolute inset-0 cursor-pointer" 
+                          onClick={() => navigate('/plan-trip', { state: { selectedDestination: dest.name } })}
+                        />
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              
+              {/* Custom Navigation for Desktop */}
+              <div className="hidden lg:flex absolute -bottom-14 left-0 gap-3">
+                <CarouselPrevious className="static translate-y-0 h-11 w-11 rounded-xl border-2 border-slate-200 hover:border-primary hover:text-primary transition-all shadow-none" />
+                <CarouselNext className="static translate-y-0 h-11 w-11 rounded-xl border-2 border-slate-200 hover:border-primary hover:text-primary transition-all shadow-none" />
+              </div>
+            </Carousel>
+          </div>
         </div>
       </div>
     </section>
