@@ -57,7 +57,7 @@ const Services = () => {
   };
 
   return (
-    <section className="min-h-[100dvh] lg:h-[100dvh] snap-start relative flex flex-col justify-center bg-[#F8FAFC] overflow-x-hidden py-16 lg:py-0">
+    <section className="min-h-[100dvh] lg:h-[100dvh] snap-start relative flex flex-col justify-center bg-[#F8FAFC] py-16 lg:py-0 overflow-x-hidden lg:overflow-hidden">
       <div className="container-custom w-full px-6 sm:px-8 lg:px-0">
 
         {/* Layout Wrapper: Grid for Desktop, Block for Mobile */}
