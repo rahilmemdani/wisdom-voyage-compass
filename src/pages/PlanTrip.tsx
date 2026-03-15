@@ -80,7 +80,7 @@ const PlanTrip = () => {
       const publicKey = 'IyzAcrjwMY4P_StOx'; // Replace with your EmailJS public key
 
       const templateParams = {
-        to_email: 'rizan@wisdomtravel.co.in', 
+        to_email: 'rizan@wisdomtravel.in',
         from_name: data.name,
         from_email: data.email,
         phone: data.phone,
@@ -118,11 +118,11 @@ Additional Notes: ${data.notes || 'None'}
 
   const onSubmit = async (data: PlanTripForm) => {
     setIsSubmitting(true);
-    
+
     try {
       // Send email using EmailJS
       const emailSent = await sendEmailJS(data);
-      
+
       if (emailSent) {
         toast.success("Trip request submitted successfully! We'll get back to you soon.");
         form.reset();
@@ -142,7 +142,7 @@ Additional Notes: ${data.notes || 'None'}
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container mx-auto px-4 py-8 mt-16">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
@@ -162,7 +162,7 @@ Additional Notes: ${data.notes || 'None'}
                 Fields marked with * are required. All other information is optional but helps us serve you better.
               </CardDescription>
             </CardHeader>
-            
+
             <CardContent>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -223,7 +223,7 @@ Additional Notes: ${data.notes || 'None'}
                   {/* Optional Trip Details */}
                   <div className="border-t pt-6">
                     <h3 className="text-lg font-semibold mb-4 text-foreground">Trip Details (Optional)</h3>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <FormField
                         control={form.control}
@@ -263,11 +263,11 @@ Additional Notes: ${data.notes || 'None'}
                           <FormItem>
                             <FormLabel>Adults</FormLabel>
                             <FormControl>
-                              <Input 
-                                type="number" 
-                                min="1" 
+                              <Input
+                                type="number"
+                                min="1"
                                 placeholder="Number of adults"
-                                value={field.value || ""} 
+                                value={field.value || ""}
                                 onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                               />
                             </FormControl>
@@ -282,11 +282,11 @@ Additional Notes: ${data.notes || 'None'}
                           <FormItem>
                             <FormLabel>Children</FormLabel>
                             <FormControl>
-                              <Input 
-                                type="number" 
-                                min="0" 
+                              <Input
+                                type="number"
+                                min="0"
                                 placeholder="Number of children(below 12 years)"
-                                value={field.value || ""} 
+                                value={field.value || ""}
                                 onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                               />
                             </FormControl>
@@ -383,10 +383,10 @@ Additional Notes: ${data.notes || 'None'}
                         <FormItem>
                           <FormLabel>Additional Notes</FormLabel>
                           <FormControl>
-                            <Textarea 
+                            <Textarea
                               placeholder="Tell us about any special requirements, preferences, or questions..."
                               className="min-h-[100px]"
-                              {...field} 
+                              {...field}
                             />
                           </FormControl>
                         </FormItem>
@@ -394,8 +394,8 @@ Additional Notes: ${data.notes || 'None'}
                     />
                   </div>
 
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     disabled={isSubmitting}
                     className="w-full md:w-auto"
                     size="lg"
