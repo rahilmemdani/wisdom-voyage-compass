@@ -44,8 +44,8 @@ const Header = () => {
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Tour Packages', href: '/packages' },
-    { name: 'Flight Bookings', href: '/flights' },
-    { name: 'Bookings', href: '/my-bookings' },
+    // { name: 'Flight Bookings', href: '/flights' },
+    // { name: 'Bookings', href: '/my-bookings' },
     { name: 'Visa Services', href: '/visa' },
     { name: 'About Us', href: '/about' },
     { name: 'Plan Your Trip', href: "/plan-trip" }
@@ -170,8 +170,8 @@ const Header = () => {
                   to={item.href}
                   onClick={() => setIsMenuOpen(false)}
                   className={`text-base font-medium rounded-xl px-4 py-3.5 transition-all flex items-center ${active
-                      ? 'bg-primary/10 text-primary'
-                      : 'text-slate-700 hover:bg-slate-50 hover:text-primary'
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-slate-700 hover:bg-slate-50 hover:text-primary'
                     }`}
                 >
                   {active && <span className="w-1.5 h-1.5 rounded-full bg-primary mr-3" />}

@@ -38,13 +38,13 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/packages" element={<Packages />} />
-          <Route path="/flights" element={<Flights />} />
+          {/* <Route path="/flights" element={<Flights />} /> */}
           <Route path="/visa" element={<Visa />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/plan-trip" element={<PlanTrip />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/my-bookings" element={<MyBookings />} />
+          {/* <Route path="/my-bookings" element={<MyBookings />} /> */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

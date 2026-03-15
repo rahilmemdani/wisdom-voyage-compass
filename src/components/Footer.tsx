@@ -40,7 +40,7 @@ const Footer = () => {
   };
 
   const handleEmailClick = () => {
-    window.open('mailto:sales@wisdomtravel.co.in', '_self');
+    window.open('mailto:sales@wisdomtravel.in', '_self');
   };
 
   const handleSubscribe = () => {
@@ -74,7 +74,7 @@ const Footer = () => {
 
         {/* Main Cards Grid */}
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
-          
+
           {/* About Us Card - Smaller height */}
           <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:shadow-red-200/50 group border border-red-100">
             <div className="space-y-4">
@@ -156,9 +156,9 @@ const Footer = () => {
                   onClick={handleEmailClick}
                 >
                   <Mail className="w-3 h-3" />
-                  <span>sales@wisdomtravel.co.in</span>
+                  <span>sales@wisdomtravel.in</span>
                 </div>
-                        </div>
+              </div>
             </div>
           </div>
         </div>
