@@ -153,8 +153,9 @@ const Contact = () => {
                   <form onSubmit={handleSubmit} className="space-y-5">
 
                     {/* Name row */}
-                    <div className="grid grid-cols-3 gap-3">
-                      <div>
+                    {/* Name row — stacks title on its own row on mobile, then 3-col on sm+ */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      <div className="col-span-2 sm:col-span-1">
                         <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Title</label>
                         <Select value={formData.title} onValueChange={v => handleInputChange('title', v)}>
                           <SelectTrigger className="h-11 rounded-xl border-slate-200 bg-slate-50 text-sm">
