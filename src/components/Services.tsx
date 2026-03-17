@@ -77,10 +77,10 @@ const Services = () => {
               Tailored solutions crafted to make your journey seamless and memorable.
             </p>
 
-            <div className="flex items-center gap-3 pt-2">
+            {/* <div className="flex items-center gap-3 pt-2">
               <div className="w-10 h-1 bg-primary/30 rounded-full" />
               <span className="text-slate-400 text-sm font-medium italic">Swipe to explore</span>
-            </div>
+            </div> */}
           </div>
 
           {/* Carousel Entity — overflow-x-hidden on mobile only, visible on desktop so buttons show */}

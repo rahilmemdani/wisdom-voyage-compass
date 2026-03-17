@@ -73,10 +73,10 @@ const CustomerReviews = () => {
             <p className="max-w-[280px] lg:max-w-md text-[13px] lg:text-lg text-slate-600 leading-relaxed font-medium">
               Real stories from travelers who experienced the world with Wisdom Voyage.
             </p>
-            <div className="flex items-center gap-3 pt-2">
+            {/* <div className="flex items-center gap-3 pt-2">
               <div className="w-10 h-1 bg-primary/30 rounded-full" />
               <span className="text-slate-400 text-sm font-medium italic">Scroll through the love</span>
-            </div>
+            </div> */}
           </div>
 
           {/* Carousel Entity — overflow-x-hidden mobile, overflow-visible desktop */}
