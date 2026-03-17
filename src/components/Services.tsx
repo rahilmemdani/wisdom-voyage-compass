@@ -93,7 +93,7 @@ const Services = () => {
               }}
               className="w-full"
             >
-              <CarouselContent className="-ml-4 flex no-scrollbar touch-pan-y">
+              <CarouselContent className="-ml-4 flex no-scrollbar">
                 {services.map((service, index) => (
                   <CarouselItem key={index} className="basis-[240px] sm:basis-[300px] lg:basis-[360px] pl-4 lg:pl-6 leading-none">
                     <Card className="group border border-slate-100 bg-white shadow-md hover:shadow-xl transition-all duration-500 overflow-hidden rounded-2xl h-[340px] sm:h-[420px] flex flex-col">

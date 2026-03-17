@@ -71,7 +71,7 @@ const PopularDestinations = () => {
               }}
               className="w-full"
             >
-              <CarouselContent className="-ml-4 flex no-scrollbar touch-pan-y">
+              <CarouselContent className="-ml-4 flex no-scrollbar">
                 {destinations.map((dest, index) => (
                   <CarouselItem key={dest.id} className="basis-[260px] sm:basis-[320px] lg:basis-[380px] pl-4 lg:pl-6 leading-none">
                     <div 

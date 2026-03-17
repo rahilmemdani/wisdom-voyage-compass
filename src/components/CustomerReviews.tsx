@@ -92,7 +92,7 @@ const CustomerReviews = () => {
               }}
               className="w-full"
             >
-              <CarouselContent className="-ml-4 flex no-scrollbar touch-pan-y items-center py-10">
+              <CarouselContent className="-ml-4 flex no-scrollbar items-center py-10">
                 {reviews.map((review, index) => {
                   const isActive = index === current;
                   return (
