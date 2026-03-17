@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -199,9 +199,17 @@ const Packages = () => {
   const totalPages = Math.ceil(packages.length / CARDS_PER_PAGE);
   const paginated = packages.slice((page - 1) * CARDS_PER_PAGE, page * CARDS_PER_PAGE);
 
+  const packagesRef = useRef<HTMLDivElement>(null);
+
   const switchTab = (tab: 'domestic' | 'international') => {
     setActiveTab(tab);
     setPage(1);
+    packagesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const changePage = (newPage: number) => {
+    setPage(newPage);
+    packagesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const PackageCard = ({ pkg }: { pkg: Package }) => (
@@ -342,7 +350,7 @@ const Packages = () => {
       </section>
 
       {/* Packages */}
-      <section className="py-12 lg:py-16">
+      <section ref={packagesRef} className="py-12 lg:py-16">
         <div className="container mx-auto px-6 max-w-7xl">
 
           {/* Section header */}
@@ -372,7 +380,7 @@ const Packages = () => {
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 mt-12">
               <button
-                onClick={() => setPage(p => Math.max(1, p - 1))}
+                onClick={() => changePage(Math.max(1, page - 1))}
                 disabled={page === 1}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-500 text-xs font-semibold hover:border-primary/30 hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               >
@@ -384,7 +392,7 @@ const Packages = () => {
                 {Array.from({ length: totalPages }).map((_, i) => (
                   <button
                     key={i}
-                    onClick={() => setPage(i + 1)}
+                    onClick={() => changePage(i + 1)}
                     className={`w-9 h-9 rounded-xl text-xs font-bold transition-all duration-200 ${page === i + 1
                       ? 'bg-primary text-white shadow-lg shadow-primary/25'
                       : 'bg-white border border-slate-200 text-slate-500 hover:border-primary/30 hover:text-primary'
@@ -396,7 +404,7 @@ const Packages = () => {
               </div>
 
               <button
-                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                onClick={() => changePage(Math.min(totalPages, page + 1))}
                 disabled={page === totalPages}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-500 text-xs font-semibold hover:border-primary/30 hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               >

@@ -207,9 +207,6 @@ const Footer = () => {
           <p className="text-slate-400 text-[11px] font-medium text-center sm:text-left">
             © 2025 Wisdom Tours and Travels. All rights reserved.
           </p>
-          <p className="text-slate-300 text-[11px]">
-            Made with ♥ in Mumbai
-          </p>
         </div>
 
       </div>
