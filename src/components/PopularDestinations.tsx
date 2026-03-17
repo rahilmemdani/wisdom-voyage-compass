@@ -55,7 +55,7 @@ const PopularDestinations = () => {
   ];
 
   return (
-    <section className="min-h-[100dvh] lg:h-[100dvh] snap-start relative flex flex-col justify-center bg-white py-16 lg:py-0 overflow-x-hidden lg:overflow-hidden no-scrollbar">
+    <section className="relative flex flex-col justify-center bg-white py-16 lg:py-24 overflow-x-hidden no-scrollbar">
       <div className="container-custom w-full px-6 sm:px-8 lg:px-0">
         
         {/* Layout Wrapper: Grid for Desktop, Block for Mobile */}

@@ -92,7 +92,7 @@ const Hero = () => {
         </Button>
       </div> */}
 
-      <section className="section-hero relative overflow-hidden h-[100dvh] !items-start pt-24 md:pt-36">
+      <section className="section-hero relative overflow-hidden min-h-[100dvh] !items-start pt-24 md:pt-32">
         {/* Enhanced Background with Multiple Layers */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-110 transition-transform duration-[10s] hover:scale-105"
@@ -128,10 +128,10 @@ const Hero = () => {
           ))}
         </div>
 
-        <div className="relative z-10 container-custom section-padding pt-20 lg:pt-0">
-          <div className="grid lg:grid-cols-1 gap-6 sm:gap-10 items-center justify-items-center text-center">
+        <div className="relative z-10 container-custom section-padding pt-8 lg:pt-0">
+          <div className="grid lg:grid-cols-1 gap-4 sm:gap-8 items-center justify-items-center text-center">
             {/* Enhanced Hero Content */}
-            <div className="text-white animate-fade-in space-y-6 sm:space-y-10 max-w-4xl">
+            <div className="text-white animate-fade-in space-y-4 sm:space-y-8 max-w-4xl">
               {/* Animated Badge */}
               {/* <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20 animate-slide-up">
                 <Sparkles className="w-5 h-5 text-yellow-400 animate-spin-slow" />
@@ -250,7 +250,7 @@ const Hero = () => {
               </div> */}
 
               {/* Enhanced Trust Indicators */}
-              <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-8 animate-slide-up" style={{ animationDelay: '1s' }}>
+              <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-4 sm:pt-8 animate-slide-up" style={{ animationDelay: '1s' }}>
                 {stats.map((stat, index) => (
                   <div key={index} className="text-center group hover:scale-110 transition-all duration-500 cursor-pointer">
                     <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 mb-3 sm:mb-4 group-hover:bg-white/20 group-hover:shadow-lg transition-all duration-300 relative overflow-hidden">
