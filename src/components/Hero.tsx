@@ -92,7 +92,7 @@ const Hero = () => {
         </Button>
       </div> */}
 
-      <section className="section-hero relative overflow-hidden h-[100dvh] !items-start pt-24 md:pt-36">
+      <section className="section-hero relative overflow-hidden min-h-[100dvh] !items-start pt-24 md:pt-32">
         {/* Enhanced Background with Multiple Layers */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-110 transition-transform duration-[10s] hover:scale-105"
