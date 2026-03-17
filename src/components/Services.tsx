@@ -57,7 +57,7 @@ const Services = () => {
   };
 
   return (
-    <section className="relative flex flex-col justify-center bg-[#F8FAFC] py-16 lg:py-24 overflow-x-hidden">
+    <section className="relative flex flex-col justify-center bg-[#F8FAFC] py-16 lg:py-24 overflow-x-hidden lg:pb-32">
       <div className="container-custom w-full px-6 sm:px-8 lg:px-0">
 
         {/* Layout Wrapper: Grid for Desktop, Block for Mobile */}
@@ -83,8 +83,8 @@ const Services = () => {
             </div>
           </div>
 
-          {/* Carousel Entity - Independent swipe track */}
-          <div className="lg:col-span-8 relative px-0">
+          {/* Carousel Entity — overflow-x-hidden on mobile only, visible on desktop so buttons show */}
+          <div className="lg:col-span-8 relative px-0 overflow-x-hidden lg:overflow-visible">
             <Carousel
               opts={{
                 align: "start",
@@ -93,7 +93,7 @@ const Services = () => {
               }}
               className="w-full"
             >
-              <CarouselContent className="-ml-4 flex no-scrollbar">
+              <CarouselContent className="-ml-4 flex no-scrollbar pl-0 pr-8">
                 {services.map((service, index) => (
                   <CarouselItem key={index} className="basis-[240px] sm:basis-[300px] lg:basis-[360px] pl-4 lg:pl-6 leading-none">
                     <Card className="group border border-slate-100 bg-white shadow-md hover:shadow-xl transition-all duration-500 overflow-hidden rounded-2xl h-[340px] sm:h-[420px] flex flex-col">
@@ -142,6 +142,7 @@ const Services = () => {
               </div>
             </Carousel>
           </div>
+
         </div>
       </div>
     </section>
