@@ -55,13 +55,12 @@ const CustomerReviews = () => {
   }, [api]);
 
   return (
-    <section className="relative flex flex-col justify-center bg-[#F1F5F9] py-16 lg:py-24 overflow-x-hidden no-scrollbar">
+    <section className="relative flex flex-col justify-center bg-[#F1F5F9] py-16 lg:py-24 lg:pb-32 overflow-x-hidden no-scrollbar">
       <div className="container-custom w-full px-6 sm:px-8 lg:px-0">
-        
-        {/* Layout Wrapper: Grid for Desktop, Block for Mobile */}
+
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-center">
-          
-          {/* Header Entity - Matched to Services/Destinations Layout */}
+
+          {/* Header Entity */}
           <div className="lg:col-span-4 text-left space-y-3 lg:space-y-6 animate-fade-in lg:pr-8 mb-10 lg:mb-0">
             <div className="space-y-2 lg:space-y-3">
               <div className="inline-flex items-center px-2 py-0.5 bg-primary/10 rounded-full text-primary font-bold text-[8px] lg:text-[10px] tracking-widest uppercase">
@@ -74,15 +73,14 @@ const CustomerReviews = () => {
             <p className="max-w-[280px] lg:max-w-md text-[13px] lg:text-lg text-slate-600 leading-relaxed font-medium">
               Real stories from travelers who experienced the world with Wisdom Voyage.
             </p>
-
             <div className="flex items-center gap-3 pt-2">
               <div className="w-10 h-1 bg-primary/30 rounded-full" />
               <span className="text-slate-400 text-sm font-medium italic">Scroll through the love</span>
             </div>
           </div>
 
-          {/* Carousel Entity - Premium Cards */}
-          <div className="lg:col-span-8 relative px-0">
+          {/* Carousel Entity — overflow-x-hidden mobile, overflow-visible desktop */}
+          <div className="lg:col-span-8 relative px-0 overflow-x-hidden lg:overflow-visible">
             <Carousel
               setApi={setApi}
               opts={{
@@ -97,33 +95,27 @@ const CustomerReviews = () => {
                   const isActive = index === current;
                   return (
                     <CarouselItem key={review.id} className="basis-[280px] sm:basis-[340px] lg:basis-[400px] pl-4 lg:pl-6">
-                      <div 
-                        className={`relative group transition-all duration-700 animate-slide-up ${
-                          isActive ? 'scale-105 z-10' : 'scale-95 opacity-60 grayscale-[0.5]'
-                        }`}
+                      <div
+                        className={`relative group transition-all duration-700 animate-slide-up ${isActive ? 'scale-105 z-10' : 'scale-95 opacity-60 grayscale-[0.5]'
+                          }`}
                         style={{ animationDelay: `${index * 0.1}s` }}
                       >
                         <div className="bg-white rounded-[2.5rem] p-8 lg:p-10 shadow-2xl shadow-slate-200/50 relative overflow-hidden flex flex-col h-[380px] sm:h-[440px] border border-white">
-                          {/* Quote Icon Background */}
                           <Quote className="absolute -top-6 -right-6 w-32 h-32 text-slate-50 opacity-[0.03] rotate-12" />
-                          
+
                           <div className="relative z-10 flex flex-col h-full">
-                            {/* Stars */}
                             <div className="flex gap-1 mb-6">
                               {[...Array(5)].map((_, i) => (
                                 <Star key={i} className="w-4 h-4 text-yellow-500 fill-current" />
                               ))}
                             </div>
 
-                            {/* Review Text */}
                             <p className="text-slate-700 text-sm sm:text-lg leading-relaxed font-medium mb-auto italic">
                               "{review.review}"
                             </p>
 
-                            {/* Divider */}
                             <div className="w-12 h-1 bg-primary/20 rounded-full my-8 transition-all duration-500 group-hover:w-full" />
 
-                            {/* Footer Info */}
                             <div className="flex items-center gap-4">
                               <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-white shadow-lg shadow-slate-200 flex-shrink-0">
                                 <img src={review.image} alt={review.name} className="w-full h-full object-cover" />
@@ -148,6 +140,7 @@ const CustomerReviews = () => {
               </div>
             </Carousel>
           </div>
+
         </div>
       </div>
     </section>
