@@ -63,7 +63,7 @@ const countries: Record<string, string> = {
 const countryCodes = Object.fromEntries(Object.entries(countries).map(([code, name]) => [name, code]));
 const sortedCountryNames = Object.values(countries).sort();
 
-// --- FLAG EMOJI HELPER ---
+// --- FLAG EMOJI ---
 const getFlagEmoji = (code: string) => {
   if (!code || code.length !== 2) return '🌐';
   return code.toUpperCase().split('').map(c =>
@@ -71,7 +71,17 @@ const getFlagEmoji = (code: string) => {
   ).join('');
 };
 
-// --- CUSTOM COUNTRY SELECTOR ---
+// --- VISA CATEGORY CONFIG ---
+const categoryConfig: Record<string, { label: string; color: string; bg: string; border: string; desc: string; emoji: string }> = {
+  VF: { label: 'Visa Free', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200', desc: 'No visa required for entry', emoji: '✅' },
+  VOA: { label: 'Visa on Arrival', color: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-200', desc: 'Obtain visa upon arrival at the airport', emoji: '🛬' },
+  EV: { label: 'eVisa Required', color: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-200', desc: 'Apply for electronic visa before travel', emoji: '💻' },
+  ETA: { label: 'eTA Required', color: 'text-violet-700', bg: 'bg-violet-50', border: 'border-violet-200', desc: 'Electronic Travel Authorisation required (e.g. ESTA, Canada)', emoji: '🖥️' },
+  VR: { label: 'Visa Required', color: 'text-red-700', bg: 'bg-red-50', border: 'border-red-200', desc: 'Must obtain visa from embassy before travel', emoji: '📋' },
+  NA: { label: 'Not Admitted', color: 'text-slate-700', bg: 'bg-slate-50', border: 'border-slate-200', desc: 'Entry not permitted with this passport', emoji: '🚫' },
+};
+
+// --- COUNTRY SELECTOR COMPONENT ---
 interface CountrySelectorProps {
   value: string;
   onChange: (val: string) => void;
@@ -86,20 +96,17 @@ const CountrySelector: React.FC<CountrySelectorProps> = ({ value, onChange, plac
   const [query, setQuery] = useState('');
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
 
   const filtered = useMemo(() => {
     if (!query) return sortedCountryNames.slice(0, 80);
     const q = query.toLowerCase();
-    return sortedCountryNames.filter(n => n.toLowerCase().startsWith(q)).slice(0, 60)
-      .concat(
-        sortedCountryNames.filter(n =>
-          !n.toLowerCase().startsWith(q) && n.toLowerCase().includes(q)
-        ).slice(0, 20)
-      );
+    const starts = sortedCountryNames.filter(n => n.toLowerCase().startsWith(q)).slice(0, 60);
+    const contains = sortedCountryNames.filter(n =>
+      !n.toLowerCase().startsWith(q) && n.toLowerCase().includes(q)
+    ).slice(0, 20);
+    return [...starts, ...contains];
   }, [query]);
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e: MouseEvent | TouchEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
@@ -135,7 +142,6 @@ const CountrySelector: React.FC<CountrySelectorProps> = ({ value, onChange, plac
         {emoji} {label}
       </label>
 
-      {/* Trigger button */}
       <button
         id={id}
         type="button"
@@ -143,9 +149,7 @@ const CountrySelector: React.FC<CountrySelectorProps> = ({ value, onChange, plac
           setOpen(o => !o);
           setTimeout(() => inputRef.current?.focus(), 50);
         }}
-        className={`w-full flex items-center gap-3 px-4 py-3 bg-slate-50 border rounded-xl text-sm text-left transition-all duration-200 ${open
-            ? 'border-primary ring-2 ring-primary/20 bg-white'
-            : 'border-slate-200 hover:border-slate-300 hover:bg-white'
+        className={`w-full flex items-center gap-3 px-4 py-3 bg-slate-50 border rounded-xl text-sm text-left transition-all duration-200 ${open ? 'border-primary ring-2 ring-primary/20 bg-white' : 'border-slate-200 hover:border-slate-300 hover:bg-white'
           }`}
       >
         {selectedCode ? (
@@ -172,11 +176,8 @@ const CountrySelector: React.FC<CountrySelectorProps> = ({ value, onChange, plac
         </div>
       </button>
 
-      {/* Dropdown */}
       {open && (
-        <div className="absolute z-50 w-full mt-1.5 bg-white border border-slate-200 rounded-2xl shadow-xl shadow-slate-200/60 overflow-hidden">
-
-          {/* Search input */}
+        <div className="absolute z-50 w-full mt-1.5 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
           <div className="p-2 border-b border-slate-100">
             <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-xl">
               <Search className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
@@ -200,44 +201,33 @@ const CountrySelector: React.FC<CountrySelectorProps> = ({ value, onChange, plac
             </div>
           </div>
 
-          {/* List */}
           <ul
-            ref={listRef}
             className="overflow-y-auto overscroll-contain"
             style={{ maxHeight: '220px', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
           >
             {filtered.length === 0 ? (
               <li className="px-4 py-6 text-center text-sm text-slate-400">No countries found</li>
-            ) : (
-              filtered.map(name => {
-                const code = countryCodes[name];
-                const isSelected = name === value;
-                return (
-                  <li key={name}>
-                    <button
-                      type="button"
-                      onMouseDown={e => { e.preventDefault(); handleSelect(name); }}
-                      onTouchEnd={e => { e.preventDefault(); handleSelect(name); }}
-                      className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-colors ${isSelected
-                          ? 'bg-primary/8 text-primary font-semibold'
-                          : 'text-slate-700 hover:bg-slate-50 active:bg-slate-100'
-                        }`}
-                    >
-                      <span className="text-base leading-none flex-shrink-0 w-6 text-center">
-                        {getFlagEmoji(code)}
-                      </span>
-                      <span className="flex-1 truncate">{name}</span>
-                      {isSelected && (
-                        <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" />
-                      )}
-                    </button>
-                  </li>
-                );
-              })
-            )}
+            ) : filtered.map(name => {
+              const code = countryCodes[name];
+              const isSelected = name === value;
+              return (
+                <li key={name}>
+                  <button
+                    type="button"
+                    onMouseDown={e => { e.preventDefault(); handleSelect(name); }}
+                    onTouchEnd={e => { e.preventDefault(); handleSelect(name); }}
+                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-colors ${isSelected ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-700 hover:bg-slate-50 active:bg-slate-100'
+                      }`}
+                  >
+                    <span className="text-base leading-none flex-shrink-0 w-6 text-center">{getFlagEmoji(code)}</span>
+                    <span className="flex-1 truncate">{name}</span>
+                    {isSelected && <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" />}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
 
-          {/* Footer hint */}
           <div className="px-4 py-2 border-t border-slate-100 bg-slate-50/80">
             <p className="text-[10px] text-slate-400 text-center">
               {filtered.length} {query ? 'results' : 'countries'} · Tap to select
@@ -249,40 +239,88 @@ const CountrySelector: React.FC<CountrySelectorProps> = ({ value, onChange, plac
   );
 };
 
-// --- VISA CATEGORY CONFIG ---
-const categoryConfig: Record<string, { label: string; color: string; bg: string; border: string; desc: string; emoji: string }> = {
-  VF: { label: 'Visa Free', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200', desc: 'No visa required for entry', emoji: '✅' },
-  VOA: { label: 'Visa on Arrival', color: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-200', desc: 'Obtain visa upon arrival at the airport', emoji: '🛬' },
-  EV: { label: 'eVisa Required', color: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-200', desc: 'Apply for electronic visa before travel', emoji: '💻' },
-  VR: { label: 'Visa Required', color: 'text-red-700', bg: 'bg-red-50', border: 'border-red-200', desc: 'Must obtain visa from embassy before travel', emoji: '📋' },
-  NA: { label: 'Not Admitted', color: 'text-slate-700', bg: 'bg-slate-50', border: 'border-slate-200', desc: 'Entry not permitted with this passport', emoji: '🚫' },
-};
-
+// --- MAIN COMPONENT ---
 const Visa = () => {
+  // ✅ ALL hooks are now correctly inside the component body
   const [passport, setPassport] = useState('');
   const [destination, setDestination] = useState('');
   const [result, setResult] = useState<VisaResult | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [visaData, setVisaData] = useState<Record<string, Record<string, string>> | null>(null);
+  const [dataLoading, setDataLoading] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
-  const handleCheck = async () => {
+  // Load CSV on mount
+  useEffect(() => {
+    const loadData = async () => {
+      setDataLoading(true);
+      try {
+        const res = await fetch(
+          'https://raw.githubusercontent.com/ilyankou/passport-index-dataset/master/passport-index-tidy.csv'
+        );
+        const text = await res.text();
+        const lines = text.trim().split('\n').slice(1);
+        const map: Record<string, Record<string, string>> = {};
+        for (const line of lines) {
+          const [p, d, r] = line.split(',');
+          if (!map[p]) map[p] = {};
+          map[p][d] = r?.trim();
+        }
+        setVisaData(map);
+        setDataLoaded(true);
+      } catch {
+        // will show error on check
+      } finally {
+        setDataLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  const handleCheck = () => {
     setError(null);
     setResult(null);
+
     if (!passport || !destination) { setError('Please select both countries.'); return; }
+
     const pc = countryCodes[passport];
     const dc = countryCodes[destination];
     if (pc === dc) { setError('Passport and destination cannot be the same.'); return; }
-    setIsLoading(true);
-    try {
-      const res = await fetch(`https://rough-sun-2523.fly.dev/${pc.toLowerCase()}/${dc.toLowerCase()}`);
-      if (!res.ok) throw new Error();
-      const data: VisaResult = await res.json();
-      setResult(data);
-    } catch {
-      setError('Failed to fetch visa requirements. Please try again.');
-    } finally {
-      setIsLoading(false);
+
+    if (!visaData || !dataLoaded) {
+      setError('Visa data is still loading, please wait a moment.');
+      return;
     }
+
+    const requirement = visaData[pc]?.[dc];
+    if (!requirement) { setError('No data available for this pair.'); return; }
+
+    let categoryCode = 'VR';
+    let dur: number | null = null;
+    const req = requirement.toLowerCase().trim();
+
+    if (req === 'visa free' || req === 'vf') {
+      categoryCode = 'VF';
+    } else if (!isNaN(Number(req)) && Number(req) > 0) {
+      categoryCode = 'VF';
+      dur = Number(req);
+    } else if (req === 'visa on arrival' || req === 'voa') {
+      categoryCode = 'VOA';
+    } else if (req === 'e-visa' || req === 'ev') {
+      categoryCode = 'EV';
+    } else if (req === 'eta') {
+      categoryCode = 'ETA';
+    } else if (req === 'no admission' || req === 'na') {
+      categoryCode = 'NA';
+    }
+
+    setResult({
+      passport: { name: passport, code: pc },
+      destination: { name: destination, code: dc },
+      dur,
+      category: { name: categoryCode, code: categoryCode },
+      last_updated: '2025-01-12',
+    });
   };
 
   const handleWhatsAppClick = () =>
@@ -367,22 +405,19 @@ const Visa = () => {
 
                 <Button
                   onClick={handleCheck}
-                  disabled={isLoading || !passport || !destination}
-                  className="w-full h-12 bg-primary hover:bg-primary/90 text-white rounded-xl font-semibold text-sm gap-2 transition-all shadow-lg shadow-primary/20 disabled:opacity-50"
+                  disabled={dataLoading || !passport || !destination}
+                  className="w-full h-12 bg-primary hover:bg-primary/90 text-white rounded-xl font-semibold text-sm gap-2 shadow-lg shadow-primary/20 disabled:opacity-50"
                 >
-                  {isLoading ? (
+                  {dataLoading ? (
                     <>
                       <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
-                      Checking...
+                      Loading data...
                     </>
                   ) : (
-                    <>
-                      <Search className="w-4 h-4" />
-                      Check Requirements
-                    </>
+                    <><Search className="w-4 h-4" /> Check Requirements</>
                   )}
                 </Button>
               </div>
@@ -393,7 +428,6 @@ const Visa = () => {
                 </div>
               )}
 
-              {/* Result */}
               {result && cat && (
                 <div className={`mt-6 rounded-2xl border ${cat.border} ${cat.bg} p-5 space-y-4`}>
                   <div className="flex items-start justify-between gap-3">
@@ -431,7 +465,7 @@ const Visa = () => {
                   </div>
 
                   <p className="text-[10px] text-slate-400 text-center">
-                    Last updated: {new Date(result.last_updated).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    Data source: Passport Index · Last updated Jan 2025
                   </p>
                 </div>
               )}
@@ -440,7 +474,7 @@ const Visa = () => {
             {/* RIGHT */}
             <div className="lg:col-span-7 space-y-8">
 
-              {/* Process */}
+              {/* Process steps */}
               <div>
                 <div className="mb-6">
                   <div className="inline-flex items-center px-2.5 py-1 bg-primary/10 rounded-full text-primary font-bold text-[9px] tracking-widest uppercase mb-3">
