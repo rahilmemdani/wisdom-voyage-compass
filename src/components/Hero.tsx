@@ -250,7 +250,7 @@ const Hero = () => {
               </div> */}
 
               {/* Enhanced Trust Indicators */}
-              <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-8 animate-slide-up" style={{ animationDelay: '1s' }}>
+              <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-4 sm:pt-8 animate-slide-up" style={{ animationDelay: '1s' }}>
                 {stats.map((stat, index) => (
                   <div key={index} className="text-center group hover:scale-110 transition-all duration-500 cursor-pointer">
                     <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 mb-3 sm:mb-4 group-hover:bg-white/20 group-hover:shadow-lg transition-all duration-300 relative overflow-hidden">
