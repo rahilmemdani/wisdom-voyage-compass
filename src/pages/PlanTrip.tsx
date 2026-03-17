@@ -67,8 +67,8 @@ const PlanTrip = () => {
   const sendEmailJS = async (data: PlanTripForm) => {
     const serviceID = 'service_7jd4cv7';
     const publicKey = 'IyzAcrjwMY4P_StOx';
-    const teamTemplateID = 'template_66u4wg8';  // → rizan@wisdomtravel.in
-    const userTemplateID = 'template_98kngzo';  // → traveler confirmation
+    const teamTemplateID = 'template_66u4wg8';
+    const userTemplateID = 'template_98kngzo';
 
     const travelDates = (() => {
       const raw = data.travelDates || '';
@@ -85,30 +85,42 @@ const PlanTrip = () => {
       from_name: data.name,
       from_email: data.email,
       phone: data.phone,
-      destination: data.destination || 'Not specified',
+      destination: data.destination || '',
       travel_dates: travelDates,
       adults: data.adults ?? 0,
       children: data.children ?? 0,
       budget: `₹${(data.budget?.[0] ?? 0).toLocaleString()}`,
-      trip_type: data.tripType || 'Not specified',
-      requirements: data.requirements?.join(', ') || 'None',
+      trip_type: data.tripType || '',
+      requirements: data.requirements?.join(', ') || '',
       notes: data.notes || 'None',
     };
 
-    // 1️⃣ Send to team
-    await emailjs.send(serviceID, teamTemplateID, {
-      ...commonParams,
-      to_email: 'rizan@wisdomtravel.in',
-      subject: `New Trip Request from ${data.name}`,
-    }, publicKey);
+    const [teamResult, userResult] = await Promise.allSettled([
 
-    // 2️⃣ Confirmation to traveler
-    await emailjs.send(serviceID, userTemplateID, {
-      ...commonParams,
-      to_email: data.email,
-      user_email: data.email,
-      subject: `Your trip request to ${data.destination || 'your dream destination'} — Wisdom Tours`,
-    }, publicKey);
+      // 1️⃣ Rizan gets full trip details
+      emailjs.send(serviceID, teamTemplateID, {
+        ...commonParams,
+        to_email: 'rizan@wisdomtravel.in',
+        subject: `New Trip Request from ${data.name}`,
+      }, publicKey),
+
+      // 2️⃣ Traveler gets confirmation
+      emailjs.send(serviceID, userTemplateID, {
+        ...commonParams,
+        to_email: data.email,
+        user_email: data.email,
+        subject: `Your trip request to ${data.destination || 'your dream destination'} — Wisdom Tours`,
+      }, publicKey),
+
+    ]);
+
+    if (teamResult.status === 'rejected') {
+      console.error('Team email failed:', teamResult.reason);
+      throw new Error('Failed to notify team');
+    }
+    if (userResult.status === 'rejected') {
+      console.error('Confirmation email failed:', userResult.reason);
+    }
   };
 
   const onSubmit = async (data: PlanTripForm) => {
