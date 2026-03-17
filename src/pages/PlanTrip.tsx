@@ -67,15 +67,26 @@ const PlanTrip = () => {
   const sendEmailJS = async (data: PlanTripForm) => {
     const serviceID = 'service_7jd4cv7';
     const publicKey = 'IyzAcrjwMY4P_StOx';
-    const teamTemplateID = 'template_66u4wg8'; // existing — goes to rizan@wisdomtravel.in
-    const userTemplateID = 'template_user_ack'; // NEW — confirmation to the traveler
+    const teamTemplateID = 'template_66u4wg8';  // → rizan@wisdomtravel.in
+    const userTemplateID = 'template_98kngzo';  // → traveler confirmation
+
+    const travelDates = (() => {
+      const raw = data.travelDates || '';
+      const [from, to] = raw.split('|');
+      if (from && to) {
+        const fmt = (d: string) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        const nights = Math.round((new Date(to).getTime() - new Date(from).getTime()) / (1000 * 60 * 60 * 24));
+        return `${fmt(from)} to ${fmt(to)} (${nights} nights)`;
+      }
+      return raw || 'Not specified';
+    })();
 
     const commonParams = {
       from_name: data.name,
       from_email: data.email,
       phone: data.phone,
       destination: data.destination || 'Not specified',
-      travel_dates: data.travelDates || 'Not specified',
+      travel_dates: travelDates,
       adults: data.adults ?? 0,
       children: data.children ?? 0,
       budget: `₹${(data.budget?.[0] ?? 0).toLocaleString()}`,
@@ -91,12 +102,10 @@ const PlanTrip = () => {
       subject: `New Trip Request from ${data.name}`,
     }, publicKey);
 
-    // 2️⃣ Send confirmation to the traveler
-    // In your EmailJS dashboard, create a template called template_user_ack
-    // with to_email = {{user_email}} and a friendly "we received your request" body
+    // 2️⃣ Confirmation to traveler
     await emailjs.send(serviceID, userTemplateID, {
       ...commonParams,
-      to_email: data.email,   // ← traveler's own email
+      to_email: data.email,
       user_email: data.email,
       subject: `Your trip request to ${data.destination || 'your dream destination'} — Wisdom Tours`,
     }, publicKey);
@@ -259,32 +268,96 @@ const PlanTrip = () => {
                       <p className="text-xs text-slate-400 mt-0.5">Help us understand your travel plans</p>
                     </div>
 
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <FormField control={form.control} name="destination" render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Destination</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                              <Input placeholder="e.g. Paris, Dubai, Goa" className="pl-9 h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-sm" {...field} />
-                            </div>
-                          </FormControl>
-                        </FormItem>
-                      )} />
+                    {/* Destination */}
+                    <FormField control={form.control} name="destination" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                          Destination
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                            <Input
+                              placeholder="e.g. Paris, Dubai, Goa, Switzerland..."
+                              autoComplete="off"
+                              autoCorrect="off"
+                              autoCapitalize="words"
+                              className="pl-9 h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-sm"
+                              {...field}
+                            />
+                          </div>
+                        </FormControl>
+                      </FormItem>
+                    )} />
 
-                      <FormField control={form.control} name="travelDates" render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Travel Dates</FormLabel>
-                          <FormControl>
+                    <FormField control={form.control} name="travelDates" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                          Travel Dates
+                        </FormLabel>
+                        <FormControl>
+                          <div className="space-y-2">
+                            {/* From */}
                             <div className="relative">
-                              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                              <Input placeholder="e.g. 15–25 March 2025" className="pl-9 h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-sm" {...field} />
+                              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none z-10" />
+                              <input
+                                type="date"
+                                min={new Date().toISOString().split('T')[0]}
+                                onChange={e => {
+                                  const from = e.target.value;
+                                  const current = field.value || '';
+                                  const to = current.split('|')[1] || '';
+                                  field.onChange(from ? `${from}|${to}` : `|${to}`);
+                                }}
+                                value={field.value?.split('|')[0] || ''}
+                                className="w-full pl-9 pr-4 h-11 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white text-sm text-slate-700 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all appearance-none"
+                                style={{ colorScheme: 'light' }}
+                              />
+                              <span className="absolute left-9 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-slate-400 uppercase tracking-wider pointer-events-none select-none bg-slate-50 pr-1"
+                                style={{ display: field.value?.split('|')[0] ? 'none' : 'block' }}>
+                              </span>
                             </div>
-                          </FormControl>
-                        </FormItem>
-                      )} />
-                    </div>
 
+                            {/* Divider */}
+                            <div className="flex items-center gap-2 px-1">
+                              <div className="flex-1 h-px bg-slate-200" />
+                              <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">to</span>
+                              <div className="flex-1 h-px bg-slate-200" />
+                            </div>
+
+                            {/* To */}
+                            <div className="relative">
+                              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none z-10" />
+                              <input
+                                type="date"
+                                min={field.value?.split('|')[0] || new Date().toISOString().split('T')[0]}
+                                onChange={e => {
+                                  const to = e.target.value;
+                                  const from = field.value?.split('|')[0] || '';
+                                  field.onChange(`${from}|${to}`);
+                                }}
+                                value={field.value?.split('|')[1] || ''}
+                                className="w-full pl-9 pr-4 h-11 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white text-sm text-slate-700 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all appearance-none"
+                                style={{ colorScheme: 'light' }}
+                              />
+                            </div>
+
+                            {/* Summary pill */}
+                            {field.value?.split('|')[0] && field.value?.split('|')[1] && (() => {
+                              const [from, to] = field.value.split('|');
+                              const diff = Math.round((new Date(to).getTime() - new Date(from).getTime()) / (1000 * 60 * 60 * 24));
+                              const fmt = (d: string) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+                              return (
+                                <div className="flex items-center justify-between bg-primary/8 border border-primary/20 rounded-xl px-3 py-2">
+                                  <span className="text-xs font-semibold text-primary">{fmt(from)} → {fmt(to)}</span>
+                                  <span className="text-[10px] font-bold text-primary/70 bg-primary/10 rounded-full px-2 py-0.5">{diff} nights</span>
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        </FormControl>
+                      </FormItem>
+                    )} />
                     {/* Travelers counter */}
                     <div className="grid sm:grid-cols-2 gap-4">
                       {/* Adults */}
@@ -331,7 +404,7 @@ const PlanTrip = () => {
                     {/* Trip type */}
                     <div>
                       <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">Trip Type</p>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                         {tripTypes.map(type => {
                           const isSelected = form.watch('tripType') === type;
                           return (
@@ -339,13 +412,16 @@ const PlanTrip = () => {
                               key={type}
                               type="button"
                               onClick={() => form.setValue('tripType', isSelected ? '' : type)}
-                              className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs font-semibold transition-all duration-200 ${isSelected
-                                  ? 'bg-primary/10 border-primary/30 text-primary shadow-sm'
-                                  : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-primary/20 hover:text-primary'
+                              className={`relative py-3 px-3 rounded-2xl border text-xs font-bold transition-all duration-200 text-center overflow-hidden ${isSelected
+                                ? 'bg-primary border-primary text-white shadow-lg shadow-primary/25 scale-[1.02]'
+                                : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-white hover:border-primary/30 hover:text-primary hover:shadow-sm'
                                 }`}
                             >
-                              <span className="text-lg">{tripTypeEmojis[type]}</span>
-                              {type}
+                              {/* Selected glow */}
+                              {isSelected && (
+                                <span className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+                              )}
+                              <span className="relative z-10">{type}</span>
                             </button>
                           );
                         })}
@@ -358,9 +434,37 @@ const PlanTrip = () => {
                         <div className="flex items-center justify-between mb-3">
                           <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Budget Per Person</p>
                           <span className="text-sm font-bold text-primary bg-primary/10 rounded-full px-3 py-1">
-                            ₹{watchedBudget[0]?.toLocaleString()}
+                            ₹{(field.value?.[0] ?? 50000).toLocaleString()}
                           </span>
                         </div>
+
+                        {/* Quick preset buttons */}
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {[
+                            { label: 'Under ₹25K', value: 25000 },
+                            { label: '₹50K', value: 50000 },
+                            { label: '₹1L', value: 100000 },
+                            { label: '₹2L', value: 200000 },
+                            { label: '₹5L+', value: 500000 },
+                          ].map(preset => {
+                            const isActive = field.value?.[0] === preset.value;
+                            return (
+                              <button
+                                key={preset.label}
+                                type="button"
+                                onClick={() => field.onChange([preset.value])}
+                                className={`px-3.5 py-1.5 rounded-xl border text-xs font-semibold transition-all duration-200 ${isActive
+                                  ? 'bg-primary text-white border-primary shadow-md shadow-primary/20'
+                                  : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-primary/20 hover:text-primary'
+                                  }`}
+                              >
+                                {preset.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        {/* Fine-tune slider */}
                         <FormControl>
                           <Slider
                             min={10000} max={1000000} step={10000}
@@ -388,8 +492,8 @@ const PlanTrip = () => {
                               type="button"
                               onClick={() => toggleRequirement(label)}
                               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-semibold transition-all duration-200 ${isSelected
-                                  ? 'bg-primary text-white border-primary shadow-md shadow-primary/20'
-                                  : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-primary/20 hover:text-primary'
+                                ? 'bg-primary text-white border-primary shadow-md shadow-primary/20'
+                                : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-primary/20 hover:text-primary'
                                 }`}
                             >
                               <Icon className="w-3.5 h-3.5" />
