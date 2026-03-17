@@ -1,20 +1,17 @@
-
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Star, MapPin, Calendar, Users, MessageCircle } from 'lucide-react';
+import { Star, MapPin, Calendar, Users, ArrowRight, Compass, Globe } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Packages = () => {
-  const [activeTab, setActiveTab] = useState('domestic');
+  const [activeTab, setActiveTab] = useState<'domestic' | 'international'>('domestic');
+  const navigate = useNavigate();
 
-  const handleWhatsAppClick = () => {
+  const handleWhatsAppClick = () =>
     window.open('https://wa.me/9856664440?text=Hello, I would like to inquire about your travel services.', '_blank');
-  };
-
 
   const domesticPackages = [
     {
@@ -26,7 +23,8 @@ const Packages = () => {
       reviews: 156,
       image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       highlights: ['Taj Mahal Visit', 'Red Fort', 'Hawa Mahal', 'Local Cuisine'],
-      groupSize: '2-15 people',
+      groupSize: '2–15 people',
+      tag: 'Most Popular',
     },
     {
       name: 'Kerala Backwaters',
@@ -37,7 +35,8 @@ const Packages = () => {
       reviews: 203,
       image: 'https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       highlights: ['Houseboat Stay', 'Tea Plantations', 'Spice Gardens', 'Ayurvedic Spa'],
-      groupSize: '2-12 people',
+      groupSize: '2–12 people',
+      tag: 'Serene',
     },
     {
       name: 'Goa Beach Paradise',
@@ -48,7 +47,8 @@ const Packages = () => {
       reviews: 289,
       image: 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       highlights: ['Beach Activities', 'Water Sports', 'Local Markets', 'Sunset Cruise'],
-      groupSize: '2-20 people',
+      groupSize: '2–20 people',
+      tag: 'Beach Vibes',
     },
     {
       name: 'Himachal Hill Stations',
@@ -59,7 +59,8 @@ const Packages = () => {
       reviews: 145,
       image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       highlights: ['Mountain Views', 'Adventure Sports', 'Local Culture', 'Photography'],
-      groupSize: '2-10 people',
+      groupSize: '2–10 people',
+      tag: 'Adventure',
     },
   ];
 
@@ -73,7 +74,8 @@ const Packages = () => {
       reviews: 98,
       image: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       highlights: ['Alpine Railways', 'Snow Activities', 'Lake Cruises', 'Mountain Hiking'],
-      groupSize: '2-8 people',
+      groupSize: '2–8 people',
+      tag: 'Luxury',
     },
     {
       name: 'Iceland Nature Tour',
@@ -84,7 +86,8 @@ const Packages = () => {
       reviews: 76,
       image: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       highlights: ['Northern Lights', 'Geysers', 'Waterfalls', 'Glacier Walks'],
-      groupSize: '2-12 people',
+      groupSize: '2–12 people',
+      tag: 'Arctic Magic',
     },
     {
       name: 'Nepal Himalayan Trek',
@@ -95,7 +98,8 @@ const Packages = () => {
       reviews: 134,
       image: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       highlights: ['Everest Views', 'Sherpa Culture', 'Mountain Lodges', 'Photography'],
-      groupSize: '4-12 people',
+      groupSize: '4–12 people',
+      tag: 'Trekking',
     },
     {
       name: 'Bali Tropical Escape',
@@ -106,172 +110,197 @@ const Packages = () => {
       reviews: 167,
       image: 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       highlights: ['Temple Visits', 'Beach Clubs', 'Rice Terraces', 'Volcano Tours'],
-      groupSize: '2-15 people',
+      groupSize: '2–15 people',
+      tag: 'Tropical',
     },
   ];
 
-  const PackageCard = ({ pkg }: { pkg: any }) => (
-    <Card className="group overflow-hidden hover-lift bg-white shadow-lg hover:shadow-xl transition-all duration-300">
-      <div className="relative overflow-hidden">
+  const packages = activeTab === 'domestic' ? domesticPackages : internationalPackages;
+
+  const PackageCard = ({ pkg }: { pkg: typeof domesticPackages[0] }) => (
+    <div className="group relative bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-slate-200/60 border border-slate-100 transition-all duration-500 flex flex-col">
+
+      {/* Image */}
+      <div className="relative h-52 sm:h-56 overflow-hidden flex-shrink-0">
         <img
           src={pkg.image}
           alt={pkg.name}
-          className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
         />
-        <div className="absolute top-4 left-4">
-          <Badge className="bg-accent text-white">
-            {pkg.duration}
-          </Badge>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+
+        {/* Tag */}
+        <div className="absolute top-3 left-3">
+          <span className="text-[9px] font-bold uppercase tracking-widest bg-white/90 backdrop-blur-sm text-slate-700 px-2.5 py-1 rounded-full">
+            {pkg.tag}
+          </span>
         </div>
-        <div className="absolute top-4 right-4">
-          <div className="flex items-center space-x-1 bg-white/90 rounded-full px-2 py-1">
-            <Star className="w-4 h-4 text-accent fill-current" />
-            <span className="text-sm font-medium">{pkg.rating}</span>
-          </div>
+
+        {/* Rating */}
+        <div className="absolute top-3 right-3 flex items-center gap-1 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full">
+          <Star className="w-3 h-3 text-yellow-500 fill-current" />
+          <span className="text-[11px] font-bold text-slate-800">{pkg.rating}</span>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+
+        {/* Price overlaid on bottom of image */}
+        <div className="absolute bottom-3 left-4">
+          <p className="text-white text-xl font-bold font-serif leading-none">{pkg.price}</p>
+          <p className="text-white/70 text-[10px] font-medium">per person</p>
+        </div>
       </div>
 
-      <CardHeader className="pb-4">
-        <CardTitle className="text-xl font-serif text-primary">{pkg.name}</CardTitle>
-        <div className="flex items-center text-muted-foreground text-sm">
-          <MapPin className="w-4 h-4 mr-1" />
-          {pkg.location}
-        </div>
-      </CardHeader>
+      {/* Content */}
+      <div className="flex flex-col flex-1 p-5 space-y-4">
 
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div className="flex items-center">
-            <Calendar className="w-4 h-4 mr-2 text-accent" />
+        {/* Title + location */}
+        <div>
+          <h3 className="text-base font-serif font-bold text-slate-900 leading-tight">{pkg.name}</h3>
+          <div className="flex items-center gap-1 mt-1">
+            <MapPin className="w-3 h-3 text-primary flex-shrink-0" />
+            <p className="text-slate-500 text-xs">{pkg.location}</p>
+          </div>
+        </div>
+
+        {/* Duration + group */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1.5 text-slate-500 text-xs">
+            <Calendar className="w-3.5 h-3.5 text-primary/60" />
             {pkg.duration}
           </div>
-          <div className="flex items-center">
-            <Users className="w-4 h-4 mr-2 text-accent" />
+          <div className="flex items-center gap-1.5 text-slate-500 text-xs">
+            <Users className="w-3.5 h-3.5 text-primary/60" />
             {pkg.groupSize}
           </div>
         </div>
 
-        <div className="space-y-2">
-          <h4 className="font-semibold text-sm">Package Highlights:</h4>
-          <div className="grid grid-cols-2 gap-1">
-            {pkg.highlights.map((highlight: string, index: number) => (
-              <div key={index} className="flex items-center text-sm">
-                <div className="w-1.5 h-1.5 bg-accent rounded-full mr-2" />
-                {highlight}
-              </div>
-            ))}
-          </div>
+        {/* Highlights */}
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1.5">
+          {pkg.highlights.map((h, i) => (
+            <div key={i} className="flex items-center gap-1.5">
+              <div className="w-1 h-1 rounded-full bg-primary/40 flex-shrink-0" />
+              <span className="text-[11px] text-slate-500">{h}</span>
+            </div>
+          ))}
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t">
-          <div>
-            <p className="text-2xl font-bold text-primary">{pkg.price}</p>
-            <p className="text-sm text-muted-foreground">per person</p>
-          </div>
-          <Button className="bg-primary hover:bg-primary/90">
+        {/* CTA */}
+        <div className="pt-1 mt-auto flex items-center justify-between border-t border-slate-100">
+          <span className="text-[10px] text-slate-400">{pkg.reviews} reviews</span>
+          <Button
+            onClick={() => navigate('/plan-trip', { state: { selectedPackage: pkg.name } })}
+            className="h-8 px-4 text-xs rounded-xl bg-primary hover:bg-primary/90 text-white gap-1.5 font-semibold"
+          >
             Book Now
+            <ArrowRight className="w-3 h-3" />
           </Button>
         </div>
-
-        <p className="text-xs text-muted-foreground text-center">
-          {pkg.reviews} reviews • Trusted by travelers
-        </p>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 
   return (
-    <div className="min-h-screen">
-            {/* Floating WhatsApp Button */}
-            {/* <div className="fixed bottom-6 right-6 z-50 animate-bounce">
-        <Button
-          onClick={handleWhatsAppClick}
-          className="w-16 h-16 rounded-full bg-green-500 hover:bg-green-600 shadow-2xl hover:shadow-green-500/25 transition-all duration-300 group relative overflow-hidden"
-          size="lg"
-        >
-          <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-20"></div>
-          <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-20 animation-delay-300"></div>
-          
-          <MessageCircle className="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300 relative z-10" />
-
-          <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-            Chat with us on WhatsApp!
-            <div className="absolute left-full top-1/2 -translate-y-1/2 border-4 border-transparent border-l-gray-900"></div>
-          </div>
-        </Button>
-      </div> */}
+    <div className="min-h-screen bg-[#F8FAFC]">
       <Header />
 
-      {/* <iframe src="https://itinerary.digital/qi/wisdom-travel-and-tours/haresh-jethwa/15582" width="800" height="600"></iframe> */}
+      {/* Hero */}
+      <section className="relative pt-28 sm:pt-32 lg:pt-36 pb-16 bg-white border-b border-slate-100 overflow-hidden">
+        {/* Subtle background */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2" />
+        </div>
 
-
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto section-padding">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-serif font-bold text-primary mb-4">
-              Our Travel Packages
+        <div className="relative container mx-auto px-6 max-w-7xl">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center px-2.5 py-1 bg-primary/10 rounded-full text-primary font-bold text-[9px] tracking-widest uppercase mb-4">
+              Curated Experiences
+            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-serif font-bold text-slate-900 leading-tight mb-4">
+              Travel <span className="gradient-text">Packages</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Discover handcrafted travel experiences designed to create unforgettable memories
+            <p className="text-slate-500 text-sm sm:text-base lg:text-lg leading-relaxed max-w-lg">
+              Handcrafted itineraries for every kind of traveler — from serene backwaters to alpine adventures.
             </p>
           </div>
 
-          <Tabs defaultValue="domestic" className="w-full">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-12">
-              <TabsTrigger value="domestic" className="font-semibold">
-                Domestic Tours
-              </TabsTrigger>
-              <TabsTrigger value="international" className="font-semibold">
-                International Tours
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="domestic" className="space-y-8">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-serif font-semibold text-primary mb-2">
-                  Domestic Travel Packages
-                </h2>
-                <p className="text-muted-foreground">
-                  Explore the incredible diversity and beauty of India
-                </p>
-              </div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {domesticPackages.map((pkg, index) => (
-                  <PackageCard key={index} pkg={pkg} />
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="international" className="space-y-8">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-serif font-semibold text-primary mb-2">
-                  International Travel Packages
-                </h2>
-                <p className="text-muted-foreground">
-                  Experience the wonders of the world with our curated international tours
-                </p>
-              </div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {internationalPackages.map((pkg, index) => (
-                  <PackageCard key={index} pkg={pkg} />
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
-
-          <div className="text-center mt-12">
-            <p className="text-muted-foreground mb-4">
-              Can't find what you're looking for? Let us create a custom package for you.
-            </p>
-            <Button
-              size="lg"
-              className="bg-accent text-white border border-white hover:bg-accent/90 "
-            >
-
-              Request Custom Package
-            </Button>
+          {/* Tab switcher in hero */}
+          <div className="flex items-center gap-2 mt-10">
+            {[
+              { id: 'domestic', label: 'Domestic', icon: Compass },
+              { id: 'international', label: 'International', icon: Globe },
+            ].map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                onClick={() => setActiveTab(id as 'domestic' | 'international')}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${activeTab === id
+                  ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                  : 'bg-white text-slate-500 border border-slate-200 hover:border-primary/30 hover:text-primary'
+                  }`}
+              >
+                <Icon className="w-4 h-4" />
+                {label}
+              </button>
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* Packages Grid */}
+      <section className="py-14 lg:py-20">
+        <div className="container mx-auto px-6 max-w-7xl">
+
+          {/* Section label */}
+          <div className="flex items-center justify-between mb-10">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-slate-900">
+                {activeTab === 'domestic' ? 'Domestic' : 'International'} Tours
+              </h2>
+              <p className="text-slate-500 text-sm mt-1">
+                {activeTab === 'domestic'
+                  ? 'Explore the incredible diversity and beauty of India'
+                  : 'Experience the wonders of the world with our curated tours'}
+              </p>
+            </div>
+            <span className="text-xs font-medium text-slate-400 bg-white border border-slate-200 rounded-full px-3 py-1.5">
+              {packages.length} packages
+            </span>
+          </div>
+
+          {/* Cards */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {packages.map((pkg, index) => (
+              <PackageCard key={index} pkg={pkg} />
+            ))}
+          </div>
+
+          {/* Custom package CTA */}
+          <div className="mt-16 bg-white rounded-3xl border border-slate-100 shadow-sm p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="text-xl sm:text-2xl font-serif font-bold text-slate-900">
+                Can't find what you're looking for?
+              </h3>
+              <p className="text-slate-500 text-sm mt-1.5 max-w-md">
+                Let our travel experts craft a fully custom itinerary tailored to your dates, budget, and dream destinations.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+              <Button
+                onClick={() => navigate('/plan-trip')}
+                className="bg-primary hover:bg-primary/90 text-white rounded-xl px-6 h-11 text-sm font-semibold gap-2"
+              >
+                Plan Custom Trip
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+              <Button
+                onClick={handleWhatsAppClick}
+                variant="outline"
+                className="border-slate-200 text-slate-600 hover:border-primary/30 hover:text-primary rounded-xl px-6 h-11 text-sm font-semibold"
+              >
+                WhatsApp Us
+              </Button>
+            </div>
+          </div>
+
         </div>
       </section>
 
