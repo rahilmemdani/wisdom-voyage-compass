@@ -250,16 +250,15 @@ const Hero = () => {
               </div> */}
 
               {/* Enhanced Trust Indicators */}
-              <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-4 sm:pt-8 animate-slide-up" style={{ animationDelay: '1s' }}>
+              <div className="grid grid-cols-3 gap-3 sm:gap-6 pt-4 sm:pt-6 animate-slide-up max-w-2xl mx-auto" style={{ animationDelay: '1s' }}>
                 {stats.map((stat, index) => (
-                  <div key={index} className="text-center group hover:scale-110 transition-all duration-500 cursor-pointer">
-                    <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 mb-3 sm:mb-4 group-hover:bg-white/20 group-hover:shadow-lg transition-all duration-300 relative overflow-hidden">
-                      {/* Shimmer effect */}
+                  <div key={index} className="text-center group hover:scale-105 transition-all duration-500 cursor-pointer">
+                    <div className="bg-white/10 backdrop-blur-md rounded-xl p-2.5 sm:p-3.5 mb-2 sm:mb-3 group-hover:bg-white/15 group-hover:shadow-lg transition-all duration-300 relative overflow-hidden aspect-[2/1] flex items-center justify-center">
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                      <stat.icon className={`w-6 h-6 sm:w-8 sm:h-8 mx-auto text-white drop-shadow-lg ${stat.color} group-hover:scale-110 transition-all duration-300`} />
+                      <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 mx-auto drop-shadow-lg ${stat.color} group-hover:scale-110 transition-all duration-300`} />
                     </div>
-                    <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-white drop-shadow-lg font-serif group-hover:text-primary-light transition-colors duration-300">{stat.value}</div>
-                    <div className="text-[10px] sm:text-sm text-white/90 font-medium">{stat.label}</div>
+                    <div className="text-[22px] sm:text-[26px] lg:text-[28px] font-semibold text-white drop-shadow-lg font-serif leading-tight group-hover:text-primary-light transition-colors duration-300">{stat.value}</div>
+                    <div className="text-[11px] sm:text-xs lg:text-[13px] text-white/70 font-normal mt-0.5">{stat.label}</div>
                   </div>
                 ))}
               </div>
