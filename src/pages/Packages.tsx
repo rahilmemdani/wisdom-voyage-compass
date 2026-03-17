@@ -441,7 +441,7 @@ const Packages = () => {
                 <Button
                   onClick={handleWhatsAppClick}
                   variant="outline"
-                  className="border-white/30 text-white hover:bg-white/10 rounded-xl px-6 h-11 text-sm font-semibold"
+                  className="border-white/30 text-white hover:bg-white/10 rounded-xl px-6 h-11 text-sm font-semibold text-red-600"
                 >
                   WhatsApp Us
                 </Button>
