@@ -8,12 +8,13 @@ import { Link } from 'react-router-dom';
 // --- TYPES ---
 interface VisaResult {
   passport: { name: string; code: string };
-  destination: { 
-    name: string; 
+  destination: {
+    name: string;
     code: string;
     currency?: string;
     exchange?: string;
     passport_validity?: string;
+    timezone?: string;
   };
   dur: number | null;
   category: { name: string; code: string };
@@ -282,13 +283,13 @@ const Visa = () => {
       }
 
       const { data } = await res.json();
-      
+
       const primaryRule = data?.visa_rules?.primary_rule?.name || '';
       const ruleDesc = primaryRule.toLowerCase();
       const destData = data?.destination || {};
-      
+
       let categoryCode = 'VR';
-      
+
       if (ruleDesc.includes('visa-free') || ruleDesc.includes('visa free') || ruleDesc.includes('visa not required')) {
         categoryCode = 'VF';
       } else if (ruleDesc.includes('visa on arrival')) {
@@ -305,12 +306,13 @@ const Visa = () => {
 
       setResult({
         passport: { name: passport, code: pc },
-        destination: { 
-          name: destination, 
+        destination: {
+          name: destination,
           code: dc,
           currency: destData.currency,
           exchange: destData.exchange,
-          passport_validity: destData.passport_validity
+          passport_validity: destData.passport_validity,
+          timezone: destData.timezone
         },
         dur: null,
         category: { name: primaryRule || 'Visa Required', code: categoryCode },
@@ -451,7 +453,7 @@ const Visa = () => {
                     </div>
                   )}
 
-                  {(result.destination.passport_validity || result.destination.currency) && (
+                  {(result.destination.passport_validity || result.destination.currency || result.destination.timezone) && (
                     <div className="pt-3 border-t border-slate-200/60 space-y-2">
                       {result.destination.passport_validity && (
                         <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
@@ -463,6 +465,12 @@ const Visa = () => {
                         <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
                           <Globe className="w-3.5 h-3.5 text-slate-400" />
                           <span>Currency: <span className="text-slate-900">{result.destination.currency}</span> {result.destination.exchange ? `(Rate: ${result.destination.exchange})` : ''}</span>
+                        </div>
+                      )}
+                      {result.destination.timezone && (
+                        <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Timezone: <span className="text-slate-900">{result.destination.timezone}</span></span>
                         </div>
                       )}
                     </div>
