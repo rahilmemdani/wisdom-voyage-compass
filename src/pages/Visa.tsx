@@ -214,8 +214,7 @@ const CountrySelector: React.FC<CountrySelectorProps> = ({ value, onChange, plac
                 <li key={name}>
                   <button
                     type="button"
-                    onMouseDown={e => { e.preventDefault(); handleSelect(name); }}
-                    onTouchEnd={e => { e.preventDefault(); handleSelect(name); }}
+                    onClick={(e) => { e.preventDefault(); handleSelect(name); }}
                     className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-colors ${isSelected ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-700 hover:bg-slate-50 active:bg-slate-100'
                       }`}
                   >
@@ -246,38 +245,9 @@ const Visa = () => {
   const [destination, setDestination] = useState('');
   const [result, setResult] = useState<VisaResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [visaData, setVisaData] = useState<Record<string, Record<string, string>> | null>(null);
   const [dataLoading, setDataLoading] = useState(false);
-  const [dataLoaded, setDataLoaded] = useState(false);
 
-  // Load CSV on mount
-  useEffect(() => {
-    const loadData = async () => {
-      setDataLoading(true);
-      try {
-        const res = await fetch(
-          'https://raw.githubusercontent.com/ilyankou/passport-index-dataset/master/passport-index-tidy.csv'
-        );
-        const text = await res.text();
-        const lines = text.trim().split('\n').slice(1);
-        const map: Record<string, Record<string, string>> = {};
-        for (const line of lines) {
-          const [p, d, r] = line.split(',');
-          if (!map[p]) map[p] = {};
-          map[p][d] = r?.trim();
-        }
-        setVisaData(map);
-        setDataLoaded(true);
-      } catch {
-        // will show error on check
-      } finally {
-        setDataLoading(false);
-      }
-    };
-    loadData();
-  }, []);
-
-  const handleCheck = () => {
+  const handleCheck = async () => {
     setError(null);
     setResult(null);
 
@@ -287,40 +257,58 @@ const Visa = () => {
     const dc = countryCodes[destination];
     if (pc === dc) { setError('Passport and destination cannot be the same.'); return; }
 
-    if (!visaData || !dataLoaded) {
-      setError('Visa data is still loading, please wait a moment.');
-      return;
+    setDataLoading(true);
+    try {
+      const res = await fetch('https://visa-requirement.p.rapidapi.com/v2/visa/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Rapidapi-Key': 'dd741aeecamshac5b8de8082a4f0p18b46cjsn1120fb18608f'
+        },
+        body: JSON.stringify({
+          passport: pc,
+          destination: dc
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to fetch visa requirements');
+      }
+
+      const { data } = await res.json();
+      
+      const primaryRule = data?.visa_rules?.primary_rule?.name || '';
+      const ruleDesc = primaryRule.toLowerCase();
+      
+      let categoryCode = 'VR';
+      
+      if (ruleDesc.includes('visa-free') || ruleDesc.includes('visa free') || ruleDesc.includes('visa not required')) {
+        categoryCode = 'VF';
+      } else if (ruleDesc.includes('visa on arrival')) {
+        categoryCode = 'VOA';
+      } else if (ruleDesc.includes('e-visa') || ruleDesc.includes('evisa') || ruleDesc.includes('e visa')) {
+        categoryCode = 'EV';
+      } else if (ruleDesc.includes('eta') || ruleDesc.includes('electronic travel authorization')) {
+        categoryCode = 'ETA';
+      } else if (ruleDesc.includes('visa required')) {
+        categoryCode = 'VR';
+      } else if (ruleDesc.includes('admission refused') || ruleDesc.includes('not admitted')) {
+        categoryCode = 'NA';
+      }
+
+      setResult({
+        passport: { name: passport, code: pc },
+        destination: { name: destination, code: dc },
+        dur: null,
+        category: { name: primaryRule || 'Visa Required', code: categoryCode },
+        last_updated: new Date().toISOString().split('T')[0],
+      });
+
+    } catch (err: any) {
+      setError(err.message || 'An error occurred while checking visa requirements.');
+    } finally {
+      setDataLoading(false);
     }
-
-    const requirement = visaData[pc]?.[dc];
-    if (!requirement) { setError('No data available for this pair.'); return; }
-
-    let categoryCode = 'VR';
-    let dur: number | null = null;
-    const req = requirement.toLowerCase().trim();
-
-    if (req === 'visa free' || req === 'vf') {
-      categoryCode = 'VF';
-    } else if (!isNaN(Number(req)) && Number(req) > 0) {
-      categoryCode = 'VF';
-      dur = Number(req);
-    } else if (req === 'visa on arrival' || req === 'voa') {
-      categoryCode = 'VOA';
-    } else if (req === 'e-visa' || req === 'ev') {
-      categoryCode = 'EV';
-    } else if (req === 'eta') {
-      categoryCode = 'ETA';
-    } else if (req === 'no admission' || req === 'na') {
-      categoryCode = 'NA';
-    }
-
-    setResult({
-      passport: { name: passport, code: pc },
-      destination: { name: destination, code: dc },
-      dur,
-      category: { name: categoryCode, code: categoryCode },
-      last_updated: '2025-01-12',
-    });
   };
 
   const handleWhatsAppClick = () =>
@@ -435,7 +423,7 @@ const Visa = () => {
                       <p className="text-xs text-slate-500 font-medium">
                         {result.passport.name} → {result.destination.name}
                       </p>
-                      <h3 className={`text-lg font-bold font-serif mt-0.5 ${cat.color}`}>{cat.label}</h3>
+                      <h3 className={`text-lg font-bold font-serif mt-0.5 ${cat.color}`}>{result.category.name || cat.label}</h3>
                       <p className="text-xs text-slate-500 mt-0.5">{cat.desc}</p>
                     </div>
                     <div className={`flex-shrink-0 w-12 h-12 rounded-xl ${cat.bg} border ${cat.border} flex items-center justify-center text-xl`}>
