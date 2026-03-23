@@ -326,8 +326,15 @@ const Visa = () => {
     }
   };
 
-  const handleWhatsAppClick = () =>
-    window.open('https://wa.me/9856664440?text=Hello, I would like to inquire about visa services.', '_blank');
+  const handleWhatsAppClick = () => {
+    let text = 'Hello, I would like to inquire about visa services.';
+    if (passport && destination && countryCodes[passport] && countryCodes[destination]) {
+      const pCode = countryCodes[passport];
+      const dCode = countryCodes[destination];
+      text = `Hello, I would like to inquire about visa services.\n\nPassport Country:\n${getFlagEmoji(pCode)} ${passport}\n\nDestination Country:\n✈️ ${destination}`;
+    }
+    window.open(`https://wa.me/9856664440?text=${encodeURIComponent(text)}`, '_blank');
+  };
   const handlePhoneClick = () =>
     window.open('tel:+919856664440', '_self');
 
