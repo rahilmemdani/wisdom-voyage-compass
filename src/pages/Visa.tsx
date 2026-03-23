@@ -8,7 +8,13 @@ import { Link } from 'react-router-dom';
 // --- TYPES ---
 interface VisaResult {
   passport: { name: string; code: string };
-  destination: { name: string; code: string };
+  destination: { 
+    name: string; 
+    code: string;
+    currency?: string;
+    exchange?: string;
+    passport_validity?: string;
+  };
   dur: number | null;
   category: { name: string; code: string };
   last_updated: string;
@@ -279,6 +285,7 @@ const Visa = () => {
       
       const primaryRule = data?.visa_rules?.primary_rule?.name || '';
       const ruleDesc = primaryRule.toLowerCase();
+      const destData = data?.destination || {};
       
       let categoryCode = 'VR';
       
@@ -298,7 +305,13 @@ const Visa = () => {
 
       setResult({
         passport: { name: passport, code: pc },
-        destination: { name: destination, code: dc },
+        destination: { 
+          name: destination, 
+          code: dc,
+          currency: destData.currency,
+          exchange: destData.exchange,
+          passport_validity: destData.passport_validity
+        },
         dur: null,
         category: { name: primaryRule || 'Visa Required', code: categoryCode },
         last_updated: new Date().toISOString().split('T')[0],
@@ -435,6 +448,23 @@ const Visa = () => {
                     <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
                       <Clock className="w-4 h-4 text-slate-400" />
                       Stay up to {result.dur} days
+                    </div>
+                  )}
+
+                  {(result.destination.passport_validity || result.destination.currency) && (
+                    <div className="pt-3 border-t border-slate-200/60 space-y-2">
+                      {result.destination.passport_validity && (
+                        <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
+                          <Shield className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Validity: <span className="text-slate-900">{result.destination.passport_validity}</span></span>
+                        </div>
+                      )}
+                      {result.destination.currency && (
+                        <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
+                          <Globe className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Currency: <span className="text-slate-900">{result.destination.currency}</span> {result.destination.exchange ? `(Rate: ${result.destination.exchange})` : ''}</span>
+                        </div>
+                      )}
                     </div>
                   )}
 
