@@ -615,7 +615,7 @@ const PlanTrip = () => {
               {/* Trust note */}
               <div className="bg-slate-50 rounded-2xl border border-slate-100 p-4 text-center">
                 <p className="text-[11px] text-slate-500 leading-relaxed">
-                  Trusted by <span className="font-bold text-slate-700">10,000+ travelers</span> since 2009. Your data is safe and never shared.
+                  Trusted by <span className="font-bold text-slate-700">10,000+ travelers</span> since 2019. Your data is safe and never shared.
                 </p>
               </div>
             </div>

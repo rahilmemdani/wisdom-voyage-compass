@@ -68,7 +68,7 @@ const Footer = () => {
                 <span className="text-red-600"> Wisdom</span> <span className="font-semibold">Travels & Tours</span>
               </h3>
               <p className="text-slate-500 text-sm leading-relaxed mt-2.5 max-w-[280px]">
-                Crafting extraordinary journeys and lifelong memories across the globe since 2009.
+                Crafting extraordinary journeys and lifelong memories across the globe since 2019.
               </p>
             </div>
 

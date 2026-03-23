@@ -52,12 +52,12 @@ const About = () => {
   ];
 
   const milestones = [
-    { year: '2009', event: 'Founded Wisdom Tours and Travels in Mumbai', icon: '🚀' },
-    { year: '2012', event: 'Expanded portfolio to international destinations', icon: '✈️' },
-    { year: '2015', event: 'Launched online booking and visa services', icon: '💻' },
-    { year: '2018', event: 'Reached 5,000+ satisfied customers milestone', icon: '🎯' },
-    { year: '2021', event: 'Introduced digital visa processing services', icon: '🛂' },
-    { year: '2024', event: 'Celebrating 15 years of extraordinary journeys', icon: '🏆' },
+    { year: '2019', event: 'Founded Wisdom Tours and Travels in Mumbai', icon: '🚀' },
+    { year: '2020', event: 'Expanded portfolio to international destinations', icon: '✈️' },
+    { year: '2021', event: 'Launched online booking and visa services', icon: '💻' },
+    { year: '2022', event: 'Reached 5,000+ satisfied customers milestone', icon: '🎯' },
+    { year: '2023', event: 'Introduced digital visa processing services', icon: '🛂' },
+    { year: '2024', event: 'Celebrating 6 years of extraordinary journeys', icon: '🏆' },
   ];
 
   return (
@@ -78,7 +78,7 @@ const About = () => {
             <div className="space-y-7">
               <div className="space-y-2">
                 <div className="inline-flex items-center px-3 py-1 bg-primary/10 rounded-full text-primary font-bold text-[9px] tracking-widest uppercase">
-                  Est. 2009 · Mumbai, India
+                  Est. 2019 · Mumbai, India
                 </div>
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-slate-900 leading-[1.1]">
                   Journeys crafted<br />
@@ -146,7 +146,7 @@ const About = () => {
               {/* Founded badge */}
               <div className="absolute top-[52%] right-[24%] bg-primary text-white rounded-2xl p-4 shadow-xl">
                 <p className="text-white/70 text-[8px] uppercase tracking-widest">Founded</p>
-                <p className="text-2xl font-bold font-serif leading-none">2009</p>
+                <p className="text-2xl font-bold font-serif leading-none">2019</p>
               </div>
             </div>
           </div>
@@ -197,7 +197,7 @@ const About = () => {
 
               <div className="space-y-4 text-slate-500 text-sm leading-relaxed">
                 <p>
-                  Founded in 2009 with a simple vision — to make travel accessible, memorable, and transformative for everyone. What started as a small travel agency has grown into one of India's most trusted travel partners.
+                  Founded in 2019 with a simple vision — to make travel accessible, memorable, and transformative for everyone. What started as a small travel agency has grown into one of India's most trusted travel partners.
                 </p>
                 <p>
                   Our journey began with a passionate team of travel enthusiasts who believed that travel is not just about visiting places, but about creating connections, understanding cultures, and building memories that last a lifetime.
@@ -337,7 +337,7 @@ const About = () => {
               Our Journey
             </div>
             <h2 className="text-2xl sm:text-3xl lg:text-5xl font-serif font-bold text-slate-900">
-              15 Years of <span className="gradient-text">Excellence</span>
+              5+ Years of <span className="gradient-text">Excellence</span>
             </h2>
             <p className="text-slate-400 text-sm mt-3">Key milestones that shaped who we are today</p>
           </div>
