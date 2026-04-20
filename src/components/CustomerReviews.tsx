@@ -16,7 +16,7 @@ const reviews = [
     role: "Global Traveler",
     image: "/lovable-uploads/f56ce2f7-71cf-4ba2-a4b6-5c6f98826e6f.png",
     rating: 5,
-    review: "The team at Wisdom Travel organized our trip across Europe. Mayur and Sohail's attention to detail was exceptional. Truly a premium experience from start to finish."
+    review: "The team at Wisdom Travel & Tours organized our trip across Europe. Mayur and Sohail's attention to detail was exceptional. Truly a premium experience from start to finish."
   },
   {
     id: 2,
@@ -32,7 +32,7 @@ const reviews = [
     role: "Family Traveler",
     image: "/lovable-uploads/f56ce2f7-71cf-4ba2-a4b6-5c6f98826e6f.png",
     rating: 5,
-    review: "A vacation is about memories. Wisdom Travel understands that. Every detail was handled with care, allowing my family to focus on recharging and connecting."
+    review: "A vacation is about memories. Wisdom Travel & Tours understands that. Every detail was handled with care, allowing my family to focus on recharging and connecting."
   },
   {
     id: 4,
@@ -71,7 +71,7 @@ const CustomerReviews = () => {
               </h2>
             </div>
             <p className="max-w-[280px] lg:max-w-md text-[13px] lg:text-lg text-slate-600 leading-relaxed font-medium">
-              Real stories from travelers who experienced the world with Wisdom Voyage.
+              Real stories from travelers who experienced the world with Wisdom Travel & Tours.
             </p>
             {/* <div className="flex items-center gap-3 pt-2">
               <div className="w-10 h-1 bg-primary/30 rounded-full" />

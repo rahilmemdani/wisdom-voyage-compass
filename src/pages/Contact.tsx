@@ -369,7 +369,7 @@ const Contact = () => {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Wisdom Tours Location"
+                  title="Wisdom Travel & Tours Location"
                 />
               </div>
 

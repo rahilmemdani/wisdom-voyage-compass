@@ -142,7 +142,7 @@ const Hero = () => {
                 <h1 className="font-serif font-bold text-4xl sm:text-5xl lg:text-7xl leading-tight text-balance animate-slide-up" style={{ animationDelay: '0.2s' }}>
                   Discover the World with
                   <span className="block bg-gradient-to-r from-white via-primary-light to-accent bg-clip-text text-transparent animate-gradient">
-                    Wisdom Travel
+                    Wisdom Travel & Tours
                   </span>
                 </h1>
 
