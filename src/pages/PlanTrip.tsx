@@ -560,7 +560,7 @@ const PlanTrip = () => {
                   </Button>
 
                   <p className="text-center text-[11px] text-slate-400">
-                    By submitting you agree to be contacted by Wisdom Tours. No spam, ever.
+                    By submitting you agree to be contacted by Wisdom Travel & Tours. No spam, ever.
                   </p>
                 </form>
               </Form>
