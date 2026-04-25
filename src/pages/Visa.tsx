@@ -1,383 +1,590 @@
-import React, { useState, useMemo } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Clock, FileText, Users, Phone, MessageCircle } from 'lucide-react';
+import { CheckCircle, Clock, FileText, Users, Phone, MessageCircle, ArrowRight, Globe, Shield, Zap, Search, X, ChevronDown } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
 
-
-// --- TYPE DEFINITION ---
-interface ApiResponse {
- passport_of: string;
- destination: string;
- capital: string;
- currency: string;
- pass_valid: string;
- phone_code: string;
- timezone: string;
- except_text: string;
- visa: string;
- color: string;
- stay_of: string;
- link: string;
- embassy: string;
- error: boolean;
- message?: string;
+// --- TYPES ---
+interface VisaResult {
+  passport: { name: string; code: string };
+  destination: {
+    name: string;
+    code: string;
+    currency?: string;
+    exchange?: string;
+    passport_validity?: string;
+    timezone?: string;
+  };
+  dur: number | null;
+  category: { name: string; code: string };
+  last_updated: string;
 }
 
-
-// --- DATA CONSTANTS ---
-const countries: { [key: string]: string } = {
- "AF": "Afghanistan", "AL": "Albania", "DZ": "Algeria", "AS": "American Samoa", "AD": "Andorra", "AO": "Angola", "AI": "Anguilla", "AQ": "Antarctica", "AG": "Antigua and Barbuda", "AR": "Argentina", "AM": "Armenia", "AW": "Aruba", "AU": "Australia", "AT": "Austria", "AZ": "Azerbaijan", "BS": "Bahamas", "BH": "Bahrain", "BD": "Bangladesh", "BB": "Barbados", "BY": "Belarus", "BE": "Belgium", "BZ": "Belize", "BJ": "Benin", "BM": "Bermuda", "BT": "Bhutan", "BO": "Bolivia", "BA": "Bosnia and Herzegovina", "BW": "Botswana", "BR": "Brazil", "IO": "British Indian Ocean Territory", "BN": "Brunei Darussalam", "BG": "Bulgaria", "BF": "Burkina Faso", "BI": "Burundi", "KH": "Cambodia", "CM": "Cameroon", "CA": "Canada", "CV": "Cape Verde", "KY": "Cayman Islands", "CF": "Central African Republic", "TD": "Chad", "CL": "Chile", "CN": "China", "CX": "Christmas Island", "CC": "Cocos (Keeling) Islands", "CO": "Colombia", "KM": "Comoros", "CG": "Congo", "CD": "Congo, The Democratic Republic of the", "CK": "Cook Islands", "CR": "Costa Rica", "CI": "Cote D'Ivoire", "HR": "Croatia", "CU": "Cuba", "CY": "Cyprus", "CZ": "Czech Republic", "DK": "Denmark", "DJ": "Djibouti", "DM": "Dominica", "DO": "Dominican Republic", "EC": "Ecuador", "EG": "Egypt", "SV": "El Salvador", "GQ": "Equatorial Guinea", "ER": "Eritrea", "EE": "Estonia", "ET": "Ethiopia", "FK": "Falkland Islands (Malvinas)", "FO": "Faroe Islands", "FJ": "Fiji", "FI": "Finland", "FR": "France", "GF": "French Guiana", "PF": "French Polynesia", "GA": "Gabon", "GM": "Gambia", "GE": "Georgia", "DE": "Germany", "GH": "Ghana", "GI": "Gibraltar", "GR": "Greece", "GL": "Greenland", "GD": "Grenada", "GP": "Guadeloupe", "GU": "Guam", "GT": "Guatemala", "GN": "Guinea", "GW": "Guinea-Bissau", "GY": "Guyana", "HT": "Haiti", "VA": "Holy See (Vatican City State)", "HN": "Honduras", "HK": "Hong Kong", "HU": "Hungary", "IS": "Iceland", "IN": "India", "ID": "Indonesia", "IR": "Iran, Islamic Republic Of", "IQ": "Iraq", "IE": "Ireland", "IL": "Israel", "IT": "Italy", "JM": "Jamaica", "JP": "Japan", "JO": "Jordan", "KZ": "Kazakhstan", "KE": "Kenya", "KI": "Kiribati", "KP": "Korea, Democratic People's Republic of", "KR": "Korea, Republic of", "KW": "Kuwait", "KG": "Kyrgyzstan", "LA": "Lao People's Democratic Republic", "LV": "Latvia", "LB": "Lebanon", "LS": "Lesotho", "LR": "Liberia", "LY": "Libyan Arab Jamahiriya", "LI": "Liechtenstein", "LT": "Lithuania", "LU": "Luxembourg", "MO": "Macao", "MK": "Macedonia, The Former Yugoslav Republic of", "MG": "Madagascar", "MW": "Malawi", "MY": "Malaysia", "MV": "Maldives", "ML": "Mali", "MT": "Malta", "MH": "Marshall Islands", "MQ": "Martinique", "MR": "Mauritania", "MU": "Mauritius", "MX": "Mexico", "FM": "Micronesia, Federated States of", "MD": "Moldova, Republic of", "MC": "Monaco", "MN": "Mongolia", "MS": "Montserrat", "MA": "Morocco", "MZ": "Mozambique", "MM": "Myanmar", "NA": "Namibia", "NR": "Nauru", "NP": "Nepal", "NL": "Netherlands", "AN": "Netherlands Antilles", "NC": "New Caledonia", "NZ": "New Zealand", "NI": "Nicaragua", "NE": "Niger", "NG": "Nigeria", "NU": "Niue", "NF": "Norfolk Island", "MP": "Northern Mariana Islands", "NO": "Norway", "OM": "Oman", "PK": "Pakistan", "PW": "Palau", "PS": "Palestinian Territory, Occupied", "PA": "Panama", "PG": "Papua New Guinea", "PY": "Paraguay", "PE": "Peru", "PH": "Philippines", "PL": "Poland", "PT": "Portugal", "PR": "Puerto Rico", "QA": "Qatar", "RE": "Reunion", "RO": "Romania", "RU": "Russian Federation", "RW": "Rwanda", "SH": "Saint Helena", "KN": "Saint Kitts and Nevis", "LC": "Saint Lucia", "PM": "Saint Pierre and Miquelon", "VC": "Saint Vincent and the Grenadines", "WS": "Samoa", "SM": "San Marino", "ST": "Sao Tome and Principe", "SA": "Saudi Arabia", "SN": "Senegal", "SC": "Seychelles", "SL": "Sierra Leone", "SG": "Singapore", "SK": "Slovakia", "SI": "Slovenia", "SB": "Solomon Islands", "SO": "Somalia", "ZA": "South Africa", "ES": "Spain", "LK": "Sri Lanka", "SD": "Sudan", "SR": "Suriname", "SZ": "Swaziland", "SE": "Sweden", "CH": "Switzerland", "SY": "Syrian Arab Republic", "TW": "Taiwan", "TJ": "Tajikistan", "TZ": "Tanzania, United Republic of", "TH": "Thailand", "TG": "Togo", "TK": "Tokelau", "TO": "Tonga", "TT": "Trinidad and Tobago", "TN": "Tunisia", "TR": "Turkey", "TM": "Turkmenistan", "TC": "Turks and Caicos Islands", "TV": "Tuvalu", "UG": "Uganda", "UA": "Ukraine", "AE": "United Arab Emirates", "GB": "United Kingdom", "US": "United States", "UY": "Uruguay", "UZ": "Uzbekistan", "VU": "Vanuatu", "VE": "Venezuela", "VN": "Viet Nam", "VG": "Virgin Islands, British", "VI": "Virgin Islands, U.S.", "WF": "Wallis and Futuna", "EH": "Western Sahara", "YE": "Yemen", "ZM": "Zambia", "ZW": "Zimbabwe"
+// --- COUNTRY DATA ---
+const countries: Record<string, string> = {
+  "AF": "Afghanistan", "AL": "Albania", "DZ": "Algeria", "AD": "Andorra", "AO": "Angola",
+  "AG": "Antigua and Barbuda", "AR": "Argentina", "AM": "Armenia", "AU": "Australia",
+  "AT": "Austria", "AZ": "Azerbaijan", "BS": "Bahamas", "BH": "Bahrain", "BD": "Bangladesh",
+  "BB": "Barbados", "BY": "Belarus", "BE": "Belgium", "BZ": "Belize", "BJ": "Benin",
+  "BT": "Bhutan", "BO": "Bolivia", "BA": "Bosnia and Herzegovina", "BW": "Botswana",
+  "BR": "Brazil", "BN": "Brunei", "BG": "Bulgaria", "BF": "Burkina Faso", "BI": "Burundi",
+  "KH": "Cambodia", "CM": "Cameroon", "CA": "Canada", "CV": "Cape Verde",
+  "CF": "Central African Republic", "TD": "Chad", "CL": "Chile", "CN": "China",
+  "CO": "Colombia", "KM": "Comoros", "CG": "Congo", "CD": "DR Congo", "CR": "Costa Rica",
+  "CI": "Cote D'Ivoire", "HR": "Croatia", "CU": "Cuba", "CY": "Cyprus", "CZ": "Czech Republic",
+  "DK": "Denmark", "DJ": "Djibouti", "DM": "Dominica", "DO": "Dominican Republic",
+  "EC": "Ecuador", "EG": "Egypt", "SV": "El Salvador", "GQ": "Equatorial Guinea",
+  "ER": "Eritrea", "EE": "Estonia", "ET": "Ethiopia", "FJ": "Fiji", "FI": "Finland",
+  "FR": "France", "GA": "Gabon", "GM": "Gambia", "GE": "Georgia", "DE": "Germany",
+  "GH": "Ghana", "GR": "Greece", "GD": "Grenada", "GT": "Guatemala", "GN": "Guinea",
+  "GW": "Guinea-Bissau", "GY": "Guyana", "HT": "Haiti", "HN": "Honduras", "HK": "Hong Kong",
+  "HU": "Hungary", "IS": "Iceland", "IN": "India", "ID": "Indonesia", "IR": "Iran",
+  "IQ": "Iraq", "IE": "Ireland", "IL": "Israel", "IT": "Italy", "JM": "Jamaica",
+  "JP": "Japan", "JO": "Jordan", "KZ": "Kazakhstan", "KE": "Kenya", "KI": "Kiribati",
+  "KP": "North Korea", "KR": "South Korea", "KW": "Kuwait", "KG": "Kyrgyzstan",
+  "LA": "Laos", "LV": "Latvia", "LB": "Lebanon", "LS": "Lesotho", "LR": "Liberia",
+  "LY": "Libya", "LI": "Liechtenstein", "LT": "Lithuania", "LU": "Luxembourg",
+  "MO": "Macao", "MG": "Madagascar", "MW": "Malawi", "MY": "Malaysia", "MV": "Maldives",
+  "ML": "Mali", "MT": "Malta", "MH": "Marshall Islands", "MR": "Mauritania", "MU": "Mauritius",
+  "MX": "Mexico", "FM": "Micronesia", "MD": "Moldova", "MC": "Monaco", "MN": "Mongolia",
+  "MA": "Morocco", "MZ": "Mozambique", "MM": "Myanmar", "NA": "Namibia", "NR": "Nauru",
+  "NP": "Nepal", "NL": "Netherlands", "NZ": "New Zealand", "NI": "Nicaragua", "NE": "Niger",
+  "NG": "Nigeria", "NO": "Norway", "OM": "Oman", "PK": "Pakistan", "PW": "Palau",
+  "PS": "Palestine", "PA": "Panama", "PG": "Papua New Guinea", "PY": "Paraguay", "PE": "Peru",
+  "PH": "Philippines", "PL": "Poland", "PT": "Portugal", "QA": "Qatar", "RO": "Romania",
+  "RU": "Russia", "RW": "Rwanda", "KN": "Saint Kitts and Nevis", "LC": "Saint Lucia",
+  "VC": "Saint Vincent and the Grenadines", "WS": "Samoa", "SM": "San Marino",
+  "ST": "Sao Tome and Principe", "SA": "Saudi Arabia", "SN": "Senegal", "SC": "Seychelles",
+  "SL": "Sierra Leone", "SG": "Singapore", "SK": "Slovakia", "SI": "Slovenia",
+  "SB": "Solomon Islands", "SO": "Somalia", "ZA": "South Africa", "ES": "Spain",
+  "LK": "Sri Lanka", "SD": "Sudan", "SR": "Suriname", "SZ": "Swaziland", "SE": "Sweden",
+  "CH": "Switzerland", "SY": "Syria", "TW": "Taiwan", "TJ": "Tajikistan", "TZ": "Tanzania",
+  "TH": "Thailand", "TG": "Togo", "TO": "Tonga", "TT": "Trinidad and Tobago", "TN": "Tunisia",
+  "TR": "Turkey", "TM": "Turkmenistan", "TV": "Tuvalu", "UG": "Uganda", "UA": "Ukraine",
+  "AE": "United Arab Emirates", "GB": "United Kingdom", "US": "United States", "UY": "Uruguay",
+  "UZ": "Uzbekistan", "VU": "Vanuatu", "VE": "Venezuela", "VN": "Vietnam", "YE": "Yemen",
+  "ZM": "Zambia", "ZW": "Zimbabwe"
 };
-
 
 const countryCodes = Object.fromEntries(Object.entries(countries).map(([code, name]) => [name, code]));
+const sortedCountryNames = Object.values(countries).sort();
 
-
-// --- API SIMULATION ---
-export const fetchVisaRequirements = async (
- passportCode: string,
- destinationCode: string
-): Promise<ApiResponse> => {
- console.log(`Fetching visa for Passport: ${passportCode}, Destination: ${destinationCode}`);
-
-
- const SUPABASE_FUNCTION_URL = 'https://fnqgouwdzgryyyorgvte.supabase.co/functions/v1/visa-requirement';
- const SUPABASE_KEY = 'YOUR_SUPABASE_KEY_HERE'; // replace with your actual Bearer token
-
-
- const response = await fetch(SUPABASE_FUNCTION_URL, {
-   method: 'POST',
-   headers: {
-     'Authorization': `Bearer ${SUPABASE_KEY}`,
-     'Content-Type': 'application/json',
-   },
-   body: JSON.stringify({
-     passport: passportCode.toUpperCase(),
-     destination: destinationCode.toUpperCase(),
-   }),
- });
-
-
- if (!response.ok) {
-   throw new Error(`API Error: ${response.status} ${response.statusText}`);
- }
-
-
- const data: ApiResponse = await response.json();
- if (data.error) {
-   throw new Error('API returned an error');
- }
-
-
- return data;
+// --- FLAG EMOJI ---
+const getFlagEmoji = (code: string) => {
+  if (!code || code.length !== 2) return '🌐';
+  return code.toUpperCase().split('').map(c =>
+    String.fromCodePoint(127397 + c.charCodeAt(0))
+  ).join('');
 };
 
-
-// --- HELPER COMPONENT for results ---
-const DetailItem: React.FC<{ icon: string; label: string; value: string }> = ({ icon, label, value }) => {
- const icons: { [key: string]: JSX.Element } = {
-   calendar: <svg className="w-6 h-6 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>,
-   building: <svg className="w-6 h-6 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>,
-   phone: <svg className="w-6 h-6 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>,
-   cash: <svg className="w-6 h-6 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01"></path></svg>,
-   clock: <svg className="w-6 h-6 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>,
- };
- return (
-   <div className="flex items-center space-x-3">
-     {icons[icon]}
-     <div>
-       <p className="text-sm text-gray-500">{label}</p>
-       <p className="font-semibold">{value || 'N/A'}</p>
-     </div>
-   </div>
- );
+// --- VISA CATEGORY CONFIG ---
+const categoryConfig: Record<string, { label: string; color: string; bg: string; border: string; desc: string; emoji: string }> = {
+  VF: { label: 'Visa Free', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200', desc: 'No visa required for entry', emoji: '✅' },
+  VOA: { label: 'Visa on Arrival', color: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-200', desc: 'Obtain visa upon arrival at the airport', emoji: '🛬' },
+  EV: { label: 'eVisa Required', color: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-200', desc: 'Apply for electronic visa before travel', emoji: '💻' },
+  ETA: { label: 'eTA Required', color: 'text-violet-700', bg: 'bg-violet-50', border: 'border-violet-200', desc: 'Electronic Travel Authorisation required (e.g. ESTA, Canada)', emoji: '🖥️' },
+  VR: { label: 'Visa Required', color: 'text-red-700', bg: 'bg-red-50', border: 'border-red-200', desc: 'Must obtain visa from embassy before travel', emoji: '📋' },
+  NA: { label: 'Not Admitted', color: 'text-slate-700', bg: 'bg-slate-50', border: 'border-slate-200', desc: 'Entry not permitted with this passport', emoji: '🚫' },
 };
 
+// --- COUNTRY SELECTOR COMPONENT ---
+interface CountrySelectorProps {
+  value: string;
+  onChange: (val: string) => void;
+  placeholder: string;
+  label: string;
+  emoji: string;
+  id: string;
+}
 
+const CountrySelector: React.FC<CountrySelectorProps> = ({ value, onChange, placeholder, label, emoji, id }) => {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
+  const filtered = useMemo(() => {
+    if (!query) return sortedCountryNames.slice(0, 80);
+    const q = query.toLowerCase();
+    const starts = sortedCountryNames.filter(n => n.toLowerCase().startsWith(q)).slice(0, 60);
+    const contains = sortedCountryNames.filter(n =>
+      !n.toLowerCase().startsWith(q) && n.toLowerCase().includes(q)
+    ).slice(0, 20);
+    return [...starts, ...contains];
+  }, [query]);
 
+  useEffect(() => {
+    const handler = (e: MouseEvent | TouchEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setOpen(false);
+        setQuery('');
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    document.addEventListener('touchstart', handler);
+    return () => {
+      document.removeEventListener('mousedown', handler);
+      document.removeEventListener('touchstart', handler);
+    };
+  }, []);
+
+  const handleSelect = (name: string) => {
+    onChange(name);
+    setOpen(false);
+    setQuery('');
+  };
+
+  const handleClear = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onChange('');
+    setQuery('');
+  };
+
+  const selectedCode = value ? countryCodes[value] : '';
+
+  return (
+    <div ref={wrapperRef} className="relative">
+      <label htmlFor={id} className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wider">
+        {emoji} {label}
+      </label>
+
+      <button
+        id={id}
+        type="button"
+        onClick={() => {
+          setOpen(o => !o);
+          setTimeout(() => inputRef.current?.focus(), 50);
+        }}
+        className={`w-full flex items-center gap-3 px-4 py-3 bg-slate-50 border rounded-xl text-sm text-left transition-all duration-200 ${open ? 'border-primary ring-2 ring-primary/20 bg-white' : 'border-slate-200 hover:border-slate-300 hover:bg-white'
+          }`}
+      >
+        {selectedCode ? (
+          <>
+            <span className="text-lg leading-none flex-shrink-0">{getFlagEmoji(selectedCode)}</span>
+            <span className="flex-1 text-slate-900 font-medium truncate">{value}</span>
+          </>
+        ) : (
+          <>
+            <span className="text-lg leading-none flex-shrink-0 opacity-30">🌐</span>
+            <span className="flex-1 text-slate-400">{placeholder}</span>
+          </>
+        )}
+        <div className="flex items-center gap-1 flex-shrink-0">
+          {value && (
+            <span
+              onClick={handleClear}
+              className="w-5 h-5 rounded-full bg-slate-200 hover:bg-red-100 hover:text-red-500 flex items-center justify-center transition-colors cursor-pointer"
+            >
+              <X className="w-3 h-3" />
+            </span>
+          )}
+          <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+        </div>
+      </button>
+
+      {open && (
+        <div className="absolute z-50 w-full mt-1.5 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
+          <div className="p-2 border-b border-slate-100">
+            <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-xl">
+              <Search className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+              <input
+                ref={inputRef}
+                type="text"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                placeholder="Search country..."
+                className="flex-1 bg-transparent text-sm outline-none text-slate-700 placeholder-slate-400 min-w-0"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck={false}
+              />
+              {query && (
+                <button onClick={() => setQuery('')} className="text-slate-400 hover:text-slate-600">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          <ul
+            className="overflow-y-auto overscroll-contain"
+            style={{ maxHeight: '220px', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+          >
+            {filtered.length === 0 ? (
+              <li className="px-4 py-6 text-center text-sm text-slate-400">No countries found</li>
+            ) : filtered.map(name => {
+              const code = countryCodes[name];
+              const isSelected = name === value;
+              return (
+                <li key={name}>
+                  <button
+                    type="button"
+                    onClick={(e) => { e.preventDefault(); handleSelect(name); }}
+                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-colors ${isSelected ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-700 hover:bg-slate-50 active:bg-slate-100'
+                      }`}
+                  >
+                    <span className="text-base leading-none flex-shrink-0 w-6 text-center">{getFlagEmoji(code)}</span>
+                    <span className="flex-1 truncate">{name}</span>
+                    {isSelected && <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" />}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="px-4 py-2 border-t border-slate-100 bg-slate-50/80">
+            <p className="text-[10px] text-slate-400 text-center">
+              {filtered.length} {query ? 'results' : 'countries'} · Tap to select
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// --- MAIN COMPONENT ---
 const Visa = () => {
- // State and logic from VisaCheckerApp
- const [passportInput, setPassportInput] = useState<string>('');
- const [destinationInput, setDestinationInput] = useState<string>('');
- const [apiResponse, setApiResponse] = useState<ApiResponse | null>(null);
- const [isLoading, setIsLoading] = useState<boolean>(false);
- const [error, setError] = useState<string | null>(null);
+  // ✅ ALL hooks are now correctly inside the component body
+  const [passport, setPassport] = useState('');
+  const [destination, setDestination] = useState('');
+  const [result, setResult] = useState<VisaResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [dataLoading, setDataLoading] = useState(false);
 
+  const handleCheck = async () => {
+    setError(null);
+    setResult(null);
 
- const countryOptions = useMemo(() => {
-   return Object.values(countries).map(name => <option key={name} value={name} />);
- }, []);
+    if (!passport || !destination) { setError('Please select both countries.'); return; }
 
+    const pc = countryCodes[passport];
+    const dc = countryCodes[destination];
+    if (pc === dc) { setError('Passport and destination cannot be the same.'); return; }
 
- const handleCheckClick = async () => {
-   setError(null);
-   setApiResponse(null);
-   const passportName = passportInput.trim();
-   const destinationName = destinationInput.trim();
+    setDataLoading(true);
+    try {
+      const res = await fetch('https://visa-requirement.p.rapidapi.com/v2/visa/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Rapidapi-Key': 'dd741aeecamshac5b8de8082a4f0p18b46cjsn1120fb18608f'
+        },
+        body: JSON.stringify({
+          passport: pc,
+          destination: dc
+        })
+      });
 
+      if (!res.ok) {
+        throw new Error('Failed to fetch visa requirements');
+      }
 
-   if (!passportName || !destinationName) {
-     setError('Please select both passport and destination countries.');
-     return;
-   }
-   const passportCode = countryCodes[passportName];
-   const destinationCode = countryCodes[destinationName];
-   if (!passportCode) {
-     setError(`"${passportName}" is not a valid country. Please select from the list.`);
-     return;
-   }
-   if (!destinationCode) {
-     setError(`"${destinationName}" is not a valid country. Please select from the list.`);
-     return;
-   }
-   if (passportCode === destinationCode) {
-     setError('Passport and destination countries cannot be the same.');
-     return;
-   }
+      const { data } = await res.json();
 
+      const primaryRule = data?.visa_rules?.primary_rule?.name || '';
+      const ruleDesc = primaryRule.toLowerCase();
+      const destData = data?.destination || {};
 
-   setIsLoading(true);
-   try {
-     const data = await fetchVisaRequirements(passportCode, destinationCode);
-     if (data.error) {
-       setError(data.message || 'An unknown error occurred.');
-     } else {
-       setApiResponse(data);
-     }
-   } catch (err) {
-     setError('Failed to retrieve visa information. Please try again.');
-   } finally {
-     setIsLoading(false);
-   }
- };
+      let categoryCode = 'VR';
 
+      if (ruleDesc.includes('visa-free') || ruleDesc.includes('visa free') || ruleDesc.includes('visa not required')) {
+        categoryCode = 'VF';
+      } else if (ruleDesc.includes('visa on arrival')) {
+        categoryCode = 'VOA';
+      } else if (ruleDesc.includes('e-visa') || ruleDesc.includes('evisa') || ruleDesc.includes('e visa')) {
+        categoryCode = 'EV';
+      } else if (ruleDesc.includes('eta') || ruleDesc.includes('electronic travel authorization')) {
+        categoryCode = 'ETA';
+      } else if (ruleDesc.includes('visa required')) {
+        categoryCode = 'VR';
+      } else if (ruleDesc.includes('admission refused') || ruleDesc.includes('not admitted')) {
+        categoryCode = 'NA';
+      }
 
- const getBadgeClasses = (color: string) => {
-   const baseClasses = 'mt-3 sm:mt-0 text-sm font-bold px-4 py-2 rounded-full';
-   switch (color.toLowerCase()) {
-     case 'red': return `${baseClasses} bg-red-100 text-red-800`;
-     case 'green': return `${baseClasses} bg-green-100 text-green-800`;
-     case 'yellow': return `${baseClasses} bg-yellow-100 text-yellow-800`;
-     default: return `${baseClasses} bg-gray-100 text-gray-800`;
-   }
- };
+      setResult({
+        passport: { name: passport, code: pc },
+        destination: {
+          name: destination,
+          code: dc,
+          currency: destData.currency,
+          exchange: destData.exchange,
+          passport_validity: destData.passport_validity,
+          timezone: destData.timezone
+        },
+        dur: null,
+        category: { name: primaryRule || 'Visa Required', code: categoryCode },
+        last_updated: new Date().toISOString().split('T')[0],
+      });
 
+    } catch (err: any) {
+      setError(err.message || 'An error occurred while checking visa requirements.');
+    } finally {
+      setDataLoading(false);
+    }
+  };
 
- const visaProcess = [
-   { step: 1, title: 'Consultation', description: 'Free consultation to understand your travel requirements and visa type', icon: Users },
-   { step: 2, title: 'Documentation', description: 'Guidance on required documents and assistance with form filling', icon: FileText },
-   { step: 3, title: 'Application', description: 'Submit your application with proper documentation and fees', icon: CheckCircle },
-   { step: 4, title: 'Processing', description: 'Track your application status and provide updates throughout', icon: Clock },
- ];
+  const handleWhatsAppClick = () => {
+    let text = 'Hello, I would like to inquire about visa services.';
+    if (passport && destination && countryCodes[passport] && countryCodes[destination]) {
+      const pCode = countryCodes[passport];
+      const dCode = countryCodes[destination];
+      text = `Hello, I would like to inquire about visa services.\n\nPassport Country:\n${getFlagEmoji(pCode)} ${passport}\n\nDestination Country:\n✈️ ${destination}`;
+    }
+    window.open(`https://wa.me/9856664440?text=${encodeURIComponent(text)}`, '_blank');
+  };
+  const handlePhoneClick = () =>
+    window.open('tel:+919856664440', '_self');
 
+  const cat = result ? (categoryConfig[result.category.code] ?? categoryConfig['VR']) : null;
 
- const handleWhatsAppClick = () => {
-   window.open('https://wa.me/1234567890?text=Hello, I would like to inquire about visa services.', '_blank');
- };
+  const visaProcess = [
+    { step: 1, title: 'Consultation', description: 'Free consultation to understand your travel requirements and visa type.', icon: Users },
+    { step: 2, title: 'Documentation', description: 'Guidance on required documents and assistance with form filling.', icon: FileText },
+    { step: 3, title: 'Application', description: 'Submit your application with proper documentation and fees.', icon: CheckCircle },
+    { step: 4, title: 'Processing', description: 'Track your application status with live updates throughout.', icon: Clock },
+  ];
 
+  return (
+    <div className="min-h-screen bg-[#F8FAFC]">
+      <Header />
 
- return (
-   <div className="min-h-screen">
-     <Header />
+      {/* HERO */}
+      <section className="relative pt-28 sm:pt-32 lg:pt-36 pb-20 bg-white border-b border-slate-100 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl translate-x-1/2 -translate-y-1/3" />
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2" />
+        </div>
+        <div className="relative container mx-auto px-6 max-w-7xl">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center px-2.5 py-1 bg-primary/10 rounded-full text-primary font-bold text-[9px] tracking-widest uppercase mb-5">
+              Visa Services
+            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-serif font-bold text-slate-900 leading-tight mb-5">
+              Visa Made <span className="gradient-text">Effortless</span>
+            </h1>
+            <p className="text-slate-500 text-sm sm:text-base lg:text-lg leading-relaxed max-w-lg mb-8">
+              Check visa requirements instantly for any passport–destination pair, then let our experts handle the rest.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {[
+                { icon: Globe, text: '199 passports covered' },
+                { icon: Zap, text: 'Instant results' },
+                { icon: Shield, text: 'Expert assistance' },
+              ].map(({ icon: Icon, text }) => (
+                <div key={text} className="flex items-center gap-2 text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded-full px-3 py-1.5">
+                  <Icon className="w-3.5 h-3.5 text-primary" /> {text}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
+      {/* MAIN */}
+      <section className="py-16 lg:py-20">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
 
-     {/* Hero Section */}
-     <section className="relative py-20 bg-gradient-to-r from-primary to-primary/80">
-       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80')] bg-cover bg-center opacity-20" />
-       <div className="relative z-10 container mx-auto px-4 text-center text-white">
-         <h1 className="text-4xl lg:text-5xl font-serif font-bold mb-4">Visa Services Made Simple</h1>
-         <p className="text-xl mb-8 max-w-2xl mx-auto">Professional visa assistance and documentation support for hassle-free international travel</p>
-         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-           <Button size="lg" className="bg-accent hover:bg-accent/90 text-white">Start Application</Button>
-           <Button size="lg" variant="outline" className="border-white text-primary hover:bg-white hover:text-primary">Free Consultation</Button>
-         </div>
-       </div>
-     </section>
+            {/* LEFT: Checker */}
+            <div className="lg:col-span-5 bg-white rounded-3xl border border-slate-100 shadow-sm p-6 sm:p-8 lg:sticky lg:top-24">
+              <div className="mb-6">
+                <h2 className="text-xl sm:text-2xl font-serif font-bold text-slate-900">Check Visa Requirements</h2>
+                <p className="text-slate-500 text-sm mt-1">Instantly see what you need before you travel.</p>
+              </div>
 
+              <div className="space-y-4">
+                <CountrySelector
+                  id="passport"
+                  value={passport}
+                  onChange={setPassport}
+                  placeholder="Select your passport country"
+                  label="Passport Country"
+                  emoji="🛂"
+                />
+                <CountrySelector
+                  id="destination"
+                  value={destination}
+                  onChange={setDestination}
+                  placeholder="Select destination country"
+                  label="Destination Country"
+                  emoji="✈️"
+                />
 
-     {/* Integrated Visa Checker Section */}
-     <section className="py-16">
-       <div className="container mx-auto px-4">
-         <div className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl p-6 md:p-8 border border-gray-200">
-           <div className="text-center mb-8">
-             <h2 className="text-3xl font-serif font-bold text-primary mb-4">Check Visa Requirements Instantly</h2>
-             <p className="text-lg text-muted-foreground">Enter your passport and destination to see the visa rules.</p>
-           </div>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-             {/* Passport Input */}
-             <div>
-               <label htmlFor="passport-input" className="block text-sm font-medium text-gray-700 mb-1">
-                 Passport Of
-               </label>
-               <input
-                 list="countries"
-                 id="passport-input"
-                 value={passportInput}
-                 onChange={(e) => setPassportInput(e.target.value)}
-                 placeholder="e.g., Türkiye"
-                 className="w-full px-4 py-3 bg-white border-2 border-red-400 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition duration-300 shadow-sm hover:shadow-md"
-               />
-             </div>
+                <Button
+                  onClick={handleCheck}
+                  disabled={dataLoading || !passport || !destination}
+                  className="w-full h-12 bg-primary hover:bg-primary/90 text-white rounded-xl font-semibold text-sm gap-2 shadow-lg shadow-primary/20 disabled:opacity-50"
+                >
+                  {dataLoading ? (
+                    <>
+                      <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Loading data...
+                    </>
+                  ) : (
+                    <><Search className="w-4 h-4" /> Check Requirements</>
+                  )}
+                </Button>
+              </div>
 
+              {error && (
+                <div className="mt-4 p-3 bg-red-50 border border-red-100 rounded-xl text-red-700 text-xs font-medium">
+                  {error}
+                </div>
+              )}
 
-             {/* Destination Input */}
-             <div>
-               <label htmlFor="destination-input" className="block text-sm font-medium text-gray-700 mb-1">
-                 Destination
-               </label>
-               <input
-                 list="countries"
-                 id="destination-input"
-                 value={destinationInput}
-                 onChange={(e) => setDestinationInput(e.target.value)}
-                 placeholder="e.g., United Arab Emirates"
-                 className="w-full px-4 py-3 bg-white border-2 border-red-400 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition duration-300 shadow-sm hover:shadow-md"
-               />
-             </div>
+              {result && cat && (
+                <div className={`mt-6 rounded-2xl border ${cat.border} ${cat.bg} p-5 space-y-4`}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs text-slate-500 font-medium">
+                        {result.passport.name} → {result.destination.name}
+                      </p>
+                      <h3 className={`text-lg font-bold font-serif mt-0.5 ${cat.color}`}>{result.category.name || cat.label}</h3>
+                      <p className="text-xs text-slate-500 mt-0.5">{cat.desc}</p>
+                    </div>
+                    <div className={`flex-shrink-0 w-12 h-12 rounded-xl ${cat.bg} border ${cat.border} flex items-center justify-center text-xl`}>
+                      {cat.emoji}
+                    </div>
+                  </div>
 
+                  {result.dur && (
+                    <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                      <Clock className="w-4 h-4 text-slate-400" />
+                      Stay up to {result.dur} days
+                    </div>
+                  )}
 
-             {/* Country Options for Autocomplete */}
-             <datalist id="countries">{countryOptions}</datalist>
+                  {(result.destination.passport_validity || result.destination.currency || result.destination.timezone) && (
+                    <div className="pt-3 border-t border-slate-200/60 space-y-2">
+                      {result.destination.passport_validity && (
+                        <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
+                          <Shield className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Validity: <span className="text-slate-900">{result.destination.passport_validity}</span></span>
+                        </div>
+                      )}
+                      {result.destination.currency && (
+                        <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
+                          <Globe className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Currency: <span className="text-slate-900">{result.destination.currency}</span> {result.destination.exchange ? `(Rate: ${result.destination.exchange})` : ''}</span>
+                        </div>
+                      )}
+                      {result.destination.timezone && (
+                        <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Timezone: <span className="text-slate-900">{result.destination.timezone}</span></span>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
+                  <div className="pt-3 border-t border-slate-200/60 flex gap-2">
+                    <Button
+                      onClick={handleWhatsAppClick}
+                      className="flex-1 h-9 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-semibold gap-1.5"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5" /> Get Help
+                    </Button>
+                    <Link to="/plan-trip" className="flex-1">
+                      <Button variant="outline" className="w-full h-9 rounded-xl text-xs font-semibold border-slate-200 text-slate-600 gap-1.5">
+                        Plan Trip <ArrowRight className="w-3 h-3" />
+                      </Button>
+                    </Link>
+                  </div>
 
-             {/* Check Button */}
-             <Button
-               onClick={handleCheckClick}
-               disabled={isLoading}
-               className="md:col-span-2 w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition duration-300"
-             >
-               {isLoading ? 'Checking...' : 'Check Requirements'}
-             </Button>
-           </div>
+                  <p className="text-[10px] text-slate-400 text-center">
+                    Data source: Passport Index · Last updated Jan 2025
+                  </p>
+                </div>
+              )}
+            </div>
 
+            {/* RIGHT */}
+            <div className="lg:col-span-7 space-y-8">
 
-           <div className="mt-6 text-center">
-             {isLoading && (
-               <div className="p-3 rounded-lg bg-gray-100 text-gray-800 flex items-center justify-center">
-                 <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                 </svg>
-                 Checking visa requirements...
-               </div>
-             )}
-             {error && <div className="p-3 rounded-lg bg-red-100 text-red-800">{error}</div>}
-           </div>
-           {apiResponse && (
-             <div className="mt-8">
-               <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 animate-[fadeIn_0.5s_ease-in-out]">
-                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-gray-200">
-                   <div>
-                     <h2 className="text-2xl font-bold text-gray-900">{apiResponse.destination}</h2>
-                     <p className="text-gray-500">Visa requirements for <span className="font-semibold">{apiResponse.passport_of}</span> citizens</p>
-                   </div>
-                   <div className={getBadgeClasses(apiResponse.color)}>
-                     <span>{apiResponse.visa}</span>
-                   </div>
-                 </div>
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mt-6">
-                   <DetailItem icon="calendar" label="Passport Validity" value={apiResponse.pass_valid} />
-                   <DetailItem icon="building" label="Capital City" value={apiResponse.capital} />
-                   <DetailItem icon="phone" label="Phone Code" value={apiResponse.phone_code} />
-                   <DetailItem icon="cash" label="Currency" value={apiResponse.currency} />
-                   <DetailItem icon="clock" label="Timezone" value={apiResponse.timezone} />
-                   {apiResponse.stay_of && <DetailItem icon="calendar" label="Max Stay" value={apiResponse.stay_of} />}
-                 </div>
-                 {apiResponse.except_text && (
-                   <div className="mt-6 pt-4 border-t border-gray-200">
-                     <h3 className="font-semibold text-gray-800">Important Notes</h3>
-                     <p className="text-sm text-gray-600 mt-2">{apiResponse.except_text}</p>
-                   </div>
-                 )}
-                 <div className="mt-6 pt-4 border-t border-gray-200 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 text-sm">
-                   <a href={apiResponse.link} target="_blank" rel="noopener noreferrer" className="font-medium text-red-600 hover:underline">Official Visa Link &rarr;</a>
-                   <a href={apiResponse.embassy} target="_blank" rel="noopener noreferrer" className="font-medium text-red-600 hover:underline">Find Embassy &rarr;</a>
-                 </div>
-               </div>
-             </div>
-           )}
-         </div>
-       </div>
-     </section>
+              {/* Process steps */}
+              <div>
+                <div className="mb-6">
+                  <div className="inline-flex items-center px-2.5 py-1 bg-primary/10 rounded-full text-primary font-bold text-[9px] tracking-widest uppercase mb-3">
+                    How It Works
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-serif font-bold text-slate-900">Our Visa Application Process</h2>
+                  <p className="text-slate-500 text-sm mt-1">Simple, transparent, and efficient in 4 easy steps.</p>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {visaProcess.map(p => (
+                    <div key={p.step} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <p.icon className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold text-primary/60 uppercase tracking-widest">Step {p.step}</span>
+                        <h3 className="text-sm font-bold text-slate-900 mt-0.5">{p.title}</h3>
+                        <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{p.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
+              {/* Category legend */}
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                <h3 className="text-sm font-bold text-slate-900 mb-4">Visa Category Guide</h3>
+                <div className="space-y-2">
+                  {Object.entries(categoryConfig).map(([code, cfg]) => (
+                    <div key={code} className={`flex items-center gap-3 p-3 rounded-xl ${cfg.bg} border ${cfg.border}`}>
+                      <span className="text-base w-6 text-center flex-shrink-0">{cfg.emoji}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-xs font-bold ${cfg.color}`}>{cfg.label}</p>
+                        <p className="text-[10px] text-slate-500">{cfg.desc}</p>
+                      </div>
+                      <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${cfg.border} ${cfg.color} ${cfg.bg} flex-shrink-0`}>{code}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-     {/* Visa Process */}
-     <section className="py-16 bg-muted/30">
-       <div className="container mx-auto px-4">
-         <div className="text-center mb-12">
-           <h2 className="text-3xl font-serif font-bold text-primary mb-4">Our Visa Application Process</h2>
-           <p className="text-lg text-muted-foreground">Simple, transparent, and efficient visa processing in 4 easy steps</p>
-         </div>
-         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-           {visaProcess.map((process) => (
-             <Card key={process.step} className="text-center bg-white shadow-lg">
-               <CardContent className="p-8">
-                 <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4">
-                   <process.icon className="w-8 h-8 text-white" />
-                 </div>
-                 <div className="text-2xl font-bold text-accent mb-2">Step {process.step}</div>
-                 <h3 className="text-lg font-semibold text-primary mb-3">{process.title}</h3>
-                 <p className="text-sm text-muted-foreground">{process.description}</p>
-               </CardContent>
-             </Card>
-           ))}
-         </div>
-       </div>
-     </section>
+              {/* CTA */}
+              <div className="relative overflow-hidden bg-primary rounded-3xl p-7 sm:p-8">
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute -top-8 -right-8 w-40 h-40 bg-white/5 rounded-full blur-2xl" />
+                  <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-white/5 rounded-full blur-2xl" />
+                </div>
+                <div className="relative">
+                  <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest mb-2">Expert Help</p>
+                  <h3 className="text-xl sm:text-2xl font-serif font-bold text-white mb-2">Need visa assistance?</h3>
+                  <p className="text-white/60 text-sm mb-6 leading-relaxed">
+                    Our visa experts guide you through every document, form, and embassy requirement.
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    <button onClick={handlePhoneClick} className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl px-4 py-2.5 text-xs font-semibold transition-all">
+                      <Phone className="w-3.5 h-3.5" /> +91 98566 64440
+                    </button>
+                    <button onClick={handleWhatsAppClick} className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl px-4 py-2.5 text-xs font-semibold transition-all">
+                      <MessageCircle className="w-3.5 h-3.5" /> WhatsApp Us
+                    </button>
+                    <Link to="/plan-trip">
+                      <button className="flex items-center gap-2 bg-white text-primary hover:bg-white/90 rounded-xl px-4 py-2.5 text-xs font-bold transition-all">
+                        Free Consultation <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
 
+            </div>
+          </div>
+        </div>
+      </section>
 
-     {/* Contact Section */}
-     <section className="py-16">
-       <div className="container mx-auto px-4">
-         <div className="max-w-4xl mx-auto">
-           <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
-             <CardContent className="p-8">
-               <div className="text-center mb-8">
-                 <h3 className="text-2xl font-serif font-bold text-primary mb-4">Need Help with Your Visa Application?</h3>
-                 <p className="text-muted-foreground">Our visa experts are here to guide you through every step of the process</p>
-               </div>
-               <div className="grid md:grid-cols-2 gap-8">
-                 <Card className="bg-white">
-                   <CardContent className="p-6 text-center">
-                     <Phone className="w-12 h-12 text-primary mx-auto mb-4" />
-                     <h4 className="font-semibold text-primary mb-2">Call Us</h4>
-                     <p className="text-muted-foreground mb-4">Speak with our visa experts</p>
-                     <Button variant="outline" className="w-full">+91 98765 43210</Button>
-                   </CardContent>
-                 </Card>
-                 <Card className="bg-white">
-                   <CardContent className="p-6 text-center">
-                     <MessageCircle className="w-12 h-12 text-primary mx-auto mb-4" />
-                     <h4 className="font-semibold text-primary mb-2">WhatsApp</h4>
-                     <p className="text-muted-foreground mb-4">Quick assistance via WhatsApp</p>
-                     <Button variant="outline" className="w-full" onClick={handleWhatsAppClick}>Chat Now</Button>
-                   </CardContent>
-                 </Card>
-               </div>
-               <div className="text-center mt-8">
-                <Link to="/plan-trip">
-                 <Button size="lg" className="bg-primary hover:bg-primary/90">Schedule Free Consultation</Button>
-                 </Link>
-               </div>
-             </CardContent>
-           </Card>
-         </div>
-       </div>
-     </section>
-
-
-     <Footer />
-   </div>
- );
+      <Footer />
+    </div>
+  );
 };
-
 
 export default Visa;
-
-
-
-
