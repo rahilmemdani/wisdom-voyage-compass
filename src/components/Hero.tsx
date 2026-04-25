@@ -67,7 +67,7 @@ const Hero = () => {
 
   const handleWhatsAppClick = () => {
     const phoneNumber = '7042434631';
-    const message = encodeURIComponent('Hi! I\'m interested in planning a trip with Wisdom Travel. Can you help me?');
+    const message = encodeURIComponent('Hi! I\'m interested in planning a trip with Wisdom Travel & Tours. Can you help me?');
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 
@@ -142,7 +142,7 @@ const Hero = () => {
                 <h1 className="font-serif font-bold text-4xl sm:text-5xl lg:text-7xl leading-tight text-balance animate-slide-up" style={{ animationDelay: '0.2s' }}>
                   Discover the World with
                   <span className="block bg-gradient-to-r from-white via-primary-light to-accent bg-clip-text text-transparent animate-gradient">
-                    Wisdom Travel
+                    Wisdom Travel & Tours
                   </span>
                 </h1>
 

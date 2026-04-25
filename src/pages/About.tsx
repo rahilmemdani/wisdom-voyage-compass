@@ -52,7 +52,7 @@ const About = () => {
   ];
 
   const milestones = [
-    { year: '2019', event: 'Founded Wisdom Tours and Travels in Mumbai', icon: '🚀' },
+    { year: '2019', event: 'Founded Wisdom Travel & Tours in Mumbai', icon: '🚀' },
     { year: '2020', event: 'Expanded portfolio to international destinations', icon: '✈️' },
     { year: '2021', event: 'Launched online booking and visa services', icon: '💻' },
     { year: '2022', event: 'Reached 5,000+ satisfied customers milestone', icon: '🎯' },
@@ -87,7 +87,7 @@ const About = () => {
               </div>
 
               <p className="text-slate-500 text-base lg:text-lg leading-relaxed max-w-md">
-                For 15 years, Wisdom Tours has been turning travel dreams into reality — one extraordinary journey at a time.
+                For 15 years, Wisdom Travel & Tours has been turning travel dreams into reality — one extraordinary journey at a time.
               </p>
 
               {/* Inline stats row */}

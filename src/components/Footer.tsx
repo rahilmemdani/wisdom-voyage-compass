@@ -65,7 +65,7 @@ const Footer = () => {
           <div className="col-span-2 lg:col-span-4 space-y-6">
             <div>
               <h3 className="text-2xl lg:text-3xl font-serif font-bold text-slate-900">
-                <span className="text-red-600"> Wisdom</span> <span className="font-semibold">Travels & Tours</span>
+                Wisdom Travel & Tours
               </h3>
               <p className="text-slate-500 text-sm leading-relaxed mt-2.5 max-w-[280px]">
                 Crafting extraordinary journeys and lifelong memories across the globe since 2019.
@@ -205,7 +205,7 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="border-t border-red-200 pt-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <p className="text-gray-600 text-sm font-medium">
-            © 2025 Wisdom Tours and Travels. All rights reserved.
+            © 2025 Wisdom Travel & Tours. All rights reserved.
           </p>
         </div>
 

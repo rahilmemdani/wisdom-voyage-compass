@@ -109,7 +109,7 @@ const PlanTrip = () => {
         ...commonParams,
         to_email: data.email,
         user_email: data.email,
-        subject: `Your trip request to ${data.destination || 'your dream destination'} — Wisdom Tours`,
+        subject: `Your trip request to ${data.destination || 'your dream destination'} — Wisdom Travel & Tours`,
       }, publicKey),
 
     ]);
@@ -560,7 +560,7 @@ const PlanTrip = () => {
                   </Button>
 
                   <p className="text-center text-[11px] text-slate-400">
-                    By submitting you agree to be contacted by Wisdom Tours. No spam, ever.
+                    By submitting you agree to be contacted by Wisdom Travel & Tours. No spam, ever.
                   </p>
                 </form>
               </Form>

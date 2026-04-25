@@ -63,7 +63,7 @@ const Contact = () => {
             ...commonParams,
             to_email: formData.email,
             user_email: formData.email,
-            subject: `We received your message — Wisdom Tours`,
+            subject: `We received your message — Wisdom Travel & Tours`,
           },
           'IyzAcrjwMY4P_StOx'
         ),
@@ -369,7 +369,7 @@ const Contact = () => {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Wisdom Tours Location"
+                  title="Wisdom Travel & Tours Location"
                 />
               </div>
 
